@@ -25,23 +25,23 @@
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:scaleType="fitCenter"
                 android:background="@drawable/inbox"
-                android:contentDescription="@string/inner_storage">
-            </ImageView>
+                android:contentDescription="@string/inner_storage"
+                android:scaleType="fitCenter" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColor"
-                android:text="@string/inner_storage">
-            </TextView>
+                android:text="@string/inner_storage"
+                android:textColor="?android:attr/textColor" />
+
             <TextView
                 android:id="@+id/tvInnerVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Tiny"
                 android:textColor="?android:attr/textColorHint"
-                tools:text="0GB/128GB"/>
+                tools:text="0GB/128GB" />
         </LinearLayout>
 
         <LinearLayout
