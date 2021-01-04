@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         setToolbarTitle();
 
         init();
+        initClick();
         setupPermission();
-//        initClick();
 
     }
 
@@ -44,14 +46,23 @@ public class MainActivity extends AppCompatActivity {
         llInnerStorage = (LinearLayout)findViewById(R.id.llInnerStorage);
         llextraStorage = (LinearLayout)findViewById(R.id.llExtraStorage);
 
+//        llextraStorage.setOnClickListener(view ->
+//                new Intent(MainActivity.this, FileList.class));
     }
-//    public void initClick(){
+    public void initClick(){
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, DirectoryActivity.class));
-//        llInnerStorage.setOnClickListener(view ->
-//                new Intent());
-//
-//    }
+        llInnerStorage.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, FileList.class)));
+
+//        llInnerStorage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, DirectoryActivity.class);
+//                start
+//            }
+//        });
+    }
 
     private void setToolbarTitle(){
         // toolbar as actionbar
