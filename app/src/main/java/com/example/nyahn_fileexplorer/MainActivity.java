@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     public void initClick(){
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, DirectoryActivity.class));
-        llMainStorage.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, FileList.class)));
+        llMainStorage.setOnClickListener(view ->{
+                    startActivity(new Intent(MainActivity.this, FileList.class));
+                    finish();
+                });
 
 //        llInnerStorage.setOnClickListener(new View.OnClickListener() {
 //            @Override

@@ -10,6 +10,7 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,13 +27,13 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:background="@drawable/inbox"
-                android:contentDescription="@string/inner_storage"
+                android:contentDescription="@string/main_storage"
                 android:scaleType="fitCenter" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/inner_storage"
+                android:text="@string/main_storage"
                 android:textColor="?android:attr/textColor" />
 
             <TextView
@@ -58,13 +59,13 @@
                 android:layout_height="70dp"
                 android:scaleType="fitCenter"
                 android:background="@drawable/sdcard"
-                android:contentDescription="@string/extra_storage">
+                android:contentDescription="@string/sdcard_storage">
             </ImageView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColor"
-                android:text="@string/extra_storage">
+                android:text="@string/sdcard_storage">
             </TextView>
             <TextView
                 android:layout_width="wrap_content"
