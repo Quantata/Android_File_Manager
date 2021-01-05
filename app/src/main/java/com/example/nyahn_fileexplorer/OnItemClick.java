@@ -3,5 +3,7 @@ package com.example.nyahn_fileexplorer;
 import java.io.File;
 
 public interface OnItemClick {
-    void onClick(String fileDir);
+//    void onBackClick(File clickedFile);
+    File onGetParentFile();
+    void onSetParentFile(File file);
 }

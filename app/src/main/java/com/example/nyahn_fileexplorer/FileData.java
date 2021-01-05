@@ -1,34 +1,17 @@
 package com.example.nyahn_fileexplorer;
 
+import java.io.File;
+
 public class FileData {
-    public String getFileName() {
-        return fileName;
+
+    File file;
+
+    public File getFile() {
+        return file;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFile(File file) {
+        this.file = file;
     }
-
-    public String getParentDir() {
-        return parentDir;
-    }
-
-    public void setParentDir(String parentDir) {
-        this.parentDir = parentDir;
-    }
-
-    String fileName; // 파일 이름
-    String parentDir; // 상위 디렉토리
-    String presentDir; // 현재 디렉토리
-
-    public String getPresentDir() {
-        return presentDir;
-    }
-
-    public void setPresentDir(String presentDir) {
-        this.presentDir = presentDir;
-    }
-
-
 
 }

@@ -38,32 +38,31 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.folderImage.setImageResource(R.drawable.folder);
-        holder.folderName.setText(fileDataList.get(position).getFileName());
+        holder.folderName.setText(fileDataList.get(position).getFile().getName());
 
         holder.folderName.setOnClickListener(v ->
         {
-            String parent = fileDataList.get(position).getParentDir();
-
-            mCallback.onClick(parent);
-            // file 객체 폴더의 fileList.get(position)라는 파일에 대한 파일 객체를 생성
-            File clickedFile = new File(fileDataList.get(position).getPresentDir());
+            File file = mCallback.onGetParentFile();
+            // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
+            File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
 
             Log.i("FileList : ", ""+ clickedFile.isFile());
 
             if(!clickedFile.isFile())
             {
+                mCallback.onSetParentFile(clickedFile);
 //            file = new File( file, fileList.get( position ));
                 File[] list = clickedFile.listFiles();
 
                 fileDataList.clear();
 
-                for (File value : list) {
-                    FileData fileData = new FileData();
-                    fileData.setParentDir(parent);
-                    fileData.setFileName(value.getName());
-                    fileData.setPresentDir(value.getPath());
-                    fileDataList.add(fileData);
+                if(list != null) {
+                    for (File value : list) {
+                        FileData fileData = new FileData();
+                        fileData.setFile(value);
+                        fileDataList.add(fileData);
 //                    fileDataList.add(value.getName());
+                    }
                 }
 
                 notifyDataSetChanged();

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, DirectoryActivity.class));
         llMainStorage.setOnClickListener(view ->{
-                    startActivity(new Intent(MainActivity.this, FileList.class));
+                    startActivity(new Intent(MainActivity.this, FileListActivity.class));
                     finish();
                 });
 
