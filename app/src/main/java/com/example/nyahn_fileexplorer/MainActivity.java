@@ -9,14 +9,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    LinearLayout llInnerStorage;
-    LinearLayout llextraStorage;
+    LinearLayout llMainStorage;
+    LinearLayout llSdcardStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void init() {
-        llInnerStorage = (LinearLayout)findViewById(R.id.llInnerStorage);
-        llextraStorage = (LinearLayout)findViewById(R.id.llExtraStorage);
+        llMainStorage = (LinearLayout)findViewById(R.id.llMainStorage);
+        llSdcardStorage = (LinearLayout)findViewById(R.id.llSdcardStorage);
 
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, FileList.class));
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public void initClick(){
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, DirectoryActivity.class));
-        llInnerStorage.setOnClickListener(view ->
+        llMainStorage.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, FileList.class)));
 
 //        llInnerStorage.setOnClickListener(new View.OnClickListener() {

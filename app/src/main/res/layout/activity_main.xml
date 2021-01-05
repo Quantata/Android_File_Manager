@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/llInnerStorage"
+            android:id="@+id/llMainStorage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -45,12 +45,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llExtraStorage"
+            android:id="@+id/llSdcardStorage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:layout_toEndOf="@+id/llInnerStorage"
+            android:layout_toEndOf="@+id/llMainStorage"
             android:padding="20dp">
 
             <ImageView
