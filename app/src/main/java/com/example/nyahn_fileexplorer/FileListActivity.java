@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     @Override
     public void onSetParentFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public void onSetFileList(File file) {
+        showFileList(file);
     }
 
 
@@ -91,12 +97,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     public void showFileList(File parentFile){
         File[] list = parentFile.listFiles();
 
-        if(list != null) {
+        if(list != null && list.length > 0) {
+            flEmptyLayout.setVisibility(View.INVISIBLE);
             for (File value : list) {
                 FileData fileData = new FileData();
                 fileData.setFile(value);
                 fileList.add(fileData);
             }
+        } else {
+            flEmptyLayout.setVisibility(View.VISIBLE);
         }
 
         fileListAdapter = new FileListAdapter(fileList, this);

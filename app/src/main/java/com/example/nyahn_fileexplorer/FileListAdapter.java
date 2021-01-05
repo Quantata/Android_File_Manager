@@ -37,9 +37,17 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.folderImage.setImageResource(R.drawable.folder);
+        // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
+        if (!fileDataList.get(position).getFile().isFile()){
+            holder.folderImage.setImageResource(R.drawable.folder);
+        }
+        else {
+            holder.folderImage.setImageResource(R.drawable.text);
+        }
         holder.folderName.setText(fileDataList.get(position).getFile().getName());
 
+
+        // 짧게 클릭했을 때
         holder.folderName.setOnClickListener(v ->
         {
             File file = mCallback.onGetParentFile();
@@ -51,22 +59,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             if(!clickedFile.isFile())
             {
                 mCallback.onSetParentFile(clickedFile);
-//            file = new File( file, fileList.get( position ));
-                File[] list = clickedFile.listFiles();
-
                 fileDataList.clear();
-
-                if(list != null) {
-                    for (File value : list) {
-                        FileData fileData = new FileData();
-                        fileData.setFile(value);
-                        fileDataList.add(fileData);
-//                    fileDataList.add(value.getName());
-                    }
-                }
+                mCallback.onSetFileList(clickedFile);
 
                 notifyDataSetChanged();
-
             }
         });
     }

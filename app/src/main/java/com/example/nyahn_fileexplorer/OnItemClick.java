@@ -6,4 +6,5 @@ public interface OnItemClick {
 //    void onBackClick(File clickedFile);
     File onGetParentFile();
     void onSetParentFile(File file);
+    void onSetFileList(File file);
 }
