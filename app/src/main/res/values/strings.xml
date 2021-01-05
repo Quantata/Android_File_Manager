@@ -3,4 +3,6 @@
     <string name="title_main_page">파일 관리자</string>
     <string name="main_storage">내부 저장소</string>
     <string name="sdcard_storage">외부 저장소</string>
+
+    <string name="empty_file_list">저장된 파일이 없습니다.</string>
 </resources>

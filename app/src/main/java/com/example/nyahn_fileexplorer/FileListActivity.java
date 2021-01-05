@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +22,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
     private RecyclerView recyclerView;
     private FileListAdapter fileListAdapter;
+    private FrameLayout flEmptyLayout;
 
     private void setToolbarTitle(){
         // toolbar as actionbar
@@ -47,6 +49,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         setContentView(R.layout.activity_file_list);
 
         setToolbarTitle();
+        flEmptyLayout = findViewById(R.id.flEmptyLayout);
         // RecyclerView 초기화
         recyclerView = findViewById(R.id.rcFileList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -58,21 +61,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootMainDir);
-        File[] list = file.listFiles();
-
-        if(list != null) {
-            for (File value : list) {
-                FileData fileData = new FileData();
-                fileData.setFile(value);
-                fileList.add(fileData);
-            }
-        }
+        showFileList(file);
 
         fileListAdapter = new FileListAdapter(fileList, this);
         recyclerView.setAdapter(fileListAdapter);
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -87,23 +81,26 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
             if(parent != null)
                 file = new File(file.getParent());
 
-            File[] list = file.listFiles();
             // 기존 list 삭제
             fileList.clear();
-
-            if(list != null) {
-                for (File value : list) {
-                    FileData fileData = new FileData();
-                    fileData.setFile(value);
-                    fileList.add(fileData);
-                }
-            }
-
-            fileListAdapter = new FileListAdapter(fileList, this);
-            recyclerView.setAdapter(fileListAdapter);
-            fileListAdapter.notifyDataSetChanged();
+            showFileList(file);
         }
     }
 
+    // 파일 목록 update
+    public void showFileList(File parentFile){
+        File[] list = parentFile.listFiles();
 
+        if(list != null) {
+            for (File value : list) {
+                FileData fileData = new FileData();
+                fileData.setFile(value);
+                fileList.add(fileData);
+            }
+        }
+
+        fileListAdapter = new FileListAdapter(fileList, this);
+        recyclerView.setAdapter(fileListAdapter);
+        fileListAdapter.notifyDataSetChanged();
+    }
 }
