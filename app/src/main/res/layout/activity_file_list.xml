@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.FileListActivity"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:layout_above="@+id/llBottomLayout">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcFileList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
-
-
-    <FrameLayout
-        android:id="@+id/flEmptyLayout"
-        android:layout_below="@+id/toolbar"
-        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/empty_file_list"
-            android:textSize="20sp"
-            />
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolbar"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcFileList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+
+        <FrameLayout
+            android:id="@+id/flEmptyLayout"
+            android:layout_below="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/empty_file_list"
+                android:textSize="20sp"
+                />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/cdBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <include
+            layout="@layout/bottom_file_layout"
+            android:id="@+id/llBottomLayout"
+            android:visibility="invisible"
+            tools:visibility="visible"/>
+
+        <include
+            layout="@layout/bottom_file_move"
+            android:id="@+id/llBottomLayout"
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </FrameLayout>
 
-    <include
-        layout="@layout/bottom_file_layout"
-        android:id="@+id/llBottomLayout"
-        android:visibility="invisible"
-        tools:visibility="visible"/>
 
-    <include
-        layout="@layout/bottom_file_move"
-        android:id="@+id/llBottomLayout"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-</RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

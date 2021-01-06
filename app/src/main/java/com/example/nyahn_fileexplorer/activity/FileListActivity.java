@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import com.example.nyahn_fileexplorer.MainActivity;
 import com.example.nyahn_fileexplorer.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.models.FileData;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private LinearLayout llFileRename;
     private LinearLayout llFileDelete;
     private LinearLayout llFileInfo;
+
+//    private BottomSheetBehavior bottomSheetBehavior;
 
     private void setToolbarTitle(){
         // toolbar as actionbar
@@ -101,6 +106,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         llFileRename = findViewById(R.id.llFileRename);
         llFileDelete = findViewById(R.id.llFileDelete);
         llFileInfo = findViewById(R.id.llFileInfo);
+
+//        bottomSheetBehavior = BottomSheetBehavior.from((FrameLayout)findViewById(R.id.cdBottomSheet));
+
     }
 
 
