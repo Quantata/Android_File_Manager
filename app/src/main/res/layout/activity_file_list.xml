@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <include
         layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcFileList"
-        android:layout_below="@id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@+id/llBottomLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcFileList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
 
     <FrameLayout
         android:id="@+id/flEmptyLayout"
@@ -28,4 +35,16 @@
             android:textSize="20sp"
             />
     </FrameLayout>
+
+    <include
+        layout="@layout/bottom_file_layout"
+        android:id="@+id/llBottomLayout"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
+    <include
+        layout="@layout/bottom_file_move"
+        android:id="@+id/llBottomLayout"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 </RelativeLayout>

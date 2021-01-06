@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nyahn_fileexplorer.models.FileData;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -49,7 +51,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
 
         // 길게 클릭했을 때
-
+        holder.llFolder.setOnLongClickListener(v -> {
+            mCallback.onShowBottomLayout();
+            return true;
+        });
         // 짧게 클릭했을 때
         holder.llFolder.setOnClickListener(v ->
         {

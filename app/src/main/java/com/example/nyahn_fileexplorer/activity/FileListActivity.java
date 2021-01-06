@@ -1,4 +1,4 @@
-package com.example.nyahn_fileexplorer;
+package com.example.nyahn_fileexplorer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,11 +6,18 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.nyahn_fileexplorer.FileListAdapter;
+import com.example.nyahn_fileexplorer.MainActivity;
+import com.example.nyahn_fileexplorer.OnItemClick;
+import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.models.FileData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +32,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private RecyclerView recyclerView;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
+
+    private LinearLayout llBottomLayout;
+    private LinearLayout llFileCopy;
+    private LinearLayout llFileMove;
+    private LinearLayout llFileRename;
+    private LinearLayout llFileDelete;
+    private LinearLayout llFileInfo;
 
     private void setToolbarTitle(){
         // toolbar as actionbar
@@ -49,6 +63,10 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         showFileList(file);
     }
 
+    @Override
+    public void onShowBottomLayout() {
+        llBottomLayout.setVisibility(View.VISIBLE);
+    }
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -76,6 +94,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         recyclerView = findViewById(R.id.rcFileList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fileList = new ArrayList<>();
+
+        llBottomLayout = findViewById(R.id.llBottomLayout);
+        llFileCopy = findViewById(R.id.llFileCopy);
+        llFileMove = findViewById(R.id.llFileMove);
+        llFileRename = findViewById(R.id.llFileRename);
+        llFileDelete = findViewById(R.id.llFileDelete);
+        llFileInfo = findViewById(R.id.llFileInfo);
     }
 
 
