@@ -17,10 +17,11 @@ import java.util.ArrayList;
 
 public class FileListActivity extends AppCompatActivity implements OnItemClick
 {
-//    private String fileDir;
+    // 현재 파일
     private File file;
     private ArrayList<FileData> fileList;
     private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
+
     private RecyclerView recyclerView;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
@@ -55,12 +56,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         setContentView(R.layout.activity_file_list);
 
         setToolbarTitle();
-        flEmptyLayout = findViewById(R.id.flEmptyLayout);
-        // RecyclerView 초기화
-        recyclerView = findViewById(R.id.rcFileList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fileList = new ArrayList<>();
-
+        init();
         // External Storage
 //        rootMainDir = Environment.getExternalStorageDirectory().toString();
         Log.i("FileList : ", rootMainDir);
@@ -74,10 +70,18 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
     }
 
+    public void init(){
+        flEmptyLayout = findViewById(R.id.flEmptyLayout);
+        // RecyclerView 초기화
+        recyclerView = findViewById(R.id.rcFileList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        fileList = new ArrayList<>();
+    }
+
+
     @Override
     public void onBackPressed() {
         // 현재 파일의 부모 경로
-
         if(rootMainDir.equals(file.getPath())){
             startActivity(new Intent(FileListActivity.this, MainActivity.class));
             finish();

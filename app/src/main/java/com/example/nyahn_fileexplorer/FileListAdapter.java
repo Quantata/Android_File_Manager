@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,16 +40,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
         if (!fileDataList.get(position).getFile().isFile()){
-            holder.folderImage.setImageResource(R.drawable.folder);
+            holder.ivFolderImage.setImageResource(R.drawable.folder);
         }
         else {
-            holder.folderImage.setImageResource(R.drawable.text);
+            holder.ivFolderImage.setImageResource(R.drawable.text);
         }
-        holder.folderName.setText(fileDataList.get(position).getFile().getName());
+        holder.tvFolderName.setText(fileDataList.get(position).getFile().getName());
 
+
+        // 길게 클릭했을 때
 
         // 짧게 클릭했을 때
-        holder.folderName.setOnClickListener(v ->
+        holder.llFolder.setOnClickListener(v ->
         {
             File file = mCallback.onGetParentFile();
             // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
@@ -73,12 +76,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView folderImage;
-        TextView folderName;
+        ImageView ivFolderImage;
+        TextView tvFolderName;
+        LinearLayout llFolder;
+
+        // bottom layout
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            folderImage = itemView.findViewById(R.id.folderImage);
-            folderName = itemView.findViewById(R.id.folderName);
+            llFolder = itemView.findViewById(R.id.llFolder);
+            ivFolderImage = itemView.findViewById(R.id.ivFolderImage);
+            tvFolderName = itemView.findViewById(R.id.tvFolderName);
         }
     }
 }
