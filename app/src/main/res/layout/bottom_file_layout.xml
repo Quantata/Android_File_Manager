@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="60dp"
     android:layout_alignParentBottom="true"
     android:gravity="center_vertical">
 
     <LinearLayout
         android:id="@+id/llFileCopy"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView
@@ -23,7 +23,7 @@
     <LinearLayout
         android:id="@+id/llFileMove"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView
@@ -36,7 +36,7 @@
     <LinearLayout
         android:id="@+id/llFileRename"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView
@@ -49,7 +49,7 @@
     <LinearLayout
         android:id="@+id/llFileDelete"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView
@@ -62,7 +62,7 @@
     <LinearLayout
         android:id="@+id/llFileInfo"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView

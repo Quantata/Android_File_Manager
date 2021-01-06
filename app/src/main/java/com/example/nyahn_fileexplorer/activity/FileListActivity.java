@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
 
+    private LinearLayout cdBottomSheet;
     private LinearLayout llBottomLayout;
     private LinearLayout llFileCopy;
     private LinearLayout llFileMove;
@@ -71,6 +73,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     @Override
     public void onShowBottomLayout() {
         llBottomLayout.setVisibility(View.VISIBLE);
+        cdBottomSheet.setVisibility(View.VISIBLE);
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -100,6 +103,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fileList = new ArrayList<>();
 
+        cdBottomSheet = findViewById(R.id.cdBottomSheet);
         llBottomLayout = findViewById(R.id.llBottomLayout);
         llFileCopy = findViewById(R.id.llFileCopy);
         llFileMove = findViewById(R.id.llFileMove);
