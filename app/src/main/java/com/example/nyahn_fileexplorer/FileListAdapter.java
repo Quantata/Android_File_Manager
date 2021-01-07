@@ -18,10 +18,12 @@ import com.example.nyahn_fileexplorer.models.FileData;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
+    // 선택됐는지 확인하기 위한 Array
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
-
+    private HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
@@ -57,30 +59,53 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
-            // false : 선택되지 않음
-            // true : 선택됨
-            boolean selected = mSelectedItems.get(holder.getAdapterPosition());
-
-            if(selected){
-                // 선택된 상태라면 선택 해제
-                mSelectedItems.put(holder.getAdapterPosition(), false);
-                holder.llFolder.setBackgroundColor(Color.WHITE);
-            } else {
-                // 선택지 않은 상태라면 선택
-                mSelectedItems.put(holder.getAdapterPosition(), true);
-                holder.llFolder.setBackgroundColor(Color.GRAY);
+            if(mCallback.onGetMode() == Mode.MOVE_MODE){ // move mode였을때
+                for(int i : mSelectedPositions) {
+                    if (holder.getAdapterPosition() == i)
+                        holder.llFolder.setBackgroundColor(Color.WHITE);
+                }
+                mSelectedPositions.clear();
+                notifyDataSetChanged();
             }
+            else {
+                // false : 선택되지 않음
+                // true : 선택됨
+                boolean selected = mSelectedItems.get(holder.getAdapterPosition());
 
-            mCallback.onShowBottomLayout(!selected);
+                // Basic_Mode였다면 SelectedMode
+                // Selected_Mode라면 아무일도 일어나지 않도록
 
+                if (selected) {
+                    // 선택된 상태라면 선택 해제
+                    mSelectedItems.put(holder.getAdapterPosition(), false);
+                    holder.llFolder.setBackgroundColor(Color.WHITE);
+
+                    // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
+                    mSelectedPositions.remove(holder.getAdapterPosition());
+                    if(mSelectedPositions.size() == 0){
+                        mCallback.onSetMode(Mode.BASIC_MODE);
+                    }
+                } else {
+                    // 선택되지 않은 상태라면 선택
+                    mSelectedItems.put(holder.getAdapterPosition(), true);
+                    holder.llFolder.setBackgroundColor(Color.GRAY);
+
+                    mSelectedPositions.add(holder.getAdapterPosition());
+                    mCallback.onSetMode(Mode.SELECTED_MODE);
+                }
+                mCallback.onShowBottomLayout();
+
+
+
+            }
             return true;
         });
 
         // 짧게 클릭했을 때
         holder.llFolder.setOnClickListener(v ->
         {
-            // 선택된 상태였다면 선택 상태를 풀도록
-            if(!mSelectedItems.get(holder.getAdapterPosition())) {
+            if(mCallback.onGetMode() == Mode.BASIC_MODE ||
+                mCallback.onGetMode() == Mode.MOVE_MODE){
                 File file = mCallback.onGetParentFile();
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
                 File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
@@ -94,11 +119,33 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                     notifyDataSetChanged();
                 }
-            } else {
-                mSelectedItems.put(holder.getAdapterPosition(), false);
-                holder.llFolder.setBackgroundColor(Color.WHITE);
-
             }
+            else if(mCallback.onGetMode() == Mode.SELECTED_MODE){
+                // false : 선택되지 않음
+                // true : 선택됨
+                boolean selected = mSelectedItems.get(holder.getAdapterPosition());
+
+                if (selected) {
+                    // 선택된 상태라면 선택 해제
+                    mSelectedItems.put(holder.getAdapterPosition(), false);
+                    holder.llFolder.setBackgroundColor(Color.WHITE);
+
+                    // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
+                    mSelectedPositions.remove(holder.getAdapterPosition());
+                    if(mSelectedPositions.size() == 0){
+                        mCallback.onSetMode(Mode.BASIC_MODE);
+                    }
+                } else {
+                    // 선택되지 않은 상태라면 선택
+                    mSelectedItems.put(holder.getAdapterPosition(), true);
+                    holder.llFolder.setBackgroundColor(Color.GRAY);
+
+                    mSelectedPositions.add(holder.getAdapterPosition());
+                    mCallback.onSetMode(Mode.SELECTED_MODE);
+                }
+                mCallback.onShowBottomLayout();
+            }
+
         });
 
     }

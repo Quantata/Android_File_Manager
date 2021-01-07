@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nyahn_fileexplorer.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
+import com.example.nyahn_fileexplorer.Mode;
 import com.example.nyahn_fileexplorer.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.ManageFile;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class FileListActivity extends AppCompatActivity implements OnItemClick
 {
+    private Mode presentMode = Mode.BASIC_MODE;
     // 현재 파일
     private File file;
     private ArrayList<FileData> fileList;
@@ -73,14 +75,30 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
     // 복사, 이동 등 file function layout
     @Override
-    public void onShowBottomLayout(boolean showBottomLayout) {
-        if(showBottomLayout) {
-//            llBottomManageLayout.setVisibility(View.VISIBLE);
+    public void onShowBottomLayout() {
+        if(presentMode == Mode.SELECTED_MODE){
             cdBottomSheet.setVisibility(View.VISIBLE);
-        } else {
-//            llBottomManageLayout.setVisibility(View.GONE);
-            cdBottomSheet.setVisibility(View.GONE);
+            llBottomManageLayout.setVisibility(View.VISIBLE);
         }
+        else if(presentMode == Mode.MOVE_MODE){
+            llBottomManageLayout.setVisibility(View.GONE);
+            llBottomMoveLayout.setVisibility(View.VISIBLE);
+        }
+        else { // Basic_mode
+            cdBottomSheet.setVisibility(View.GONE);
+            llBottomManageLayout.setVisibility(View.GONE);
+            llBottomMoveLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public Mode onGetMode() {
+        return presentMode;
+    }
+
+    @Override
+    public void onSetMode(Mode mode) {
+        presentMode = mode;
     }
 
     public void onCreate(Bundle savedInstanceState)

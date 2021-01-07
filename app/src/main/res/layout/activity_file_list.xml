@@ -45,6 +45,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <include
             layout="@layout/bottom_file_layout"
             android:id="@+id/llBottomManageLayout"
