@@ -12,6 +12,7 @@
         android:id="@+id/llCancel"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:onClick="onClickButton"
         android:layout_weight="1">
 
         <TextView
@@ -25,6 +26,7 @@
         android:id="@+id/llFilePaste"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:onClick="onClickButton"
         android:layout_weight="1">
 
         <TextView

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +71,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         showFileList(file);
     }
 
+    // 복사, 이동 등 file function layout
     @Override
     public void onShowBottomLayout() {
         llBottomLayout.setVisibility(View.VISIBLE);
@@ -105,17 +107,46 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
         cdBottomSheet = findViewById(R.id.cdBottomSheet);
         llBottomLayout = findViewById(R.id.llBottomLayout);
+
         llFileCopy = findViewById(R.id.llFileCopy);
         llFileMove = findViewById(R.id.llFileMove);
         llFileRename = findViewById(R.id.llFileRename);
         llFileDelete = findViewById(R.id.llFileDelete);
         llFileInfo = findViewById(R.id.llFileInfo);
 
-//        bottomSheetBehavior = BottomSheetBehavior.from((FrameLayout)findViewById(R.id.cdBottomSheet));
-
     }
 
+    // 파일 버튼 클릭시
+    public void onClickButton(View view){
+        switch (view.getId()){
+            // 파일 기능
+            case R.id.llFileCopy:
+                Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.llFileMove:
+                Toast.makeText(this, "이동하겠습니다.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.llFileRename:
+                Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.llFileDelete:
+                Toast.makeText(this, "삭제.", Toast.LENGTH_SHORT).show();
 
+            case R.id.llFileInfo:
+                Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
+                break;
+            // 복사, 이동시 나타나는 버튼
+            case R.id.llCancel:
+                Toast.makeText(this, "취소.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.llFilePaste:
+                Toast.makeText(this, "복사하기.", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(this, "기본버튼입니다.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
     @Override
     public void onBackPressed() {
         // 현재 파일의 부모 경로
