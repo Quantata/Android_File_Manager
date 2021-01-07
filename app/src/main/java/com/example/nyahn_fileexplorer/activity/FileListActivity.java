@@ -155,7 +155,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
             case R.id.llFileMove:
                 presentMode = Mode.MOVE_MODE;
                 Toast.makeText(this, "이동하겠습니다.", Toast.LENGTH_SHORT).show();
-
+                onShowBottomLayout();
                 break;
             case R.id.llFileRename:
                 Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
@@ -183,7 +183,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
                 Toast.makeText(this, "취소.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.llFilePaste:
-                Toast.makeText(this, "복사하기.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 Toast.makeText(this, "기본버튼입니다.", Toast.LENGTH_SHORT).show();
