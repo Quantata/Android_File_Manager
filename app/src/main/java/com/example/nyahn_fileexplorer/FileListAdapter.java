@@ -1,7 +1,9 @@
 package com.example.nyahn_fileexplorer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
+    private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
+
+
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
     private final ArrayList<FileData> fileDataList;
@@ -52,27 +57,50 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
-            mCallback.onShowBottomLayout();
+            // false : 선택되지 않음
+            // true : 선택됨
+            boolean selected = mSelectedItems.get(holder.getAdapterPosition());
+
+            if(selected){
+                // 선택된 상태라면 선택 해제
+                mSelectedItems.put(holder.getAdapterPosition(), false);
+                holder.llFolder.setBackgroundColor(Color.WHITE);
+            } else {
+                // 선택지 않은 상태라면 선택
+                mSelectedItems.put(holder.getAdapterPosition(), true);
+                holder.llFolder.setBackgroundColor(Color.GRAY);
+            }
+
+            mCallback.onShowBottomLayout(!selected);
+
             return true;
         });
+
         // 짧게 클릭했을 때
         holder.llFolder.setOnClickListener(v ->
         {
-            File file = mCallback.onGetParentFile();
-            // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
-            File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
+            // 선택된 상태였다면 선택 상태를 풀도록
+            if(!mSelectedItems.get(holder.getAdapterPosition())) {
+                File file = mCallback.onGetParentFile();
+                // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
+                File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
 
-            Log.i("FileList : ", ""+ clickedFile.isFile());
+                Log.i("FileList : ", "" + clickedFile.isFile());
 
-            if(!clickedFile.isFile())
-            {
-                mCallback.onSetParentFile(clickedFile);
-                fileDataList.clear();
-                mCallback.onSetFileList(clickedFile);
+                if (!clickedFile.isFile()) {
+                    mCallback.onSetParentFile(clickedFile);
+                    fileDataList.clear();
+                    mCallback.onSetFileList(clickedFile);
 
-                notifyDataSetChanged();
+                    notifyDataSetChanged();
+                }
+            } else {
+                mSelectedItems.put(holder.getAdapterPosition(), false);
+                holder.llFolder.setBackgroundColor(Color.WHITE);
+
             }
         });
+
     }
 
     @Override
@@ -80,7 +108,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         return fileDataList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFolderImage;
         TextView tvFolderName;
         LinearLayout llFolder;
@@ -93,6 +121,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             llFolder = itemView.findViewById(R.id.llFolder);
             ivFolderImage = itemView.findViewById(R.id.ivFolderImage);
             tvFolderName = itemView.findViewById(R.id.tvFolderName);
+
         }
     }
 }

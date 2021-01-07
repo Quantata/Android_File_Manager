@@ -7,13 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,8 +18,8 @@ import com.example.nyahn_fileexplorer.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
 import com.example.nyahn_fileexplorer.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.Utils.ManageFile;
 import com.example.nyahn_fileexplorer.models.FileData;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,12 +36,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private FrameLayout flEmptyLayout;
 
     private LinearLayout cdBottomSheet;
-    private LinearLayout llBottomLayout;
+    private LinearLayout llBottomManageLayout;
+    private LinearLayout llBottomMoveLayout;
     private LinearLayout llFileCopy;
     private LinearLayout llFileMove;
     private LinearLayout llFileRename;
     private LinearLayout llFileDelete;
     private LinearLayout llFileInfo;
+
+    ManageFile manageFile;
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -73,9 +73,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
     // 복사, 이동 등 file function layout
     @Override
-    public void onShowBottomLayout() {
-        llBottomLayout.setVisibility(View.VISIBLE);
-        cdBottomSheet.setVisibility(View.VISIBLE);
+    public void onShowBottomLayout(boolean showBottomLayout) {
+        if(showBottomLayout) {
+//            llBottomManageLayout.setVisibility(View.VISIBLE);
+            cdBottomSheet.setVisibility(View.VISIBLE);
+        } else {
+//            llBottomManageLayout.setVisibility(View.INVISIBLE);
+            cdBottomSheet.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -99,6 +104,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     }
 
     public void init(){
+        manageFile = new ManageFile();
+
         flEmptyLayout = findViewById(R.id.flEmptyLayout);
         // RecyclerView 초기화
         recyclerView = findViewById(R.id.rcFileList);
@@ -106,8 +113,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         fileList = new ArrayList<>();
 
         cdBottomSheet = findViewById(R.id.cdBottomSheet);
-        llBottomLayout = findViewById(R.id.llBottomLayout);
-
+        llBottomManageLayout = findViewById(R.id.llBottomManageLayout);
+        llBottomMoveLayout = findViewById(R.id.llBottomMoveLayout);
         llFileCopy = findViewById(R.id.llFileCopy);
         llFileMove = findViewById(R.id.llFileMove);
         llFileRename = findViewById(R.id.llFileRename);
@@ -118,6 +125,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
     // 파일 버튼 클릭시
     public void onClickButton(View view){
+        // TODO: if/else로 변경 static에서 기본형으로 바뀌면서 효율성 면에서 R.id.~ 사용시 if/else문으로 사용 하는걸 권장
         switch (view.getId()){
             // 파일 기능
             case R.id.llFileCopy:
@@ -179,6 +187,27 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         } else {
             flEmptyLayout.setVisibility(View.VISIBLE);
         }
+
+        fileListAdapter = new FileListAdapter(fileList, this);
+        recyclerView.setAdapter(fileListAdapter);
+        fileListAdapter.notifyDataSetChanged();
+    }
+
+    // fileList를 매개변수로 받았을시 목록 변경
+    public void showFileList(ArrayList<FileData> fileList){
+        this.fileList = fileList;
+//        File[] list = parentFile.listFiles();
+//
+//        if(list != null && list.length > 0) {
+//            flEmptyLayout.setVisibility(View.INVISIBLE);
+//            for (File value : list) {
+//                FileData fileData = new FileData();
+//                fileData.setFile(value);
+//                fileList.add(fileData);
+//            }
+//        } else {
+//            flEmptyLayout.setVisibility(View.VISIBLE);
+//        }
 
         fileListAdapter = new FileListAdapter(fileList, this);
         recyclerView.setAdapter(fileListAdapter);

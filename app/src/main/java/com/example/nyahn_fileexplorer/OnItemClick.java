@@ -7,5 +7,5 @@ public interface OnItemClick {
     File onGetParentFile();
     void onSetParentFile(File file);
     void onSetFileList(File file);
-    void onShowBottomLayout();
+    void onShowBottomLayout(boolean selected);
 }

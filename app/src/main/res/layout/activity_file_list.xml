@@ -47,13 +47,13 @@
         android:layout_height="wrap_content">
         <include
             layout="@layout/bottom_file_layout"
-            android:id="@+id/llBottomLayout"
-            android:visibility="invisible"
+            android:id="@+id/llBottomManageLayout"
+            android:visibility="visible"
             tools:visibility="visible"/>
 
         <include
             layout="@layout/bottom_file_move"
-            android:id="@+id/llBottomLayout"
+            android:id="@+id/llBottomMoveLayout"
             android:visibility="gone"
             tools:visibility="visible"/>
     </LinearLayout>
