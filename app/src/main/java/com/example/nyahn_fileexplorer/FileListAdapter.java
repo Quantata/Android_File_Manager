@@ -22,7 +22,6 @@ import java.util.HashSet;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     // 선택됐는지 확인하기 위한 Array
-    private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     // Activity의 file 변수 Update 위함
@@ -48,13 +47,14 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public void fileSelected(@NonNull ViewHolder holder, int position){
         // false : 선택되지 않음
         // true : 선택됨
-        boolean selected = mSelectedItems.get(position);
+
+        boolean selected = fileDataList.get(position).isSelected();
 
         // Basic_Mode였다면 SelectedMode
         // Selected_Mode라면 아무일도 일어나지 않도록
         if (selected) {
             // 선택된 상태라면 선택 해제
-            mSelectedItems.put(position, false);
+            fileDataList.get(position).setSelected(false);
             holder.llFolder.setBackgroundColor(Color.WHITE);
 
             // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
@@ -64,7 +64,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
         } else {
             // 선택되지 않은 상태라면 선택
-            mSelectedItems.put(position, true);
+            fileDataList.get(position).setSelected(true);
             holder.llFolder.setBackgroundColor(Color.GRAY);
 
             mSelectedPositions.add(position);
@@ -74,7 +74,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     }
 
     public void fileSelectedMoveMode(ViewHolder holder, int position){
-        mSelectedItems.put(position, true);
+        fileDataList.get(position).setSelected(true);
         holder.llFolder.setBackgroundColor(Color.GRAY);
 
         mSelectedPositions.add(position);
@@ -96,7 +96,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
 
         // Color 설정
-        if(mSelectedItems.get(position))
+        if(fileDataList.get(position).isSelected())
             holder.llFolder.setBackgroundColor(Color.GRAY);
         else
             holder.llFolder.setBackgroundColor(Color.WHITE);
@@ -107,7 +107,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 //TODO: 선택되어 있던 부분 해제하는 방법 찾아보기
                 // 선택되어있던 부분 전체 해제
                 for(int i : mSelectedPositions) {
-                    mSelectedItems.put(i, false);
+                    fileDataList.get(i).setSelected(false);
                     notifyItemChanged(i);
                 }
                 mSelectedPositions.clear();
