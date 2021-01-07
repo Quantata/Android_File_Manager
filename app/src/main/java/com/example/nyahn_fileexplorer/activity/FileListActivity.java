@@ -149,8 +149,10 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
             // 파일 기능
             case R.id.llFileCopy:
                 presentMode = Mode.MOVE_MODE;
+                onShowBottomLayout();
 
                 Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.llFileMove:
                 presentMode = Mode.MOVE_MODE;
@@ -181,6 +183,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
                 Toast.makeText(this, "취소.", Toast.LENGTH_SHORT).show();
+                // Basic 모드로 바꾸고
+                // showBottom 호출하면 됨.
                 break;
             case R.id.llFilePaste:
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
