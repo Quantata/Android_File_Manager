@@ -155,11 +155,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         switch (view.getId()){
             // 파일 기능
             case R.id.llFileCopy:
+                // COPY_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.COPY_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
                 // 현재 선택된 파일 복사하는 로직
                 // 현재 선택된 FileList와 현재 이동된 file Path
-                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
+//                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
                 // Basic Mode로 바꿔주고 onShowBottomLayout하면 될듯 -> 이건 Paste나 cancel에서
                 Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
 
@@ -201,6 +202,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
+                manageFile.pasteFile(presentMode, fileListAdapter.getSelectedFileList(), file);
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
             default:

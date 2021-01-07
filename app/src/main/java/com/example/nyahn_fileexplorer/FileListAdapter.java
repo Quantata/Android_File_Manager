@@ -36,10 +36,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     // 선택된 파일 List
     public ArrayList<FileData> getSelectedFileList(){
-        ArrayList<FileData> selectedList = null;
+        ArrayList<FileData> selectedList = new ArrayList<>();
         if(mSelectedPositions.size() != 0) {
             for (int selected : mSelectedPositions) {
-                selectedList.add(fileDataList.get(selected));
+                FileData fileData = fileDataList.get(selected);
+                selectedList.add(fileData);
             }
         }
         return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
@@ -144,7 +145,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                 Log.i("FileList : ", "" + clickedFile.isFile());
 
-                if (!clickedFile.isFile()) {
+                if (clickedFile.isDirectory()) {
                     mCallback.onSetParentFile(clickedFile);
                     fileDataList.clear();
                     mCallback.onSetFileList(clickedFile);
