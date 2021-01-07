@@ -3,7 +3,6 @@ package com.example.nyahn_fileexplorer;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +13,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nyahn_fileexplorer.models.FileData;
+import com.example.nyahn_fileexplorer.Models.FileData;
+import com.example.nyahn_fileexplorer.Models.Mode;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+//  Adapter에서 MOVE_MODE = MOVE_MODE, COPY_MODE
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     // 선택됐는지 확인하기 위한 Array
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
 
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
-    private final ArrayList<FileData> fileDataList;
+    private ArrayList<FileData> fileDataList;
+
     public FileListAdapter(ArrayList<FileData> files, OnItemClick listener) {
         this.fileDataList = files;
         this.mCallback = listener;
+    }
+
+    // 선택된 파일 List
+    public ArrayList<FileData> getSelectedFileList(){
+        ArrayList<FileData> selectedList = null;
+        if(mSelectedPositions.size() != 0) {
+            for (int selected : mSelectedPositions) {
+                selectedList.add(fileDataList.get(selected));
+            }
+        }
+        return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
     }
 
     @NonNull
@@ -39,7 +52,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
 
         View view = inflater.inflate(R.layout.listview_item, parent, false) ;
-        FileListAdapter.ViewHolder vh = new FileListAdapter.ViewHolder(view) ;
+        FileListAdapter.ViewHolder vh = new ViewHolder(view);
 
         return vh ;
     }
@@ -104,8 +117,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
             if(mCallback.onGetMode() == Mode.MOVE_MODE){ // move mode였을때
-                //TODO: 선택되어 있던 부분 해제하는 방법 찾아보기
-                // 선택되어있던 부분 전체 해제
                 for(int i : mSelectedPositions) {
                     fileDataList.get(i).setSelected(false);
                     notifyItemChanged(i);
@@ -154,7 +165,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         return fileDataList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFolderImage;
         TextView tvFolderName;
         LinearLayout llFolder;

@@ -1,4 +1,4 @@
-package com.example.nyahn_fileexplorer.activity;
+package com.example.nyahn_fileexplorer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,21 +16,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nyahn_fileexplorer.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
-import com.example.nyahn_fileexplorer.Mode;
+import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.OnItemClick;
+import com.example.nyahn_fileexplorer.OnManageFile;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.ManageFile;
-import com.example.nyahn_fileexplorer.models.FileData;
+import com.example.nyahn_fileexplorer.Models.FileData;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class FileListActivity extends AppCompatActivity implements OnItemClick
+public class FileListActivity extends AppCompatActivity implements OnItemClick, OnManageFile
 {
     private Mode presentMode = Mode.BASIC_MODE;
     // 현재 파일
     private File file;
+    // 현재 파일이 갖고 있는 파일 목록
     private ArrayList<FileData> fileList;
+    // File 기능
+    private ManageFile manageFile;
+
     private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
 
     private RecyclerView recyclerView;
@@ -45,8 +50,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
     private LinearLayout llFileRename;
     private LinearLayout llFileDelete;
     private LinearLayout llFileInfo;
-
-    ManageFile manageFile;
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -81,6 +84,10 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
             llBottomManageLayout.setVisibility(View.VISIBLE);
         }
         else if(presentMode == Mode.MOVE_MODE){
+            llBottomManageLayout.setVisibility(View.GONE);
+            llBottomMoveLayout.setVisibility(View.VISIBLE);
+        }
+        else if(presentMode == Mode.COPY_MODE){
             llBottomManageLayout.setVisibility(View.GONE);
             llBottomMoveLayout.setVisibility(View.VISIBLE);
         }
@@ -148,9 +155,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
         switch (view.getId()){
             // 파일 기능
             case R.id.llFileCopy:
-                presentMode = Mode.MOVE_MODE;
-                onShowBottomLayout();
-
+                presentMode = Mode.COPY_MODE;
+                onShowBottomLayout();   // 취소/붙여넣기
+                // 현재 선택된 파일 복사하는 로직
+                // 현재 선택된 FileList와 현재 이동된 file Path
+                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
+                // Basic Mode로 바꿔주고 onShowBottomLayout하면 될듯 -> 이건 Paste나 cancel에서
                 Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
 
                 break;
@@ -182,11 +192,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
                 break;
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
-                Toast.makeText(this, "취소.", Toast.LENGTH_SHORT).show();
+                presentMode = Mode.BASIC_MODE;
+                onShowBottomLayout();
+
+                Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show();
                 // Basic 모드로 바꾸고
                 // showBottom 호출하면 됨.
                 break;
             case R.id.llFilePaste:
+                // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
             default:

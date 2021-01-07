@@ -1,4 +1,4 @@
-package com.example.nyahn_fileexplorer.models;
+package com.example.nyahn_fileexplorer.Models;
 
 import java.io.File;
 

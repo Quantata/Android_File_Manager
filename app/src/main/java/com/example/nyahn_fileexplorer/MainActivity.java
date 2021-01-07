@@ -11,7 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import com.example.nyahn_fileexplorer.activity.FileListActivity;
+import com.example.nyahn_fileexplorer.Activity.FileListActivity;
 
 public class MainActivity extends AppCompatActivity {
 

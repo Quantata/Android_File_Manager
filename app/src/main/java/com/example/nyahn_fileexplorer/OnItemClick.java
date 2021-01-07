@@ -1,5 +1,7 @@
 package com.example.nyahn_fileexplorer;
 
+import com.example.nyahn_fileexplorer.Models.Mode;
+
 import java.io.File;
 
 public interface OnItemClick {
