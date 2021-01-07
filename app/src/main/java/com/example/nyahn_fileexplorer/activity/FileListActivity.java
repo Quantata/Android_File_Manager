@@ -141,21 +141,38 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 
     }
 
+
     // 파일 버튼 클릭시
     public void onClickButton(View view){
         // TODO: if/else로 변경 static에서 기본형으로 바뀌면서 효율성 면에서 R.id.~ 사용시 if/else문으로 사용 하는걸 권장
         switch (view.getId()){
             // 파일 기능
             case R.id.llFileCopy:
+                presentMode = Mode.MOVE_MODE;
+
                 Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.llFileMove:
+                presentMode = Mode.MOVE_MODE;
                 Toast.makeText(this, "이동하겠습니다.", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.llFileRename:
                 Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
+                presentMode = Mode.BASIC_MODE;
+                //이름 변경 Dialog한 뒤 notifySetData
+
+                // Layout 내림
+                onShowBottomLayout();
                 break;
             case R.id.llFileDelete:
+                presentMode = Mode.BASIC_MODE;
+                // Delete Dialog
+
+                // 삭제 완료되었습니다. Dialog
+
+                // Layout 내림
+                onShowBottomLayout();
                 Toast.makeText(this, "삭제.", Toast.LENGTH_SHORT).show();
 
             case R.id.llFileInfo:

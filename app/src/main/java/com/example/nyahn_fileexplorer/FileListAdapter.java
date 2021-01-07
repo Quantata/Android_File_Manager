@@ -45,6 +45,44 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         return vh ;
     }
 
+    public void fileSelected(@NonNull ViewHolder holder, int position){
+        // false : 선택되지 않음
+        // true : 선택됨
+        boolean selected = mSelectedItems.get(position);
+
+        // Basic_Mode였다면 SelectedMode
+        // Selected_Mode라면 아무일도 일어나지 않도록
+        if (selected) {
+            // 선택된 상태라면 선택 해제
+            mSelectedItems.put(position, false);
+            holder.llFolder.setBackgroundColor(Color.WHITE);
+
+            // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
+            mSelectedPositions.remove(position);
+            if(mSelectedPositions.size() == 0){
+                mCallback.onSetMode(Mode.BASIC_MODE);
+            }
+        } else {
+            // 선택되지 않은 상태라면 선택
+            mSelectedItems.put(position, true);
+            holder.llFolder.setBackgroundColor(Color.GRAY);
+
+            mSelectedPositions.add(position);
+            mCallback.onSetMode(Mode.SELECTED_MODE);
+        }
+        mCallback.onShowBottomLayout();
+    }
+
+    public void fileSelectedMoveMode(ViewHolder holder, int position){
+        mSelectedItems.put(position, true);
+        holder.llFolder.setBackgroundColor(Color.GRAY);
+
+        mSelectedPositions.add(position);
+        mCallback.onSetMode(Mode.SELECTED_MODE);
+
+        mCallback.onShowBottomLayout();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
@@ -57,45 +95,28 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         holder.tvFolderName.setText(fileDataList.get(position).getFile().getName());
 
 
+        // Color 설정
+        if(mSelectedItems.get(position))
+            holder.llFolder.setBackgroundColor(Color.GRAY);
+        else
+            holder.llFolder.setBackgroundColor(Color.WHITE);
+
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
             if(mCallback.onGetMode() == Mode.MOVE_MODE){ // move mode였을때
+                //TODO: 선택되어 있던 부분 해제하는 방법 찾아보기
+                // 선택되어있던 부분 전체 해제
                 for(int i : mSelectedPositions) {
-                    if (holder.getAdapterPosition() == i)
-                        holder.llFolder.setBackgroundColor(Color.WHITE);
+                    mSelectedItems.put(i, false);
+                    notifyItemChanged(i);
                 }
                 mSelectedPositions.clear();
-                notifyDataSetChanged();
+
+                // 선택된 부분 click
+                fileSelectedMoveMode(holder, holder.getAdapterPosition());
             }
-            else {
-                // false : 선택되지 않음
-                // true : 선택됨
-                boolean selected = mSelectedItems.get(holder.getAdapterPosition());
-
-                // Basic_Mode였다면 SelectedMode
-                // Selected_Mode라면 아무일도 일어나지 않도록
-
-                if (selected) {
-                    // 선택된 상태라면 선택 해제
-                    mSelectedItems.put(holder.getAdapterPosition(), false);
-                    holder.llFolder.setBackgroundColor(Color.WHITE);
-
-                    // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
-                    mSelectedPositions.remove(holder.getAdapterPosition());
-                    if(mSelectedPositions.size() == 0){
-                        mCallback.onSetMode(Mode.BASIC_MODE);
-                    }
-                } else {
-                    // 선택되지 않은 상태라면 선택
-                    mSelectedItems.put(holder.getAdapterPosition(), true);
-                    holder.llFolder.setBackgroundColor(Color.GRAY);
-
-                    mSelectedPositions.add(holder.getAdapterPosition());
-                    mCallback.onSetMode(Mode.SELECTED_MODE);
-                }
-                mCallback.onShowBottomLayout();
-
-
+            else { // basic_mode, selected_mode
+                fileSelected(holder, holder.getAdapterPosition());
 
             }
             return true;
@@ -121,29 +142,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 }
             }
             else if(mCallback.onGetMode() == Mode.SELECTED_MODE){
-                // false : 선택되지 않음
-                // true : 선택됨
-                boolean selected = mSelectedItems.get(holder.getAdapterPosition());
-
-                if (selected) {
-                    // 선택된 상태라면 선택 해제
-                    mSelectedItems.put(holder.getAdapterPosition(), false);
-                    holder.llFolder.setBackgroundColor(Color.WHITE);
-
-                    // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
-                    mSelectedPositions.remove(holder.getAdapterPosition());
-                    if(mSelectedPositions.size() == 0){
-                        mCallback.onSetMode(Mode.BASIC_MODE);
-                    }
-                } else {
-                    // 선택되지 않은 상태라면 선택
-                    mSelectedItems.put(holder.getAdapterPosition(), true);
-                    holder.llFolder.setBackgroundColor(Color.GRAY);
-
-                    mSelectedPositions.add(holder.getAdapterPosition());
-                    mCallback.onSetMode(Mode.SELECTED_MODE);
-                }
-                mCallback.onShowBottomLayout();
+                fileSelected(holder, holder.getAdapterPosition());
             }
 
         });
@@ -161,8 +160,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         LinearLayout llFolder;
 
         // bottom layout
-
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             llFolder = itemView.findViewById(R.id.llFolder);
