@@ -78,8 +78,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick
 //            llBottomManageLayout.setVisibility(View.VISIBLE);
             cdBottomSheet.setVisibility(View.VISIBLE);
         } else {
-//            llBottomManageLayout.setVisibility(View.INVISIBLE);
-            cdBottomSheet.setVisibility(View.INVISIBLE);
+//            llBottomManageLayout.setVisibility(View.GONE);
+            cdBottomSheet.setVisibility(View.GONE);
         }
     }
 
