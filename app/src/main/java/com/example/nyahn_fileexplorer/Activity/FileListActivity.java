@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nyahn_fileexplorer.FileListAdapter;
+import com.example.nyahn_fileexplorer.Adapter.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
 import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.OnItemClick;
@@ -28,6 +28,8 @@ import java.util.ArrayList;
 
 public class FileListActivity extends AppCompatActivity implements OnItemClick, OnFileManage
 {
+    private static final String TAG = FileListActivity.class.getSimpleName();
+
     private Mode presentMode = Mode.BASIC_MODE;
     // 현재 파일
     private File file;
@@ -120,7 +122,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         init();
         // External Storage
 //        rootMainDir = Environment.getExternalStorageDirectory().toString();
-        Log.i("FileList : ", rootMainDir);
+        Log.d(TAG, "FileList : "+ rootMainDir);
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootMainDir);

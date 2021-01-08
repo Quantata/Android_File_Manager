@@ -2,7 +2,6 @@ package com.example.nyahn_fileexplorer.Utils;
 
 import android.util.Log;
 
-import com.example.nyahn_fileexplorer.FileListAdapter;
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
 
@@ -16,6 +15,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class FileManage {
+    private static final String TAG = FileManage.class.getSimpleName();
+
     Mode mode = Mode.COPY_MODE;
     // 현재 fileDataList
     ArrayList<FileData> selectedDataList;
@@ -28,18 +29,20 @@ public class FileManage {
         // 선택된 파일의 파일 리스트
         File[] targetFiles = sourceFile.listFiles();
 
-        // 빈 폴더 또는 파일일때
+        // 붙여넣기할 곳이 빈 폴더 또는 파일일때
         if(targetFiles != null && targetFiles.length == 0){
             File newFile = new File(targetFile, sourceFile.getName());
-            if(targetFile.canWrite()) {
-                newFile.mkdir();
-            }
+            Log.d(TAG, "만들어지므");
         }
         else {
             // 선택된 파일들의 파일 하나하나 꺼내기
             for (File file : targetFiles) {
+                // TODO: file.exists()를 통해 같은 이름을 갖고 있는 폴더 있을 경우 처리
+
+
                 // 옮길 곳의 파일 객체 만듦
                 File temp = new File(targetFile.getPath());
+
                 // 선택된 파일이 디렉토리라면
                 if (file.isDirectory()) {
                     // 옮길 곳에 디렉토리 하나 만들고
@@ -79,17 +82,18 @@ public class FileManage {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         this.selectedDataList = selectedDataList;
+
         for (FileData fileData : selectedDataList) {
             File file = fileData.getFile();
             // 폴더 일때 recursive
             if (file.isDirectory()) {    // 디렉토리 이면
-                File directory = new File(file.getParent(), file.getName());
-                File[] files = directory.listFiles();
-                ArrayList<FileData> fileDatas = new ArrayList<>();
-                for (File tempFile : files) {
-                    fileData.setFile(tempFile);
-                }
-                copyFile(fileDatas, directory.getPath());
+//                File directory = new File(file.getParent(), file.getName());
+//                File[] files = directory.listFiles();
+//                ArrayList<FileData> fileDatas = new ArrayList<>();
+//                for (File tempFile : files) {
+//                    fileData.setFile(tempFile);
+//                }
+//                copyFile(fileDatas, directory.getPath());
             }else{ // 파일 일때 그냥 붙여 넣기
                 System.out.println("파일일때 그냥 붙여넣기");
                 try {
@@ -113,7 +117,7 @@ public class FileManage {
                     outputStream = null;
 
                 } catch (FileNotFoundException e) {
-                    Log.i("ManageFile", "inputStream" + e);
+                    Log.d(TAG, "inputStream" + e);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
