@@ -158,7 +158,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
                 File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
 
-                Log.d(TAG, "FileList : " + clickedFile.isFile());
+                Log.d(TAG, "LongClicked isFile : " + clickedFile.isFile());
 
                 // 디렉토리일때
                 if (clickedFile.isDirectory()) {

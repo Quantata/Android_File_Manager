@@ -5,6 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:elevation="5dp"
-    app:titleTextColor="?android:attr/textColor">
+    app:titleTextColor="@color/black">
 
 </androidx.appcompat.widget.Toolbar>

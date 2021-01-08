@@ -1,6 +1,9 @@
 package com.example.nyahn_fileexplorer.Utils;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
@@ -12,7 +15,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileManage {
     private static final String TAG = FileManage.class.getSimpleName();
@@ -21,61 +30,86 @@ public class FileManage {
     // 현재 fileDataList
     ArrayList<FileData> selectedDataList;
 
-    // fileList 받고 삭제해서 돌려주기
-    // 호출한 곳에서 setAdapter, notifyChanged
-
-    // 하나의 copyFile 복사
     public void copy(File sourceFile, File targetFile) {
         // 선택된 파일의 파일 리스트
-        File[] targetFiles = sourceFile.listFiles();
+        File[] sourceFiles = sourceFile.listFiles();
 
-        // 붙여넣기할 곳이 빈 폴더 또는 파일일때
-        if(targetFiles != null && targetFiles.length == 0){
+        // 선택된 파일이 빈 폴더 또는 파일일때 - 완료
+        if(sourceFiles != null && sourceFiles.length == 0){
+            // Oreo 이상만 가능
             File newFile = new File(targetFile, sourceFile.getName());
-            Log.d(TAG, "만들어지므");
+
+            if(!newFile.exists()){
+                try {
+                    // java NIO
+//                     File.copy(복사할 파일의 Path, 복사할 곳의 Path)
+                    Files.copy(sourceFile.toPath(),
+                            newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e){
+
+                    Log.d(TAG, "Excpetion = " + e);
+                }
+
+            }
+            Log.d(TAG, "newFile = " + newFile.getPath());
+
         }
         else {
             // 선택된 파일들의 파일 하나하나 꺼내기
-            for (File file : targetFiles) {
+            for (File file : sourceFiles) {
                 // TODO: file.exists()를 통해 같은 이름을 갖고 있는 폴더 있을 경우 처리
 
-
                 // 옮길 곳의 파일 객체 만듦
-                File temp = new File(targetFile.getPath());
+                File newTargetFile = new File(targetFile.getPath(), file.getName());
 
                 // 선택된 파일이 디렉토리라면
                 if (file.isDirectory()) {
-                    // 옮길 곳에 디렉토리 하나 만들고
-                    temp.mkdir();
-                    // 복사할거 recursive
-                    copy(file, temp);
-                } else {
-                    FileInputStream fis = null;
-                    FileOutputStream fos = null;
                     try {
-                        fis = new FileInputStream(file);
-                        fos = new FileOutputStream(temp);
-                        byte[] b = new byte[4096];
-                        int cnt = 0;
-                        while ((cnt = fis.read(b)) != -1) {
-                            fos.write(b, 0, cnt);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            fis.close();
-                            fos.close();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+                        // 옮길 곳에 디렉토리 하나 만들고
+                        Files.createDirectory(newTargetFile.toPath());
+//                        Files.copy(sourceFile.toPath(),
+//                                temp.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                        // 복사할거 recursive
+                        copy(file, newTargetFile);
+                    } catch (IOException e){
+                        Log.d(TAG, "Excpetion = " + e);
+                    }
+
+                } else {
+                    try {
+                        // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
+                        Files.copy(file.toPath(),
+                                newTargetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e){
+                        Log.d(TAG, "Excpetion = " + e);
                     }
                 }
+//                    FileInputStream fis = null;
+//                    FileOutputStream fos = null;
+//                    try {
+//                        fis = new FileInputStream(file);
+//                        fos = new FileOutputStream(temp);
+//                        byte[] b = new byte[4096];
+//                        int cnt = 0;
+//                        while ((cnt = fis.read(b)) != -1) {
+//                            fos.write(b, 0, cnt);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    } finally {
+//                        try {
+//                            fis.close();
+//                            fos.close();
+//                        } catch (IOException e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             }
         }
     }
-
+/*
     // 복사될 파일 리스트
     // 여러개 선택된 파일들 복사할 때
     public void copyFile(ArrayList<FileData> selectedDataList, String outputPath) {
@@ -126,7 +160,7 @@ public class FileManage {
 
         }
     }
-
+*/
 
     // file 이동
 //    public void moveFile(ArrayList<FileData> fileData, Mode mode){

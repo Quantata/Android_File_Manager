@@ -50,11 +50,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private LinearLayout cdBottomSheet;
     private LinearLayout llBottomManageLayout;
     private LinearLayout llBottomMoveLayout;
-    private LinearLayout llFileCopy;
-    private LinearLayout llFileMove;
-    private LinearLayout llFileRename;
-    private LinearLayout llFileDelete;
-    private LinearLayout llFileInfo;
+//    private LinearLayout llFileCopy;
+//    private LinearLayout llFileMove;
+//    private LinearLayout llFileRename;
+//    private LinearLayout llFileDelete;
+//    private LinearLayout llFileInfo;
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -122,7 +122,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         init();
         // External Storage
 //        rootMainDir = Environment.getExternalStorageDirectory().toString();
-        Log.d(TAG, "FileList : "+ rootMainDir);
+        Log.d(TAG, "RootDirectory = "+ rootMainDir);
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootMainDir);
@@ -145,11 +145,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         cdBottomSheet = findViewById(R.id.cdBottomSheet);
         llBottomManageLayout = findViewById(R.id.llBottomManageLayout);
         llBottomMoveLayout = findViewById(R.id.llBottomMoveLayout);
-        llFileCopy = findViewById(R.id.llFileCopy);
-        llFileMove = findViewById(R.id.llFileMove);
-        llFileRename = findViewById(R.id.llFileRename);
-        llFileDelete = findViewById(R.id.llFileDelete);
-        llFileInfo = findViewById(R.id.llFileInfo);
+//        llFileCopy = findViewById(R.id.llFileCopy);
+//        llFileMove = findViewById(R.id.llFileMove);
+//        llFileRename = findViewById(R.id.llFileRename);
+//        llFileDelete = findViewById(R.id.llFileDelete);
+//        llFileInfo = findViewById(R.id.llFileInfo);
 
     }
 
@@ -250,6 +250,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         if(list != null && list.length > 0) {
             flEmptyLayout.setVisibility(View.INVISIBLE);
+            fileList.clear();
             for (File value : list) {
                 FileData fileData = new FileData();
                 fileData.setFile(value);
@@ -265,7 +266,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     // fileList를 매개변수로 받았을시 목록 변경
-    public void showFileList(ArrayList<FileData> fileList){
+    public void showAfterMoveFileList(ArrayList<FileData> fileList){
         this.fileList = fileList;
 //        File[] list = parentFile.listFiles();
 //
