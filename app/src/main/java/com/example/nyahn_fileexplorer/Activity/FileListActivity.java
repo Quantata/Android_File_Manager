@@ -250,6 +250,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         if(list != null && list.length > 0) {
             flEmptyLayout.setVisibility(View.INVISIBLE);
+            // 붙여넣기시 기존 파일 + 붙여넣기 안되는 문제 해결
             fileList.clear();
             for (File value : list) {
                 FileData fileData = new FileData();
