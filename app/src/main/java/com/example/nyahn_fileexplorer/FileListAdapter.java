@@ -22,10 +22,8 @@ import java.util.HashSet;
 
 //  Adapter에서 MOVE_MODE = MOVE_MODE, COPY_MODE
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
-    // 선택됐는지 확인하기 위한 Array
+    // 현재 List의 파일들이 선택됐는지 확인하기 위한 Array
     private HashSet<Integer> selectedPositions = new HashSet<>();
-    // 복사, 이동 후 다른 폴더 들어갈 때 복사된 파일 Path의 fileList가 clear되지 않도록
-    private ArrayList<FileData> sourceFileDataList = new ArrayList<>();
 
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
@@ -36,11 +34,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         this.mCallback = listener;
     }
 
-    // 선택된 파일이 있는 곳의 fileList 저장
-    public void setSourceFileDataList(){
-//        this.sourceFileDataList = fileDataList;
-        sourceFileDataList.addAll(fileDataList);
-    }
+
 
     // 선택된 파일 List
     public ArrayList<FileData> getSelectedFileList(){
@@ -57,12 +51,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     // 파일 선택 해제
     public void setClearSelectedFileList(){
         for(int i : selectedPositions) {
-            sourceFileDataList.get(i).setSelected(false);
+            fileDataList.get(i).setSelected(false);
             notifyItemChanged(i);
         }
 
         selectedPositions.clear();  // 선택된 파일 위치 리스트 삭제
-        sourceFileDataList.clear(); // 선택된 파일의 파일리스트 삭제
     }
 
     @NonNull
@@ -106,6 +99,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         mCallback.onShowBottomLayout();
     }
 
+    // move모드일때
     public void fileSelectedMoveMode(ViewHolder holder, int position){
         fileDataList.get(position).setSelected(true);
         holder.llFolder.setBackgroundColor(Color.GRAY);
@@ -162,6 +156,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                 Log.i("FileList : ", "" + clickedFile.isFile());
 
+                // 디렉토리일때
                 if (clickedFile.isDirectory()) {
                     mCallback.onSetParentFile(clickedFile);
                     fileDataList.clear();
@@ -169,6 +164,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                     notifyDataSetChanged();
                 }
+                /*
+                    TODO: 일반 파일일때 구현
+
+                else {
+
+                }
+                */
             }
             else if(mCallback.onGetMode() == Mode.SELECTED_MODE){
                 fileSelected(holder, holder.getAdapterPosition());

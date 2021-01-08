@@ -28,37 +28,43 @@ public class FileManage {
         // 선택된 파일의 파일 리스트
         File[] targetFiles = sourceFile.listFiles();
 
-        // 선택된 파일들의 파일 하나하나 꺼내기
-        for(File file : targetFiles) {
-            // 옮길 곳의 파일 객체 만듦
-            File temp = new File(targetFile.getPath());
-            // 선택된 파일이 디렉토리라면
-            if(file.isDirectory()) {
-                // 옮길 곳에 디렉토리 하나 만들고
-                temp.mkdir();
-                // 복사할거 recursive
-                copy(file, temp);
-            }
-            else {
-                FileInputStream fis = null;
-                FileOutputStream fos = null;
-                try {
-                    fis = new FileInputStream(file);
-                    fos = new FileOutputStream(temp) ;
-                    byte[] b = new byte[4096];
-                    int cnt = 0;
-                    while((cnt=fis.read(b)) != -1){
-                        fos.write(b, 0, cnt);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally{
+        // 빈 폴더 또는 파일일때
+        if(targetFiles != null && targetFiles.length == 0){
+            File newFile = new File(targetFile, sourceFile.getName());
+            newFile.mkdir();
+        }
+        else {
+            // 선택된 파일들의 파일 하나하나 꺼내기
+            for (File file : targetFiles) {
+                // 옮길 곳의 파일 객체 만듦
+                File temp = new File(targetFile.getPath());
+                // 선택된 파일이 디렉토리라면
+                if (file.isDirectory()) {
+                    // 옮길 곳에 디렉토리 하나 만들고
+                    temp.mkdir();
+                    // 복사할거 recursive
+                    copy(file, temp);
+                } else {
+                    FileInputStream fis = null;
+                    FileOutputStream fos = null;
                     try {
-                        fis.close();
-                        fos.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
+                        fis = new FileInputStream(file);
+                        fos = new FileOutputStream(temp);
+                        byte[] b = new byte[4096];
+                        int cnt = 0;
+                        while ((cnt = fis.read(b)) != -1) {
+                            fos.write(b, 0, cnt);
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
+                    } finally {
+                        try {
+                            fis.close();
+                            fos.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

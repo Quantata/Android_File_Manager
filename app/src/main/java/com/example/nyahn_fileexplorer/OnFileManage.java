@@ -1,4 +1,4 @@
 package com.example.nyahn_fileexplorer;
 
-public interface OnManageFile {
+public interface OnFileManage {
 }

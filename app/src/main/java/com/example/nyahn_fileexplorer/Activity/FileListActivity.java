@@ -18,7 +18,7 @@ import com.example.nyahn_fileexplorer.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
 import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.OnItemClick;
-import com.example.nyahn_fileexplorer.OnManageFile;
+import com.example.nyahn_fileexplorer.OnFileManage;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
@@ -26,7 +26,7 @@ import com.example.nyahn_fileexplorer.Models.FileData;
 import java.io.File;
 import java.util.ArrayList;
 
-public class FileListActivity extends AppCompatActivity implements OnItemClick, OnManageFile
+public class FileListActivity extends AppCompatActivity implements OnItemClick, OnFileManage
 {
     private Mode presentMode = Mode.BASIC_MODE;
     // 현재 파일
@@ -35,6 +35,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private ArrayList<FileData> fileList;
     // File 기능
     private FileManage fileManage;
+    // 선택된 파일 리스트
+    private ArrayList<FileData> selectedFileDataList;
+    // 선택된 파일 Position
 
     private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
 
@@ -158,7 +161,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // COPY_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.COPY_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
-                fileListAdapter.setSourceFileDataList();
+                // 선택된 파일(들)이 있는 경로의 파일 목록
+                selectedFileDataList = fileListAdapter.getSelectedFileList();
+
                 // 현재 선택된 파일 복사하는 로직
                 // 현재 선택된 FileList와 현재 이동된 file Path
 //                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
@@ -204,7 +209,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
-                fileManage.pasteFile(presentMode, fileListAdapter.getSelectedFileList(), file);
+                fileManage.pasteFile(presentMode, selectedFileDataList, file);
+                selectedFileDataList.clear();
+                fileListAdapter.notifyDataSetChanged();
+                
+                // 붙여넣기 끝난 후 Basic_Mode로 변경
+                presentMode = Mode.BASIC_MODE;
+                onShowBottomLayout();
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
             default:
@@ -270,4 +281,5 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         recyclerView.setAdapter(fileListAdapter);
         fileListAdapter.notifyDataSetChanged();
     }
+
 }
