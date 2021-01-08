@@ -195,7 +195,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             case R.id.llCancel:
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
-
+                // 선택 해제
+                fileListAdapter.setClearSelectedFileList();
                 Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show();
                 // Basic 모드로 바꾸고
                 // showBottom 호출하면 됨.

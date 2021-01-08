@@ -46,6 +46,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
     }
 
+    // 파일 선택 해제
+    public void setClearSelectedFileList(){
+        for(int i : mSelectedPositions) {
+            fileDataList.get(i).setSelected(false);
+            notifyItemChanged(i);
+        }
+        mSelectedPositions.clear();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -118,11 +127,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
             if(mCallback.onGetMode() == Mode.MOVE_MODE){ // move mode였을때
-                for(int i : mSelectedPositions) {
-                    fileDataList.get(i).setSelected(false);
-                    notifyItemChanged(i);
-                }
-                mSelectedPositions.clear();
+                // 선택된 파일 리스트 해제하는 함수
+                setClearSelectedFileList();
 
                 // 선택된 부분 click
                 fileSelectedMoveMode(holder, holder.getAdapterPosition());
