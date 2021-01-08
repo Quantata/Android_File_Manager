@@ -31,7 +31,9 @@ public class FileManage {
         // 빈 폴더 또는 파일일때
         if(targetFiles != null && targetFiles.length == 0){
             File newFile = new File(targetFile, sourceFile.getName());
-            newFile.mkdir();
+            if(targetFile.canWrite()) {
+                newFile.mkdir();
+            }
         }
         else {
             // 선택된 파일들의 파일 하나하나 꺼내기

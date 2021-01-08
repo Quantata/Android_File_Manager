@@ -211,8 +211,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
                 fileManage.pasteFile(presentMode, selectedFileDataList, file);
                 selectedFileDataList.clear();
-                fileListAdapter.notifyDataSetChanged();
-                
+                // 복사된 파일 List 보여주기
+                showFileList(file);
+
                 // 붙여넣기 끝난 후 Basic_Mode로 변경
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
