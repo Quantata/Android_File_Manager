@@ -20,7 +20,7 @@ import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.OnItemClick;
 import com.example.nyahn_fileexplorer.OnManageFile;
 import com.example.nyahn_fileexplorer.R;
-import com.example.nyahn_fileexplorer.Utils.ManageFile;
+import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 현재 파일이 갖고 있는 파일 목록
     private ArrayList<FileData> fileList;
     // File 기능
-    private ManageFile manageFile;
+    private FileManage fileManage;
 
     private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
 
@@ -129,7 +129,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     public void init(){
-        manageFile = new ManageFile();
+        fileManage = new FileManage();
 
         flEmptyLayout = findViewById(R.id.flEmptyLayout);
         // RecyclerView 초기화
@@ -158,6 +158,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // COPY_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.COPY_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
+                fileListAdapter.setSourceFileDataList();
                 // 현재 선택된 파일 복사하는 로직
                 // 현재 선택된 FileList와 현재 이동된 file Path
 //                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
@@ -203,7 +204,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
-                manageFile.pasteFile(presentMode, fileListAdapter.getSelectedFileList(), file);
+                fileManage.pasteFile(presentMode, fileListAdapter.getSelectedFileList(), file);
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
             default:

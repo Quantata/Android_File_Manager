@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class ManageFile {
+public class FileManage {
     Mode mode = Mode.COPY_MODE;
     // 현재 fileDataList
     ArrayList<FileData> selectedDataList;

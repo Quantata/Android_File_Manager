@@ -23,7 +23,9 @@ import java.util.HashSet;
 //  Adapter에서 MOVE_MODE = MOVE_MODE, COPY_MODE
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     // 선택됐는지 확인하기 위한 Array
-    private HashSet<Integer> mSelectedPositions = new HashSet<>();
+    private HashSet<Integer> selectedPositions = new HashSet<>();
+    // 복사, 이동 후 다른 폴더 들어갈 때 복사된 파일 Path의 fileList가 clear되지 않도록
+    private ArrayList<FileData> sourceFileDataList = new ArrayList<>();
 
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
@@ -34,11 +36,17 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         this.mCallback = listener;
     }
 
+    // 선택된 파일이 있는 곳의 fileList 저장
+    public void setSourceFileDataList(){
+//        this.sourceFileDataList = fileDataList;
+        sourceFileDataList.addAll(fileDataList);
+    }
+
     // 선택된 파일 List
     public ArrayList<FileData> getSelectedFileList(){
         ArrayList<FileData> selectedList = new ArrayList<>();
-        if(mSelectedPositions.size() != 0) {
-            for (int selected : mSelectedPositions) {
+        if(selectedPositions.size() != 0) {
+            for (int selected : selectedPositions) {
                 FileData fileData = fileDataList.get(selected);
                 selectedList.add(fileData);
             }
@@ -48,11 +56,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     // 파일 선택 해제
     public void setClearSelectedFileList(){
-        for(int i : mSelectedPositions) {
-            fileDataList.get(i).setSelected(false);
+        for(int i : selectedPositions) {
+            sourceFileDataList.get(i).setSelected(false);
             notifyItemChanged(i);
         }
-        mSelectedPositions.clear();
+
+        selectedPositions.clear();  // 선택된 파일 위치 리스트 삭제
+        sourceFileDataList.clear(); // 선택된 파일의 파일리스트 삭제
     }
 
     @NonNull
@@ -81,8 +91,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             holder.llFolder.setBackgroundColor(Color.WHITE);
 
             // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
-            mSelectedPositions.remove(position);
-            if(mSelectedPositions.size() == 0){
+            selectedPositions.remove(position);
+            if(selectedPositions.size() == 0){
                 mCallback.onSetMode(Mode.BASIC_MODE);
             }
         } else {
@@ -90,7 +100,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             fileDataList.get(position).setSelected(true);
             holder.llFolder.setBackgroundColor(Color.GRAY);
 
-            mSelectedPositions.add(position);
+            selectedPositions.add(position);
             mCallback.onSetMode(Mode.SELECTED_MODE);
         }
         mCallback.onShowBottomLayout();
@@ -100,7 +110,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         fileDataList.get(position).setSelected(true);
         holder.llFolder.setBackgroundColor(Color.GRAY);
 
-        mSelectedPositions.add(position);
+        selectedPositions.add(position);
         mCallback.onSetMode(Mode.SELECTED_MODE);
 
         mCallback.onShowBottomLayout();
@@ -144,7 +154,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         holder.llFolder.setOnClickListener(v ->
         {
             if(mCallback.onGetMode() == Mode.BASIC_MODE ||
-                mCallback.onGetMode() == Mode.MOVE_MODE){
+                mCallback.onGetMode() == Mode.MOVE_MODE ||
+                mCallback.onGetMode() == Mode.COPY_MODE){
                 File file = mCallback.onGetParentFile();
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
                 File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
