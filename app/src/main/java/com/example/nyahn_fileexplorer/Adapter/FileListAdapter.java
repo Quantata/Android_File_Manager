@@ -37,34 +37,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         this.fileDataList = files;
         this.mCallback = listener;
     }
-    public void fileSelected(@NonNull ViewHolder holder, int position){
-        // false : 선택되지 않음
-        // true : 선택됨
-
-        boolean selected = fileDataList.get(position).isSelected();
-
-        // Basic_Mode였다면 SelectedMode
-        // Selected_Mode라면 아무일도 일어나지 않도록
-        if (selected) {
-            // 선택된 상태라면 선택 해제
-            fileDataList.get(position).setSelected(false);
-            holder.llFolder.setBackgroundColor(Color.WHITE);
-
-            // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
-            selectedPositions.remove(position);
-            if(selectedPositions.size() == 0){
-                mCallback.onSetMode(Mode.BASIC_MODE);
-            }
-        } else {
-            // 선택되지 않은 상태라면 선택
-            fileDataList.get(position).setSelected(true);
-            holder.llFolder.setBackgroundColor(Color.GRAY);
-
-            selectedPositions.add(position);
-            mCallback.onSetMode(Mode.SELECTED_MODE);
-        }
-        mCallback.onShowBottomLayout();
-    }
 
     // move모드일때
     public void fileSelectedMoveMode(ViewHolder holder, int position){
@@ -99,6 +71,35 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         selectedPositions.clear();  // 선택된 파일 위치 리스트 삭제
     }
 
+    // 파일 선택 로직
+    public void fileSelected(@NonNull ViewHolder holder, int position){
+        // false : 선택되지 않음
+        // true : 선택됨
+
+        boolean selected = fileDataList.get(position).isSelected();
+
+        // Basic_Mode였다면 SelectedMode
+        // Selected_Mode라면 아무일도 일어나지 않도록
+        if (selected) {
+            // 선택된 상태라면 선택 해제
+            fileDataList.get(position).setSelected(false);
+            holder.llFolder.setBackgroundColor(Color.WHITE);
+
+            // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
+            selectedPositions.remove(position);
+            if(selectedPositions.size() == 0){
+                mCallback.onSetMode(Mode.BASIC_MODE);
+            }
+        } else {
+            // 선택되지 않은 상태라면 선택
+            fileDataList.get(position).setSelected(true);
+            holder.llFolder.setBackgroundColor(Color.GRAY);
+
+            selectedPositions.add(position);
+            mCallback.onSetMode(Mode.SELECTED_MODE);
+        }
+        mCallback.onShowBottomLayout();
+    }
 
     @NonNull
     @Override
