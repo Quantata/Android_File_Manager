@@ -266,25 +266,4 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         fileListAdapter.notifyDataSetChanged();
     }
 
-    // fileList를 매개변수로 받았을시 목록 변경
-    public void showAfterMoveFileList(ArrayList<FileData> fileList){
-        this.fileList = fileList;
-//        File[] list = parentFile.listFiles();
-//
-//        if(list != null && list.length > 0) {
-//            flEmptyLayout.setVisibility(View.INVISIBLE);
-//            for (File value : list) {
-//                FileData fileData = new FileData();
-//                fileData.setFile(value);
-//                fileList.add(fileData);
-//            }
-//        } else {
-//            flEmptyLayout.setVisibility(View.VISIBLE);
-//        }
-
-        fileListAdapter = new FileListAdapter(fileList, this);
-        recyclerView.setAdapter(fileListAdapter);
-        fileListAdapter.notifyDataSetChanged();
-    }
-
 }
