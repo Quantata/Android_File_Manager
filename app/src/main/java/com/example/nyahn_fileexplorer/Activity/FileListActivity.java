@@ -122,21 +122,22 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Bundle bundle = intent.getExtras();
 
         String storage = bundle.getString("STORAGE");
-        if ("MAIN".equals(storage)){
-            rootDir = Environment.getExternalStorageDirectory().toString();
-        } else {
-            File sdcard = null;
-            File file = new File(Environment.getStorageDirectory().getPath());
-            File[] list = file.listFiles();
-
-            // sdcard 이름에 (-)이 포함되어 있음.
-            for(File el : list){
-                if(el.getName().contains("-")){
-                    sdcard = el;
-                }
-            }
-            rootDir = sdcard.getPath();
-        }
+        rootDir = storage;
+//        if ("MAIN".equals(storage)){
+//            rootDir = Environment.getExternalStorageDirectory().toString();
+//        } else {
+//            File sdcard = null;
+//            File file = new File(Environment.getStorageDirectory().getPath());
+//            File[] list = file.listFiles();
+//
+//            // sdcard 이름에 (-)이 포함되어 있음.
+//            for(File el : list){
+//                if(el.getName().contains("-")){
+//                    sdcard = el;
+//                }
+//            }
+//            rootDir = sdcard.getPath();
+//        }
 
         setToolbarTitle();
         init();
