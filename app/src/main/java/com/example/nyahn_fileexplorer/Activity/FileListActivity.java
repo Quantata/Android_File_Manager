@@ -41,8 +41,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private ArrayList<FileData> selectedFileDataList;
     // 선택된 파일 Position
 
-    private final String rootMainDir = Environment.getExternalStorageDirectory().toString();
-
+    private String rootDir = "";
     private RecyclerView recyclerView;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
@@ -118,14 +117,33 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_list);
 
+        // storage 종류 판별
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        String storage = bundle.getString("STORAGE");
+        if ("MAIN".equals(storage)){
+            rootDir = Environment.getExternalStorageDirectory().toString();
+        } else {
+            File sdcard = null;
+            File file = new File(Environment.getStorageDirectory().getPath());
+            File[] list = file.listFiles();
+            for(File el : list){
+                if(el.getName().contains("-")){
+                    sdcard = el;
+                }
+            }
+            rootDir = sdcard.getPath();
+        }
+
         setToolbarTitle();
         init();
         // External Storage
 //        rootMainDir = Environment.getExternalStorageDirectory().toString();
-        Log.d(TAG, "RootDirectory = "+ rootMainDir);
+        Log.d(TAG, "RootDirectory = "+ rootDir);
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
-        file = new File(rootMainDir);
+        file = new File(rootDir);
         showFileList(file);
 
         fileListAdapter = new FileListAdapter(fileList, this);
@@ -229,7 +247,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     @Override
     public void onBackPressed() {
         // 현재 파일의 부모 경로
-        if(rootMainDir.equals(file.getPath())){
+        if(rootDir.equals(file.getPath())){
             startActivity(new Intent(FileListActivity.this, MainActivity.class));
             finish();
         }

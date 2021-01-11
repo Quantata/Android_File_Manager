@@ -50,6 +50,8 @@ public class FileManage {
                             copy(file, newDirectory);
                         }
                     }
+                } else { // 같은 이름 Directory가 이미 조재할 때
+                    // if(Dialog 결과값: 덮어쓰기 == true) { 기존 directory삭제 및 다시 copy 진행 } else { move로 이름 바꿔서 진행 }
                 }
 
             } catch (IOException e) {
@@ -63,14 +65,16 @@ public class FileManage {
                 try {
                     // java NIO
                     // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
-                    // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기
+                    // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
                     Files.copy(sourceFile.toPath(),
-                            newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
                 } catch (IOException e){
 
                     Log.d(TAG, "Excpetion = " + e);
                 }
 
+            } else {    // 덮어쓰기 또는 이름 변경, 건너뛰기 alert 띄우기
+                // if (다이얼로그 결과: 덮어쓰기 == true) { replacing } else { move, rename }
             }
             Log.d(TAG, "newFile = " + newFile.getPath());
         }

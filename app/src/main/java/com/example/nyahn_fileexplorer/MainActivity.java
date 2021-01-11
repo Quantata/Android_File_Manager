@@ -56,10 +56,23 @@ public class MainActivity extends AppCompatActivity {
     public void initClick(){
 //        llextraStorage.setOnClickListener(view ->
 //                new Intent(MainActivity.this, DirectoryActivity.class));
+        Intent intent;
+        Bundle bundle = new Bundle();
+        intent = new Intent(MainActivity.this, FileListActivity.class);
+
         llMainStorage.setOnClickListener(view ->{
-                    startActivity(new Intent(MainActivity.this, FileListActivity.class));
-                    finish();
-                });
+            bundle.putString("STORAGE", "MAIN");
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        });
+
+        llSdcardStorage.setOnClickListener(v -> {
+            bundle.putString("STORAGE", "SD_CARD");
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        });
 
 //        llInnerStorage.setOnClickListener(new View.OnClickListener() {
 //            @Override
