@@ -6,6 +6,7 @@ import java.io.File;
 
 public interface OnItemClick {
 //    void onBackClick(File clickedFile);
+    void onSetToolbarTitle(String title);
     File onGetParentFile();
     void onSetParentFile(File file);
     void onSetFileList(File file);

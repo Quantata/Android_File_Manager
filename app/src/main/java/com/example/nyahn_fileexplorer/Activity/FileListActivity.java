@@ -41,6 +41,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private ArrayList<FileData> selectedFileDataList;
     // 선택된 파일 Position
 
+    Toolbar toolbar;
+
     private String rootDir = "";
     private RecyclerView recyclerView;
     private FileListAdapter fileListAdapter;
@@ -60,9 +62,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private void setToolbarTitle(){
         // toolbar as actionbar
         // setting toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.main_storage);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void onSetToolbarTitle(String title) {
+        toolbar.setTitle(title);
     }
 
     @Override
@@ -258,6 +265,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             String parent = file.getParent();
             if(parent != null)
                 file = new File(file.getParent());
+
+            // toolbar title 변경
+            if(rootDir.equals(file.getPath()))
+                toolbar.setTitle(R.string.main_storage);
+            else
+                toolbar.setTitle(file.getName());
 
             // 기존 list 삭제
             fileList.clear();

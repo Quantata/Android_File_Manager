@@ -157,6 +157,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             if(mCallback.onGetMode() == Mode.BASIC_MODE ||
                 mCallback.onGetMode() == Mode.MOVE_MODE ||
                 mCallback.onGetMode() == Mode.COPY_MODE){
+
                 File file = mCallback.onGetParentFile();
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
                 File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
@@ -170,6 +171,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                     mCallback.onSetFileList(clickedFile);
 
                     notifyDataSetChanged();
+
+                    // toolbar title 변경
+                    mCallback.onSetToolbarTitle(clickedFile.getName());
                 }
                 /*
                     TODO: 일반 파일일때 구현
