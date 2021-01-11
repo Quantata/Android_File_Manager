@@ -128,6 +128,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             File sdcard = null;
             File file = new File(Environment.getStorageDirectory().getPath());
             File[] list = file.listFiles();
+
+            // sdcard 이름에 (-)이 포함되어 있음.
             for(File el : list){
                 if(el.getName().contains("-")){
                     sdcard = el;
@@ -146,7 +148,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         file = new File(rootDir);
         showFileList(file);
 
-        fileListAdapter = new FileListAdapter(fileList, this);
+        fileListAdapter = new FileListAdapter(this, fileList, this);
         recyclerView.setAdapter(fileListAdapter);
 
     }
@@ -279,7 +281,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             flEmptyLayout.setVisibility(View.VISIBLE);
         }
 
-        fileListAdapter = new FileListAdapter(fileList, this);
+        fileListAdapter = new FileListAdapter(this, fileList, this);
         recyclerView.setAdapter(fileListAdapter);
         fileListAdapter.notifyDataSetChanged();
     }

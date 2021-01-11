@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nyahn_fileexplorer.Models.FileData;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 
 //  Adapter에서 MOVE_MODE = MOVE_MODE, COPY_MODE
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
+    Context context;
     private static final String TAG = FileListAdapter.class.getSimpleName();
 
     // 현재 List의 파일들이 선택됐는지 확인하기 위한 Array
@@ -33,7 +35,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     private OnItemClick mCallback;
     private ArrayList<FileData> fileDataList;
 
-    public FileListAdapter(ArrayList<FileData> files, OnItemClick listener) {
+    public FileListAdapter(Context context, ArrayList<FileData> files, OnItemClick listener) {
+        this.context = context;
         this.fileDataList = files;
         this.mCallback = listener;
     }
@@ -41,7 +44,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     // move모드일때
     public void fileSelectedMoveMode(ViewHolder holder, int position){
         fileDataList.get(position).setSelected(true);
-        holder.llFolder.setBackgroundColor(Color.GRAY);
+        holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
 
         selectedPositions.add(position);
         mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -93,7 +96,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         } else {
             // 선택되지 않은 상태라면 선택
             fileDataList.get(position).setSelected(true);
-            holder.llFolder.setBackgroundColor(Color.GRAY);
+            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
 
             selectedPositions.add(position);
             mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -127,7 +130,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
         // Color 설정
         if(fileDataList.get(position).isSelected())
-            holder.llFolder.setBackgroundColor(Color.GRAY);
+            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
         else
             holder.llFolder.setBackgroundColor(Color.WHITE);
 
