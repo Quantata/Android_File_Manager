@@ -21,8 +21,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
 public class FileManage {
     private static final String TAG = FileManage.class.getSimpleName();
 
@@ -67,7 +65,7 @@ public class FileManage {
                     // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
                     // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
                     Files.copy(sourceFile.toPath(),
-                            newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
+                            newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e){
 
                     Log.d(TAG, "Excpetion = " + e);

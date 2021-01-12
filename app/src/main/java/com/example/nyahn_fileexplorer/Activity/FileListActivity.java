@@ -130,6 +130,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         String storage = bundle.getString("STORAGE");
         rootDir = storage;
+        Log.d(TAG, "RootDir = " + rootDir);
 //        if ("MAIN".equals(storage)){
 //            rootDir = Environment.getExternalStorageDirectory().toString();
 //        } else {

@@ -127,7 +127,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         }
         holder.tvFolderName.setText(fileDataList.get(position).getFile().getName());
 
-
         // Color 설정
         if(fileDataList.get(position).isSelected())
             holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
