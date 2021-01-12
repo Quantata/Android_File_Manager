@@ -126,13 +126,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     @Override
     public void onSetDirectoryList(String dirName, boolean add) {
-//        if(add)
-//            directoryList.add(dirName);
-//        else
-//            directoryList.remove(dirName);
-//
-//
-//        directoryListAdapter.notifyDataSetChanged();
+        if(add) {
+            directoryList.add(dirName);
+            Log.d(TAG, "directoryList size =" + directoryList.size());
+//            directoryListAdapter.notifyItemInserted(directoryList.size()-1);
+            directoryListAdapter.notifyDataSetChanged();
+        }
+        else {
+            directoryList.remove(dirName);
+            directoryListAdapter.notifyDataSetChanged();
+        }
+
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -181,8 +185,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         fileManage = new FileManage();
 
         rcDirectoryList = findViewById(R.id.rcDirectoryList);
-        rcDirectoryList.setLayoutManager(new LinearLayoutManager(this));
+        // for horizontal scroll
+        rcDirectoryList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         directoryList = new ArrayList<>();
+        directoryListAdapter = new DirectoryListAdapter(directoryList);
+        rcDirectoryList.setAdapter(directoryListAdapter);
 
         flEmptyLayout = findViewById(R.id.flEmptyLayout);
         // RecyclerView 초기화

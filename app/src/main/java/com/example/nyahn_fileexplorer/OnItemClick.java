@@ -6,6 +6,8 @@ import java.io.File;
 
 public interface OnItemClick {
 //    void onBackClick(File clickedFile);
+
+    // FileListAdapter.java
     void onSetToolbarTitle(String title);
     File onGetParentFile();
     void onSetParentFile(File file);
@@ -14,4 +16,6 @@ public interface OnItemClick {
     Mode onGetMode();
     void onSetMode(Mode mode);
     void onSetDirectoryList(String dirName, boolean add);
+
+    // DirectoryListAdapter.java
 }
