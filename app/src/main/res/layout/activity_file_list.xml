@@ -6,36 +6,59 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-        <include
-            layout="@layout/toolbar"
-            android:id="@+id/toolbar"/>
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
 
-        <RelativeLayout
+    <LinearLayout
+        android:id="@+id/llDirectory"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_below="@+id/toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:text="/"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcDirectoryList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:layout_above="@+id/cdBottomSheet">
+            android:layout_height="match_parent"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcFileList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    </LinearLayout>
 
-        </RelativeLayout>
-        <FrameLayout
-            android:id="@+id/flEmptyLayout"
-            android:layout_below="@+id/toolbar"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/llDirectory"
+        android:layout_above="@+id/cdBottomSheet">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcFileList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/empty_file_list"
-                android:textSize="20sp"
-                />
-        </FrameLayout>
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/flEmptyLayout"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/empty_file_list"
+            android:textSize="20sp"
+            />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/cdBottomSheet"

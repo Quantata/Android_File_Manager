@@ -2,7 +2,6 @@ package com.example.nyahn_fileexplorer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nyahn_fileexplorer.Adapter.DirectoryListAdapter;
 import com.example.nyahn_fileexplorer.Adapter.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
 import com.example.nyahn_fileexplorer.Models.Mode;
@@ -42,9 +42,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 선택된 파일 Position
 
     Toolbar toolbar;
+    RecyclerView rcDirectory; // 디렉토리 구조
+    // directory 구조 list
+    private ArrayList<String> directoryList;
+    DirectoryListAdapter directoryListAdapter;
+    private RecyclerView rcDirectoryList;
 
     private String rootDir = "";
-    private RecyclerView recyclerView;
+    private RecyclerView rcFileList;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
 
@@ -119,6 +124,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         presentMode = mode;
     }
 
+    @Override
+    public void onSetDirectoryList(String dirName, boolean add) {
+//        if(add)
+//            directoryList.add(dirName);
+//        else
+//            directoryList.remove(dirName);
+//
+//
+//        directoryListAdapter.notifyDataSetChanged();
+    }
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -155,20 +171,23 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootDir);
-        showFileList(file);
-
         fileListAdapter = new FileListAdapter(this, fileList, this);
-        recyclerView.setAdapter(fileListAdapter);
+        rcFileList.setAdapter(fileListAdapter);
 
+        showFileList(file);
     }
 
     public void init(){
         fileManage = new FileManage();
 
+        rcDirectoryList = findViewById(R.id.rcDirectoryList);
+        rcDirectoryList.setLayoutManager(new LinearLayoutManager(this));
+        directoryList = new ArrayList<>();
+
         flEmptyLayout = findViewById(R.id.flEmptyLayout);
         // RecyclerView 초기화
-        recyclerView = findViewById(R.id.rcFileList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        rcFileList = findViewById(R.id.rcFileList);
+        rcFileList.setLayoutManager(new LinearLayoutManager(this));
         fileList = new ArrayList<>();
 
         cdBottomSheet = findViewById(R.id.cdBottomSheet);
@@ -296,8 +315,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             flEmptyLayout.setVisibility(View.VISIBLE);
         }
 
-        fileListAdapter = new FileListAdapter(this, fileList, this);
-        recyclerView.setAdapter(fileListAdapter);
+//        fileListAdapter = new FileListAdapter(this, fileList, this);
+//        recyclerView.setAdapter(fileListAdapter);
+//        fileListAdapter.notifyDataSetChanged();
         fileListAdapter.notifyDataSetChanged();
     }
 

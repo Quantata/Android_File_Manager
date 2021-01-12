@@ -13,4 +13,5 @@ public interface OnItemClick {
     void onShowBottomLayout();
     Mode onGetMode();
     void onSetMode(Mode mode);
+    void onSetDirectoryList(String dirName, boolean add);
 }

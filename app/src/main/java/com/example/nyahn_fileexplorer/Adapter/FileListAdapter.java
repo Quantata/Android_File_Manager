@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-//  Adapter에서 MOVE_MODE = MOVE_MODE, COPY_MODE
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     Context context;
     private static final String TAG = FileListAdapter.class.getSimpleName();
