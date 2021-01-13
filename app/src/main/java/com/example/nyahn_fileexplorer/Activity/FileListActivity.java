@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -60,7 +61,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
-    private void setToolbarTitle(){
+    private void setToolbar(){
         // toolbar as actionbar
         // setting toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -68,8 +69,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         setSupportActionBar(toolbar);
     }
 
-    @Override
-    public void onSetToolbarTitle(String title) {
+    public void setToolbarTitle(String title) {
         toolbar.setTitle(title);
     }
 
@@ -124,8 +124,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     public void onAddDirectoryList(File addFile) {
         directoryList.add(addFile);
         Log.d(TAG, "directoryList size =" + directoryList.size());
-//            directoryListAdapter.notifyItemInserted(directoryList.size()-1);
         directoryListAdapter.notifyDataSetChanged();
+
+        setToolbarTitle(addFile.getName());
     }
 
     @Override
@@ -134,17 +135,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Log.d(TAG, "ClickedPosition =" + clickedPosition);
         Log.d(TAG, "DirectoryList.size =" + directoryList.size());
 
-
-        int originSize = directoryList.size();
         // 뒤에서 부터 삭제
         for(int i = directoryList.size()-1; i > clickedPosition; i--){
             directoryList.remove(i);
+            directoryListAdapter.notifyItemRemoved(i);
         }
 
-        if(clickedPosition == -1)
-            directoryListAdapter.notifyItemRemoved(0);
+        //Toolbar title 지정
+        if(directoryList.size() == 0)
+            setToolbar();
         else
-            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
+            setToolbarTitle(directoryList.get(clickedPosition).getName());
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -160,9 +161,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         rootDir = storage;
         Log.d(TAG, "RootDirectory = "+ rootDir);
 
-        setToolbarTitle();
+        setToolbar();
         init();
-        
+
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootDir);
         fileListAdapter = new FileListAdapter(this, fileList, this);
@@ -182,7 +183,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         // 마지막 item으로 자동 scroll
         directoryListAdapter = new DirectoryListAdapter(directoryList, this);
         rcDirectoryList.setAdapter(directoryListAdapter);
-
 
         // FileList RecyclerView 초기화
         rcFileList = findViewById(R.id.rcFileList);
@@ -263,6 +263,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ivRootDir:
+                onBackDirectoryList(-1);
+                file = new File(rootDir);
+                onSetFileList(file);
                 break;
             default:
                 Toast.makeText(this, "기본버튼입니다.", Toast.LENGTH_SHORT).show();

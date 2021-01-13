@@ -8,7 +8,6 @@ public interface OnItemClick {
 //    void onBackClick(File clickedFile);
 
     // FileListAdapter.java
-    void onSetToolbarTitle(String title);
     File onGetParentFile();
     void onSetParentFile(File file);
     void onSetFileList(File file);

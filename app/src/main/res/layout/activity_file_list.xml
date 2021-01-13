@@ -22,9 +22,11 @@
 
 
             <ImageView
+                android:id="@+id/ivRootDir"
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/inbox"/>
+                android:background="@drawable/inbox"
+                android:onClick="onClickButton"/>
 
             <ImageView
                 android:layout_width="10dp"
