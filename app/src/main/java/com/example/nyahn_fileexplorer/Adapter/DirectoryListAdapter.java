@@ -12,18 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nyahn_fileexplorer.Models.FileData;
+import com.example.nyahn_fileexplorer.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class DirectoryListAdapter extends RecyclerView.Adapter<DirectoryListAdapter.ViewHolder>{
     private static final String TAG = DirectoryListAdapter.class.getSimpleName();
 
-    private ArrayList<String> directoryList;
+    private ArrayList<File> directoryList;
+    private OnItemClick mCallback;
 
-    public DirectoryListAdapter(ArrayList<String> directoryList) {
+
+    public DirectoryListAdapter(ArrayList<File> directoryList, OnItemClick onItemClick) {
         this.directoryList = directoryList;
+        this.mCallback = onItemClick;
     }
 
     @NonNull
@@ -40,7 +44,14 @@ public class DirectoryListAdapter extends RecyclerView.Adapter<DirectoryListAdap
 
     @Override
     public void onBindViewHolder(@NonNull DirectoryListAdapter.ViewHolder holder, int position) {
-        holder.tvDirName.setText(directoryList.get(position));
+        holder.tvDirName.setText(directoryList.get(position).getName());
+
+        holder.tvDirName.setOnClickListener(v -> {
+            // directory list : 해당 position까지 remove
+            mCallback.onBackDirectoryList(holder.getAdapterPosition());
+            // onSetFileList 전달
+            mCallback.onSetFileList(directoryList.get(holder.getAdapterPosition()));
+        });
     }
 
     @Override

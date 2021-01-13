@@ -15,7 +15,7 @@ public interface OnItemClick {
     void onShowBottomLayout();
     Mode onGetMode();
     void onSetMode(Mode mode);
-    void onAddDirectoryList(String dirName);
+    void onAddDirectoryList(File addFile);
     void onBackDirectoryList(int clickedPosition);
 
     // DirectoryListAdapter.java

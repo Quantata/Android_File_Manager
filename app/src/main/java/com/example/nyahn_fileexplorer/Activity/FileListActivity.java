@@ -44,7 +44,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     Toolbar toolbar;
     RecyclerView rcDirectory; // 디렉토리 구조
     // directory 구조 list
-    private ArrayList<String> directoryList;
+    private ArrayList<File> directoryList;
     DirectoryListAdapter directoryListAdapter;
     private RecyclerView rcDirectoryList;
 
@@ -125,8 +125,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     @Override
-    public void onAddDirectoryList(String dirName) {
-        directoryList.add(dirName);
+    public void onAddDirectoryList(File addFile) {
+        directoryList.add(addFile);
         Log.d(TAG, "directoryList size =" + directoryList.size());
 //            directoryListAdapter.notifyItemInserted(directoryList.size()-1);
         directoryListAdapter.notifyDataSetChanged();
@@ -135,15 +135,20 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     @Override
     public void onBackDirectoryList(int clickedPosition) {
 
+        Log.d(TAG, "ClickedPosition =" + clickedPosition);
+        Log.d(TAG, "DirectoryList.size =" + directoryList.size());
+
         if(clickedPosition == directoryList.size()-1) {
             directoryList.remove(clickedPosition);
             directoryListAdapter.notifyItemRemoved(clickedPosition);
         }
         else {
-            for(int i = directoryList.size()-1; i < clickedPosition; i--){
+            int originSize = directoryList.size();
+            for(int i = directoryList.size()-1; i > clickedPosition; i--){
                 directoryList.remove(i);
+//                directoryListAdapter.notifyItemRemoved(clickedPosition);
             }
-            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, directoryList.size()-1);
+            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
         }
     }
 
@@ -198,7 +203,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         rcDirectoryList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         directoryList = new ArrayList<>();
         // 마지막 item으로 자동 scroll
-        directoryListAdapter = new DirectoryListAdapter(directoryList);
+        directoryListAdapter = new DirectoryListAdapter(directoryList, this);
         rcDirectoryList.setAdapter(directoryListAdapter);
 
 
@@ -315,7 +320,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     // 파일 목록 update
     public void showFileList(File parentFile){
-        File[] list = parentFile.listFiles();
+        file = parentFile;
+        File[] list = file.listFiles();
 
         if(list != null && list.length > 0) {
             flEmptyLayout.setVisibility(View.INVISIBLE);
