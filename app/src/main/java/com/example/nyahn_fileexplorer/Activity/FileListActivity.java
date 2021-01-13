@@ -135,18 +135,16 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Log.d(TAG, "DirectoryList.size =" + directoryList.size());
 
 
-            int originSize = directoryList.size();
-            // 뒤에서 부터 삭제
-            for(int i = directoryList.size()-1; i > clickedPosition; i--){
-                directoryList.remove(i);
-//                directoryListAdapter.notifyItemRemoved(clickedPosition);
-            }
+        int originSize = directoryList.size();
+        // 뒤에서 부터 삭제
+        for(int i = directoryList.size()-1; i > clickedPosition; i--){
+            directoryList.remove(i);
+        }
 
-            if(clickedPosition == -1)
-                directoryListAdapter.notifyItemRemoved(0);
-            else
-                directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
-//        }
+        if(clickedPosition == -1)
+            directoryListAdapter.notifyItemRemoved(0);
+        else
+            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -160,29 +158,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         String storage = bundle.getString("STORAGE");
         rootDir = storage;
-        Log.d(TAG, "RootDir = " + rootDir);
-//        if ("MAIN".equals(storage)){
-//            rootDir = Environment.getExternalStorageDirectory().toString();
-//        } else {
-//            File sdcard = null;
-//            File file = new File(Environment.getStorageDirectory().getPath());
-//            File[] list = file.listFiles();
-//
-//            // sdcard 이름에 (-)이 포함되어 있음.
-//            for(File el : list){
-//                if(el.getName().contains("-")){
-//                    sdcard = el;
-//                }
-//            }
-//            rootDir = sdcard.getPath();
-//        }
+        Log.d(TAG, "RootDirectory = "+ rootDir);
 
         setToolbarTitle();
         init();
-        // External Storage
-//        rootMainDir = Environment.getExternalStorageDirectory().toString();
-        Log.d(TAG, "RootDirectory = "+ rootDir);
-
+        
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootDir);
         fileListAdapter = new FileListAdapter(this, fileList, this);
