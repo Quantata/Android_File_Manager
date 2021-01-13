@@ -56,11 +56,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private LinearLayout cdBottomSheet;
     private LinearLayout llBottomManageLayout;
     private LinearLayout llBottomMoveLayout;
-//    private LinearLayout llFileCopy;
-//    private LinearLayout llFileMove;
-//    private LinearLayout llFileRename;
-//    private LinearLayout llFileDelete;
-//    private LinearLayout llFileInfo;
+
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -138,18 +134,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Log.d(TAG, "ClickedPosition =" + clickedPosition);
         Log.d(TAG, "DirectoryList.size =" + directoryList.size());
 
-        if(clickedPosition == directoryList.size()-1) {
-            directoryList.remove(clickedPosition);
-            directoryListAdapter.notifyItemRemoved(clickedPosition);
-        }
-        else {
+
             int originSize = directoryList.size();
+            // 뒤에서 부터 삭제
             for(int i = directoryList.size()-1; i > clickedPosition; i--){
                 directoryList.remove(i);
 //                directoryListAdapter.notifyItemRemoved(clickedPosition);
             }
-            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
-        }
+
+            if(clickedPosition == -1)
+                directoryListAdapter.notifyItemRemoved(0);
+            else
+                directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, originSize-1);
+//        }
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -313,7 +310,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             // 기존 list 삭제
             fileList.clear();
             // 마지막만 삭제
-            onBackDirectoryList(directoryList.size()-1);
+            onBackDirectoryList(directoryList.size()-2);
             showFileList(file);
         }
     }
