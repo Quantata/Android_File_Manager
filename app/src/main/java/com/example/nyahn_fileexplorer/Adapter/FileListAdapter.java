@@ -172,7 +172,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                     // toolbar title 변경
                     mCallback.onSetToolbarTitle(clickedFile.getName());
-                    mCallback.onSetDirectoryList(clickedFile.getName(), true);
+                    mCallback.onAddDirectoryList(clickedFile.getName());
                 }
                 /*
                     TODO: 일반 파일일때 구현

@@ -125,18 +125,26 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     @Override
-    public void onSetDirectoryList(String dirName, boolean add) {
-        if(add) {
-            directoryList.add(dirName);
-            Log.d(TAG, "directoryList size =" + directoryList.size());
+    public void onAddDirectoryList(String dirName) {
+        directoryList.add(dirName);
+        Log.d(TAG, "directoryList size =" + directoryList.size());
 //            directoryListAdapter.notifyItemInserted(directoryList.size()-1);
-            directoryListAdapter.notifyDataSetChanged();
+        directoryListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackDirectoryList(int clickedPosition) {
+
+        if(clickedPosition == directoryList.size()-1) {
+            directoryList.remove(clickedPosition);
+            directoryListAdapter.notifyItemRemoved(clickedPosition);
         }
         else {
-            directoryList.remove(dirName);
-            directoryListAdapter.notifyDataSetChanged();
+            for(int i = directoryList.size()-1; i < clickedPosition; i--){
+                directoryList.remove(i);
+            }
+            directoryListAdapter.notifyItemRangeRemoved(clickedPosition+1, directoryList.size()-1);
         }
-
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -184,27 +192,25 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     public void init(){
         fileManage = new FileManage();
 
+        // Directory RecyclerView 초기화
         rcDirectoryList = findViewById(R.id.rcDirectoryList);
         // for horizontal scroll
         rcDirectoryList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         directoryList = new ArrayList<>();
+        // 마지막 item으로 자동 scroll
         directoryListAdapter = new DirectoryListAdapter(directoryList);
         rcDirectoryList.setAdapter(directoryListAdapter);
 
-        flEmptyLayout = findViewById(R.id.flEmptyLayout);
-        // RecyclerView 초기화
+
+        // FileList RecyclerView 초기화
         rcFileList = findViewById(R.id.rcFileList);
         rcFileList.setLayoutManager(new LinearLayoutManager(this));
         fileList = new ArrayList<>();
 
+        flEmptyLayout = findViewById(R.id.flEmptyLayout);
         cdBottomSheet = findViewById(R.id.cdBottomSheet);
         llBottomManageLayout = findViewById(R.id.llBottomManageLayout);
         llBottomMoveLayout = findViewById(R.id.llBottomMoveLayout);
-//        llFileCopy = findViewById(R.id.llFileCopy);
-//        llFileMove = findViewById(R.id.llFileMove);
-//        llFileRename = findViewById(R.id.llFileRename);
-//        llFileDelete = findViewById(R.id.llFileDelete);
-//        llFileInfo = findViewById(R.id.llFileInfo);
 
     }
 
@@ -301,6 +307,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             // 기존 list 삭제
             fileList.clear();
+            // 마지막만 삭제
+            onBackDirectoryList(directoryList.size()-1);
             showFileList(file);
         }
     }
