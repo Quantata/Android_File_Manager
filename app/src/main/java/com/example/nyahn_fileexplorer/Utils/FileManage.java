@@ -54,6 +54,15 @@ public class FileManage {
     public void copy(File sourceFile, File targetFile) {
         File newDirectory = new File(targetFile, sourceFile.getName());
 
+        // 파일이 존재할 경우
+        if(newDirectory.exists()){
+            int i = 0;
+            while(newDirectory.exists()) {
+                i++;
+                newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+            }
+        }
+
         if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
             // 복사할거 recursive
             // 선택된 파일의 파일 리스트
@@ -81,9 +90,6 @@ public class FileManage {
 
                 Log.d(TAG, "복사 Exception = " + e);
             }
-        }
-        else {
-            // getName(1) 과 같이 바꾸는 과정 추가
         }
     }
 
