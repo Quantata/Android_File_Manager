@@ -205,6 +205,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 onShowBottomLayout();   // 취소/붙여넣기
                 // 선택된 파일(들)이 있는 경로의 파일 목록
                 selectedFileDataList = fileListAdapter.getSelectedFileList();
+                // 현재 화면의 recyclerView fileList 선택부분 초기화
+                fileListAdapter.setClearSelectedFileList();
 
                 // 현재 선택된 파일 복사하는 로직
                 // 현재 선택된 FileList와 현재 이동된 file Path
@@ -228,14 +230,25 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFileDelete:
                 presentMode = Mode.BASIC_MODE;
+                // 현재 화면에서 선택된 fileList 갖고옴
+                selectedFileDataList = fileListAdapter.getSelectedFileList();
+                // 현재 화면의 선택된 파일 List 선택 해제
+                fileListAdapter.setClearSelectedFileList();
+
+                //임시로 삭제 함수
+                fileManage.deleteFile(selectedFileDataList);
                 // Delete Dialog
 
                 // 삭제 완료되었습니다. Dialog
 
+                // 선택된 파일 clear
+                selectedFileDataList.clear();
+                // 파일 List 갱신
+                showFileList(file);
                 // Layout 내림
                 onShowBottomLayout();
                 Toast.makeText(this, "삭제.", Toast.LENGTH_SHORT).show();
-
+                break;
             case R.id.llFileInfo:
                 Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
                 break;
@@ -244,6 +257,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 // 선택 해제
+                selectedFileDataList.clear();
                 fileListAdapter.setClearSelectedFileList();
                 Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show();
                 // Basic 모드로 바꾸고
@@ -252,15 +266,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
                 fileManage.pasteFile(presentMode, selectedFileDataList, file);
-                selectedFileDataList.clear();
+
                 // 복사된 파일 List 보여주기
                 showFileList(file);
+
+                // 선택된 fileList 초기화
+                selectedFileDataList.clear();
 
                 // 붙여넣기 끝난 후 Basic_Mode로 변경
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.ivRootDir:
                 onBackDirectoryList(-1);
                 file = new File(rootDir);

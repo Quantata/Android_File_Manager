@@ -56,6 +56,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         ArrayList<FileData> selectedList = new ArrayList<>();
         if(selectedPositions.size() != 0) {
             for (int selected : selectedPositions) {
+                Log.d(TAG, "selected position =" + selected);
                 FileData fileData = fileDataList.get(selected);
                 selectedList.add(fileData);
             }

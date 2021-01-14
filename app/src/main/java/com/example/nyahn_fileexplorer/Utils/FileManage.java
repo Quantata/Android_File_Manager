@@ -24,19 +24,43 @@ import java.util.ArrayList;
 public class FileManage {
     private static final String TAG = FileManage.class.getSimpleName();
 
-    Mode mode = Mode.COPY_MODE;
-    // 현재 fileDataList
-    ArrayList<FileData> selectedDataList;
 
+    public void delete(File sourceFile){
+        // 파일이 존재 한다면
+        if(sourceFile.exists()){
+            File[] list = sourceFile.listFiles();
+            try {
+                if(list == null || list.length == 0) {  // 빈 폴더이거나 파일일때
+
+                    Log.d(TAG, sourceFile.getName() + "파일 삭제 성공");
+
+                    Files.delete(sourceFile.toPath());
+
+                } else {   // 디렉토리일 경우
+                    for (File file : list) {
+                        delete(file);
+                    }
+                    // 마지막에 자기자신 삭제
+                    Files.delete(sourceFile.toPath());
+                    Log.d(TAG, sourceFile.getName() + "디렉토리 삭제 성공");
+                }
+            } catch (IOException e){
+                Log.d(TAG, "파일 삭제 실패 =" + e);
+            }
+        }
+    }
+
+    // 파일 복사하기 - 완료
     public void copy(File sourceFile, File targetFile) {
 
         // 선택된 파일이 디렉토리 였을때
         if(sourceFile.isDirectory()){
             try {
-                // directory 생성, targetFile + sourceFile의 폴더 이름
+                // directory 객체 생성, targetFile + sourceFile의 폴더 이름
                 File newDirectory = new File(targetFile, sourceFile.getName());
                 if(!newDirectory.exists()) {
                     // 옮길 곳에 디렉토리 하나 만들고, sourceFiles는 리스트고 sourceFile 자체의 Path로 만들어 줘야함
+                    // 빈 폴더인 경우 여기서 끝
                     Files.createDirectories(newDirectory.toPath());
 
                     // 복사할거 recursive
@@ -48,7 +72,7 @@ public class FileManage {
                             copy(file, newDirectory);
                         }
                     }
-                } else { // 같은 이름 Directory가 이미 조재할 때
+                } else { // 같은 이름 Directory가 이미 존재할 때
                     // if(Dialog 결과값: 덮어쓰기 == true) { 기존 directory삭제 및 다시 copy 진행 } else { move로 이름 바꿔서 진행 }
                 }
 
@@ -76,7 +100,7 @@ public class FileManage {
             }
             Log.d(TAG, "newFile = " + newFile.getPath());
         }
-
+*/
     }
 
 
@@ -97,4 +121,11 @@ public class FileManage {
             // 삭제하는 부분
         }
     }
+
+    public void deleteFile(ArrayList<FileData> selectedList){
+        for(FileData fileData : selectedList){
+            delete(fileData.getFile());
+        }
+    }
+
 }
