@@ -358,8 +358,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         if(dialogMode == DialogMode.DIALOG_RENAME){
             EditText edittext = new EditText(this);
 
+            LinearLayout container = new LinearLayout(getApplicationContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.topMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+
+            edittext.setLayoutParams(params);
+            edittext.setSingleLine();
+
+            container.addView(edittext);
+
             builder.setTitle(R.string.file_rename)
-                    .setView(edittext)
+                    .setView(container)
                     .setPositiveButton("이름 변경", (dialog, which) -> {
                         /*
                          * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
