@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -43,14 +42,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 선택된 파일 Position
 
     Toolbar toolbar;
-    RecyclerView rcDirectory; // 디렉토리 구조
+    private RecyclerView rcDirectory; // 디렉토리 구조
     // directory 구조 list
     private ArrayList<File> directoryList;
     DirectoryListAdapter directoryListAdapter;
-    private RecyclerView rcDirectoryList;
 
     private String rootDir = "";
-    private RecyclerView rcFileList;
+    private RecyclerView rcFile;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
 
@@ -157,8 +155,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        String storage = bundle.getString("STORAGE");
-        rootDir = storage;
+        rootDir = bundle.getString("STORAGE");
         Log.d(TAG, "RootDirectory = "+ rootDir);
 
         setToolbar();
@@ -167,7 +164,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootDir);
         fileListAdapter = new FileListAdapter(this, fileList, this);
-        rcFileList.setAdapter(fileListAdapter);
+        rcFile.setAdapter(fileListAdapter);
 
         showFileList(file);
     }
@@ -176,17 +173,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         fileManage = new FileManage();
 
         // Directory RecyclerView 초기화
-        rcDirectoryList = findViewById(R.id.rcDirectoryList);
+        rcDirectory = findViewById(R.id.rcDirectory);
         // for horizontal scroll
-        rcDirectoryList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rcDirectory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         directoryList = new ArrayList<>();
         // 마지막 item으로 자동 scroll
         directoryListAdapter = new DirectoryListAdapter(directoryList, this);
-        rcDirectoryList.setAdapter(directoryListAdapter);
+        rcDirectory.setAdapter(directoryListAdapter);
 
         // FileList RecyclerView 초기화
-        rcFileList = findViewById(R.id.rcFileList);
-        rcFileList.setLayoutManager(new LinearLayoutManager(this));
+        rcFile = findViewById(R.id.rcFile);
+        rcFile.setLayoutManager(new LinearLayoutManager(this));
         fileList = new ArrayList<>();
 
         flEmptyLayout = findViewById(R.id.flEmptyLayout);

@@ -36,7 +36,7 @@
                 app:tint="@color/gray" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcDirectoryList"
+            android:id="@+id/rcDirectory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -49,7 +49,7 @@
         android:layout_above="@+id/cdBottomSheet">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcFileList"
+            android:id="@+id/rcFile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
