@@ -249,6 +249,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 onShowBottomLayout();
                 Toast.makeText(this, "삭제.", Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.llFileInfo:
                 Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
                 break;
@@ -309,7 +310,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             // 기존 list 삭제
             fileList.clear();
-            // 마지막만 삭제
+            // list size = 마지막 위치+1, 마지막 위치의 이전위치로 가려면 list size-2
             onBackDirectoryList(directoryList.size()-2);
             showFileList(file);
         }
@@ -320,17 +321,18 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         file = parentFile;
         File[] list = file.listFiles();
 
-        if(list != null && list.length > 0) {
+        // 붙여넣기시 기존 파일 + 붙여넣기 안되는 문제 해결
+        fileList.clear();
+        if(list == null || list.length == 0){
+            flEmptyLayout.setVisibility(View.VISIBLE);
+        } else {
             flEmptyLayout.setVisibility(View.INVISIBLE);
-            // 붙여넣기시 기존 파일 + 붙여넣기 안되는 문제 해결
-            fileList.clear();
+
             for (File value : list) {
                 FileData fileData = new FileData();
                 fileData.setFile(value);
                 fileList.add(fileData);
             }
-        } else {
-            flEmptyLayout.setVisibility(View.VISIBLE);
         }
 
 //        fileListAdapter = new FileListAdapter(this, fileList, this);
