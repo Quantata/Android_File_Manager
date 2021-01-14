@@ -222,14 +222,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
                 presentMode = Mode.BASIC_MODE;
                 //이름 변경 Dialog한 뒤 notifySetData
-                showDialog(DialogMode.DIALOG_RENAME, 0);
+                showDialog(DialogMode.DIALOG_RENAME, fileListAdapter.getSelectedFileList());
                 // Layout 내림
                 onShowBottomLayout();
                 break;
             case R.id.llFileDelete:
                 presentMode = Mode.BASIC_MODE;
 
-                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList().size());
+                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
 
                 // Layout 내림
                 onShowBottomLayout();
@@ -324,17 +324,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         fileListAdapter.notifyDataSetChanged();
     }
 
-    private void showDialog(DialogMode dialogMode, int selected){
+    private void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
 //        AlertDialog alertDialog = builder.create();
 
         if(dialogMode == DialogMode.DIALOG_DELETE) {
             builder.setTitle(R.string.file_delete)
-                    .setMessage(String.format(getResources().getString(R.string.confirm_delete), selected))
+                    .setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()))
                     .setPositiveButton("확인", (dialog, which) -> {
                         // 현재 화면에서 선택된 fileList 갖고옴
-                        selectedFileDataList = fileListAdapter.getSelectedFileList();
+                        selectedFileDataList = selectedDataList;
                         // 현재 화면의 선택된 파일 List 선택 해제
                         fileListAdapter.setClearSelectedFileList();
 
@@ -356,6 +356,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         }
 
         if(dialogMode == DialogMode.DIALOG_RENAME){
+            // 배경 터치 불가
+            builder.setCancelable(false);
+
             EditText edittext = new EditText(this);
 
             LinearLayout container = new LinearLayout(getApplicationContext());
@@ -367,6 +370,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             edittext.setLayoutParams(params);
             edittext.setSingleLine();
 
+            // edittext 기존 파일 이름
+            edittext.setText(selectedDataList.get(0).getFile().getName());
+            edittext.requestFocus();
+            edittext.selectAll();
+
             container.addView(edittext);
 
             builder.setTitle(R.string.file_rename)
@@ -376,7 +384,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                          * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
                          */
                         // 현재 화면에서 선택된 fileList 갖고옴
-                        selectedFileDataList = fileListAdapter.getSelectedFileList();
+                        selectedFileDataList = selectedDataList;
                         // 현재 화면의 선택된 파일 List 선택 해제
                         fileListAdapter.setClearSelectedFileList();
 
