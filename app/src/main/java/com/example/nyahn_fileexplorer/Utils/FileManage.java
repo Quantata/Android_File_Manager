@@ -52,55 +52,39 @@ public class FileManage {
 
     // 파일 복사하기 - 완료
     public void copy(File sourceFile, File targetFile) {
+        File newDirectory = new File(targetFile, sourceFile.getName());
 
-        // 선택된 파일이 디렉토리 였을때
-        if(sourceFile.isDirectory()){
+        if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
+            // 복사할거 recursive
+            // 선택된 파일의 파일 리스트
+            File[] sourceFiles = sourceFile.listFiles();
             try {
-                // directory 객체 생성, targetFile + sourceFile의 폴더 이름
-                File newDirectory = new File(targetFile, sourceFile.getName());
-                if(!newDirectory.exists()) {
-                    // 옮길 곳에 디렉토리 하나 만들고, sourceFiles는 리스트고 sourceFile 자체의 Path로 만들어 줘야함
-                    // 빈 폴더인 경우 여기서 끝
-                    Files.createDirectories(newDirectory.toPath());
-
-                    // 복사할거 recursive
-                    // file = sourceFiles의 파일, newTargetFile은
-                    // 선택된 파일의 파일 리스트
-                    File[] sourceFiles = sourceFile.listFiles();
-                    if (sourceFiles != null && sourceFiles.length != 0) {
-                        for (File file : sourceFiles) {
-                            copy(file, newDirectory);
-                        }
-                    }
-                } else { // 같은 이름 Directory가 이미 존재할 때
-                    // if(Dialog 결과값: 덮어쓰기 == true) { 기존 directory삭제 및 다시 copy 진행 } else { move로 이름 바꿔서 진행 }
-                }
-
-            } catch (IOException e) {
-                Log.d(TAG, "Excpetion = " + e);
-            }
-        } else { // 선택된 파일이 빈폴더/파일이였을때
-            // targetFile/sourceFile.jpg 이런식
-            File newFile = new File(targetFile, sourceFile.getName());
-
-            if(!newFile.exists()){
-                try {
+                if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
                     // java NIO
                     // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
                     // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
                     Files.copy(sourceFile.toPath(),
-                            newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException e){
+                            newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                    Log.d(TAG, "Excpetion = " + e);
+                    Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
                 }
+                else {  // 복사할 파일이 파일 or 빈폴더가 아니면
+                    Files.createDirectories(newDirectory.toPath());
 
-            } else {    // 덮어쓰기 또는 이름 변경, 건너뛰기 alert 띄우기
-                // if (다이얼로그 결과: 덮어쓰기 == true) { replacing } else { move, rename }
+                    // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
+                    for (File file : sourceFiles) {
+                        copy(file, newDirectory);
+                    }
+
+                }
+            } catch (IOException e){
+
+                Log.d(TAG, "복사 Exception = " + e);
             }
-            Log.d(TAG, "newFile = " + newFile.getPath());
         }
-*/
+        else {
+            // getName(1) 과 같이 바꾸는 과정 추가
+        }
     }
 
 
