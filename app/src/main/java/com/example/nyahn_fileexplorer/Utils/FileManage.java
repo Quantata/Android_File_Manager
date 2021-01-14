@@ -93,6 +93,17 @@ public class FileManage {
         }
     }
 
+    public void rename(File sourceFile, String rename){
+        File file = new File(sourceFile.getPath());
+        File newFile = new File(file.getParent(), rename);
+
+        try {
+            Files.move(file.toPath(), newFile.toPath());
+        } catch (IOException e){
+            Log.d(TAG, "파일 이름 변경 = " + rename);
+        }
+    }
+
 
     // 붙여넣기시 mode확인하고 진행
     // fileDataList : 현재 선택된 파일 리스트
@@ -112,10 +123,16 @@ public class FileManage {
         }
     }
 
+    // 삭제
     public void deleteFile(ArrayList<FileData> selectedList){
         for(FileData fileData : selectedList){
             delete(fileData.getFile());
         }
     }
 
+    public void renameFile(ArrayList<FileData> selectedList, String rename){
+        for(FileData fileData : selectedList){
+            rename(fileData.getFile(), rename);
+        }
+    }
 }

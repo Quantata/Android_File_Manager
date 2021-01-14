@@ -1,10 +1,10 @@
 package com.example.nyahn_fileexplorer.Activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -202,7 +202,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         // TODO: if/else로 변경 static에서 기본형으로 바뀌면서 효율성 면에서 R.id.~ 사용시 if/else문으로 사용 하는걸 권장
         switch (view.getId()){
             // 파일 기능
-            case R.id.llFileCopy:
+            case R.id.llFileCopy:   // 구현 완료
                 // COPY_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.COPY_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
@@ -210,24 +210,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 selectedFileDataList = fileListAdapter.getSelectedFileList();
                 // 현재 화면의 recyclerView fileList 선택부분 초기화
                 fileListAdapter.setClearSelectedFileList();
-
-                // 현재 선택된 파일 복사하는 로직
-                // 현재 선택된 FileList와 현재 이동된 file Path
-//                manageFile.copyFile(fileListAdapter.getSelectedFileList(), file.getPath());
-                // Basic Mode로 바꿔주고 onShowBottomLayout하면 될듯 -> 이건 Paste나 cancel에서
-                Toast.makeText(this, "복사하겠습니다.", Toast.LENGTH_SHORT).show();
-
                 break;
+
             case R.id.llFileMove:
                 presentMode = Mode.MOVE_MODE;
                 Toast.makeText(this, "이동하겠습니다.", Toast.LENGTH_SHORT).show();
                 onShowBottomLayout();
                 break;
+
             case R.id.llFileRename:
                 Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
                 presentMode = Mode.BASIC_MODE;
                 //이름 변경 Dialog한 뒤 notifySetData
-
+                showDialog(DialogMode.DIALOG_RENAME, 0);
                 // Layout 내림
                 onShowBottomLayout();
                 break;
@@ -254,6 +249,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // Basic 모드로 바꾸고
                 // showBottom 호출하면 됨.
                 break;
+
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
                 fileManage.pasteFile(presentMode, selectedFileDataList, file);
@@ -336,7 +332,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         if(dialogMode == DialogMode.DIALOG_DELETE) {
             builder.setTitle(R.string.file_delete)
                     .setMessage(String.format(getResources().getString(R.string.confirm_delete), selected))
-                    .setPositiveButton("예", (dialog, which) -> {
+                    .setPositiveButton("확인", (dialog, which) -> {
                         // 현재 화면에서 선택된 fileList 갖고옴
                         selectedFileDataList = fileListAdapter.getSelectedFileList();
                         // 현재 화면의 선택된 파일 List 선택 해제
@@ -351,10 +347,41 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                         showFileList(file);
 
                     })
-                    .setNegativeButton("아니오",
+                    .setNegativeButton("취소",
                             (dialog, which) ->
                             // 현재 화면의 선택된 파일 List 선택 해제
                             fileListAdapter.setClearSelectedFileList());
+
+            builder.show();
+        }
+
+        if(dialogMode == DialogMode.DIALOG_RENAME){
+            EditText edittext = new EditText(this);
+
+            builder.setTitle(R.string.file_rename)
+                    .setView(edittext)
+                    .setPositiveButton("이름 변경", (dialog, which) -> {
+                        /*
+                         * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
+                         */
+                        // 현재 화면에서 선택된 fileList 갖고옴
+                        selectedFileDataList = fileListAdapter.getSelectedFileList();
+                        // 현재 화면의 선택된 파일 List 선택 해제
+                        fileListAdapter.setClearSelectedFileList();
+
+                        //이름 변경 함수
+                        fileManage.renameFile(selectedFileDataList, edittext.getText().toString());
+
+                        // 선택된 파일 clear
+                        selectedFileDataList.clear();
+                        // 파일 List 갱신
+                        showFileList(file);
+
+                    })
+                    .setNegativeButton("취소",
+                            (dialog, which) ->
+                                    // 현재 화면의 선택된 파일 List 선택 해제
+                                    fileListAdapter.setClearSelectedFileList());
 
             builder.show();
         }
