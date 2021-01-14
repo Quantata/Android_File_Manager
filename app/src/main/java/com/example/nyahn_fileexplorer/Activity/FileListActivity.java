@@ -1,5 +1,6 @@
 package com.example.nyahn_fileexplorer.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nyahn_fileexplorer.Adapter.DirectoryListAdapter;
 import com.example.nyahn_fileexplorer.Adapter.FileListAdapter;
 import com.example.nyahn_fileexplorer.MainActivity;
+import com.example.nyahn_fileexplorer.Models.DialogMode;
 import com.example.nyahn_fileexplorer.Models.Mode;
-import com.example.nyahn_fileexplorer.OnItemClick;
+import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.OnFileManage;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
@@ -230,24 +233,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFileDelete:
                 presentMode = Mode.BASIC_MODE;
-                // 현재 화면에서 선택된 fileList 갖고옴
-                selectedFileDataList = fileListAdapter.getSelectedFileList();
-                // 현재 화면의 선택된 파일 List 선택 해제
-                fileListAdapter.setClearSelectedFileList();
 
-                //임시로 삭제 함수
-                fileManage.deleteFile(selectedFileDataList);
-                // Delete Dialog
+                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList().size());
 
-                // 삭제 완료되었습니다. Dialog
-
-                // 선택된 파일 clear
-                selectedFileDataList.clear();
-                // 파일 List 갱신
-                showFileList(file);
                 // Layout 내림
                 onShowBottomLayout();
-                Toast.makeText(this, "삭제.", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.llFileInfo:
@@ -335,10 +325,39 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             }
         }
 
-//        fileListAdapter = new FileListAdapter(this, fileList, this);
-//        recyclerView.setAdapter(fileListAdapter);
-//        fileListAdapter.notifyDataSetChanged();
         fileListAdapter.notifyDataSetChanged();
+    }
+
+    private void showDialog(DialogMode dialogMode, int selected){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
+//        AlertDialog alertDialog = builder.create();
+
+        if(dialogMode == DialogMode.DIALOG_DELETE) {
+            builder.setTitle(R.string.file_delete)
+                    .setMessage(String.format(getResources().getString(R.string.confirm_delete), selected))
+                    .setPositiveButton("예", (dialog, which) -> {
+                        // 현재 화면에서 선택된 fileList 갖고옴
+                        selectedFileDataList = fileListAdapter.getSelectedFileList();
+                        // 현재 화면의 선택된 파일 List 선택 해제
+                        fileListAdapter.setClearSelectedFileList();
+
+                        //삭제 함수
+                        fileManage.deleteFile(selectedFileDataList);
+
+                        // 선택된 파일 clear
+                        selectedFileDataList.clear();
+                        // 파일 List 갱신
+                        showFileList(file);
+
+                    })
+                    .setNegativeButton("아니오",
+                            (dialog, which) ->
+                            // 현재 화면의 선택된 파일 List 선택 해제
+                            fileListAdapter.setClearSelectedFileList());
+
+            builder.show();
+        }
     }
 
 }

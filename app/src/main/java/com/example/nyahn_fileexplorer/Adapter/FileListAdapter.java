@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
-import com.example.nyahn_fileexplorer.OnItemClick;
+import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
 
 import java.io.File;

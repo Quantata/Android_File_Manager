@@ -1,4 +1,4 @@
-package com.example.nyahn_fileexplorer;
+package com.example.nyahn_fileexplorer.Interface;
 
 import com.example.nyahn_fileexplorer.Models.Mode;
 
