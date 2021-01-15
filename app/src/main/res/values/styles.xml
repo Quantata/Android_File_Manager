@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TextAppearance.AppCompat.6sp" parent="@android:style/TextAppearance.Small">
+    <style name="TextSize" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColorHint">?android:attr/textColorHint</item>
+    </style>
+
+    <style name="TextSize.6sp">
         <item name="android:textSize">6sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.8sp" parent="@android:style/TextAppearance.Small">
+    <style name="TextSize.8sp">
         <item name="android:textSize">8sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.10sp" parent="@android:style/TextAppearance.Small">
+    <style name="TextSize.10sp">
         <item name="android:textSize">10sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.12sp" parent="@android:style/TextAppearance.Small">
+    <style name="TextSize.12sp">
         <item name="android:textSize">12sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.14sp" parent="@android:style/TextAppearance.Medium">
+    <style name="TextSize.14sp">
         <item name="android:textSize">14sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.16sp" parent="@android:style/TextAppearance.Medium">
+    <style name="TextSize.16sp">
         <item name="android:textSize">16sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.18sp" parent="@android:style/TextAppearance.Large">
+    <style name="TextSize.18sp">
         <item name="android:textSize">18sp</item>
     </style>
-    <style name="TextAppearance.AppCompat.20sp" parent="@android:style/TextAppearance.Large">
+    <style name="TextSize.20sp">
         <item name="android:textSize">20sp</item>
     </style>
+
+
 
     <style name="BottomTextColor" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?bottomTextColor</item>
         <item name="android:textColorHint">?bottomTextColorHint</item>
         <item name="android:background">?bottomLayoutColor</item>
     </style>
+
 
 </resources>

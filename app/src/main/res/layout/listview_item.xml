@@ -23,7 +23,6 @@
         android:layout_marginStart="20dp"
         android:singleLine="true"
         android:ellipsize="middle"
-        android:textAppearance="@style/TextAppearance.AppCompat.18sp"
-        android:textColor="?android:attr/textColor"
+        android:textAppearance="@style/TextSize.18sp"
         android:gravity="center_vertical" />
 </LinearLayout>
