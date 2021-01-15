@@ -29,6 +29,7 @@ import com.example.nyahn_fileexplorer.OnFileManage;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
+import com.example.nyahn_fileexplorer.Utils.SortFileData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -172,7 +173,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             Log.d(TAG, "Rename Mode Clickable = " + active);
         }
 
-
+        // TODO: 이동시 현재 폴더일 경우 비활성화
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -333,6 +334,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     // 파일 목록 update
     public void showFileList(File parentFile){
+        ArrayList<FileData> directories = new ArrayList<>();
+        ArrayList<FileData> files = new ArrayList<>();
+
         file = parentFile;
         File[] list = file.listFiles();
 
@@ -346,8 +350,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             for (File value : list) {
                 FileData fileData = new FileData();
                 fileData.setFile(value);
-                fileList.add(fileData);
+                if(fileData.getFile().isDirectory())
+                    directories.add(fileData);
+                else
+                    files.add(fileData);
             }
+            // 정렬
+            directories.sort(new SortFileData());
+//            directories.sort(new SortFileData());
+            files.sort(new SortFileData());
+
+            // directory먼저 보여주기
+            fileList.addAll(directories);
+            fileList.addAll(files);
         }
 
         fileListAdapter.notifyDataSetChanged();
