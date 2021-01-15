@@ -14,10 +14,10 @@
         <!-- Customize your theme here. -->
         <item name="bottomTextColor">@color/white</item>
         <item name="bottomTextColorHint">@color/gray</item>
-        <item name="bottomLayoutColor">?attr/colorPrimaryVariant</item>
+        <item name="bottomLayoutColor">?attr/colorPrimary</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/gray</item>
-        <item name="android:colorForeground">@color/purple_transparent</item>
+        <item name="foregroundColor">@color/purple_transparent</item>
         <item name="selectableItemBackground">@drawable/ripple</item>
     </style>
 </resources>

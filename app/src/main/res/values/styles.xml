@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TextSize" parent="@android:style/TextAppearance.Small">
+    <style name="TextSize" parent="TextAppearance.AppCompat">
         <item name="android:textColor">?android:attr/textColor</item>
         <item name="android:textColorHint">?android:attr/textColorHint</item>
     </style>
@@ -32,10 +32,14 @@
 
 
 
-    <style name="BottomTextColor" parent="@android:style/TextAppearance.Medium">
+    <style name="BottomTextColor" parent="Theme.AppCompat">
         <item name="android:textColor">?bottomTextColor</item>
         <item name="android:textColorHint">?bottomTextColorHint</item>
         <item name="android:background">?bottomLayoutColor</item>
+    </style>
+
+    <style name="ForegroundColor" parent="Theme.AppCompat">
+        <item name="android:colorForeground">?foregroundColor</item>
     </style>
 
 

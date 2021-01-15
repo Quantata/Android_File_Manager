@@ -3,4 +3,5 @@
     <attr name="bottomTextColor" format="reference|color" />
     <attr name="bottomTextColorHint" format="reference|color" />
     <attr name="bottomLayoutColor" format="reference|color" />
+    <attr name="foregroundColor" format="reference|color" />
 </resources>
