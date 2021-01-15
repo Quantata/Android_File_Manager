@@ -308,27 +308,35 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
     @Override
     public void onBackPressed() {
-        // 현재 파일의 부모 경로
-        if(rootDir.equals(file.getPath())){
-            startActivity(new Intent(FileListActivity.this, MainActivity.class));
-            finish();
+        if(presentMode == Mode.SELECTED_MODE){
+            presentMode = Mode.BASIC_MODE;
+            onShowBottomLayout();
+            // selectedFileDataList에는 따로저장된게 없음으로 adapter의 selectedList만 clear해주면 됨.
+            fileListAdapter.setClearSelectedFileList();
         }
         else {
-            String parent = file.getParent();
-            if(parent != null)
-                file = new File(file.getParent());
+            // 현재 파일의 부모 경로
+            if(rootDir.equals(file.getPath())){
+                startActivity(new Intent(FileListActivity.this, MainActivity.class));
+                finish();
+            }
+            else {
+                String parent = file.getParent();
+                if(parent != null)
+                    file = new File(file.getParent());
 
-            // toolbar title 변경
-            if(rootDir.equals(file.getPath()))
-                toolbar.setTitle(R.string.main_storage);
-            else
-                toolbar.setTitle(file.getName());
+                // toolbar title 변경
+                if(rootDir.equals(file.getPath()))
+                    toolbar.setTitle(R.string.main_storage);
+                else
+                    toolbar.setTitle(file.getName());
 
-            // 기존 list 삭제
-            fileList.clear();
-            // list size = 마지막 위치+1, 마지막 위치의 이전위치로 가려면 list size-2
-            onBackDirectoryList(directoryList.size()-2);
-            showFileList(file);
+                // 기존 list 삭제
+                fileList.clear();
+                // list size = 마지막 위치+1, 마지막 위치의 이전위치로 가려면 list size-2
+                onBackDirectoryList(directoryList.size()-2);
+                showFileList(file);
+            }
         }
     }
 
