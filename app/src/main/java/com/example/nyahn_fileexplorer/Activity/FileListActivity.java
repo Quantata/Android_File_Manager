@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -361,6 +362,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             EditText edittext = new EditText(this);
 
+            // Edittext margin 주기 위해 LinearLayout 구현
             LinearLayout container = new LinearLayout(getApplicationContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.topMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
@@ -375,35 +377,46 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             edittext.requestFocus();
             edittext.selectAll();
 
+            // 키보드 관리자 생성 및 보이기
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            // 키보드가 올라와있으면 내리고, 내려와있으면 올림
+            // 열리는 용도로 사용 -> ShowSoftInput이 안먹힘
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
             container.addView(edittext);
 
-            builder.setTitle(R.string.file_rename)
-                    .setView(container)
-                    .setPositiveButton("이름 변경", (dialog, which) -> {
-                        /*
-                         * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
-                         */
-                        // 현재 화면에서 선택된 fileList 갖고옴
-                        selectedFileDataList = selectedDataList;
-                        // 현재 화면의 선택된 파일 List 선택 해제
-                        fileListAdapter.setClearSelectedFileList();
+            builder.setTitle(R.string.file_rename);
+            builder.setView(container);
+            builder.setPositiveButton("이름 변경", (dialog, which) -> {
+                /*
+                 * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
+                 */
+                // 현재 화면에서 선택된 fileList 갖고옴
+                selectedFileDataList = selectedDataList;
+                // 현재 화면의 선택된 파일 List 선택 해제
+                fileListAdapter.setClearSelectedFileList();
 
-                        //이름 변경 함수
-                        fileManage.renameFile(selectedFileDataList, edittext.getText().toString());
+                //이름 변경 함수
+                fileManage.renameFile(selectedFileDataList, edittext.getText().toString());
 
-                        // 선택된 파일 clear
-                        selectedFileDataList.clear();
-                        // 파일 List 갱신
-                        showFileList(file);
+                // 선택된 파일 clear
+                selectedFileDataList.clear();
+                // 파일 List 갱신
+                showFileList(file);
 
-                    })
-                    .setNegativeButton("취소",
-                            (dialog, which) ->
-                                    // 현재 화면의 선택된 파일 List 선택 해제
-                                    fileListAdapter.setClearSelectedFileList());
+                // 키보드 숨기기
+                imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+            });
+            builder.setNegativeButton(
+            "취소",
+                (dialog, which) ->{
+                    // 현재 화면의 선택된 파일 List 선택 해제
+                    fileListAdapter.setClearSelectedFileList();
+                    // 키보드 숨기기
+                    imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+                });
 
             builder.show();
         }
     }
-
 }
