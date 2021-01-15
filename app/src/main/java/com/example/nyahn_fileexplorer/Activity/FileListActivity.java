@@ -3,16 +3,19 @@ package com.example.nyahn_fileexplorer.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +62,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private LinearLayout cdBottomSheet;
     private LinearLayout llBottomManageLayout;
     private LinearLayout llBottomMoveLayout;
+    private LinearLayout llFileRename;
+    private TextView tvFileRename;
+    private LinearLayout llFilePaste;
 
 
 //    private BottomSheetBehavior bottomSheetBehavior;
@@ -150,6 +156,25 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             setToolbarTitle(directoryList.get(clickedPosition).getName());
     }
 
+    @Override
+    public void onSetChangeStatus(Mode mode, boolean active) {
+        TypedValue typedValue;
+        if(mode == Mode.RENAME_MODE){
+            typedValue = new TypedValue();
+
+            if(active)
+                getTheme().resolveAttribute(R.attr.bottomTextColor, typedValue, true);
+            else
+                getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
+
+            tvFileRename.setTextColor(typedValue.data);
+            llFileRename.setClickable(active);
+            Log.d(TAG, "Rename Mode Clickable = " + active);
+        }
+
+
+    }
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -195,6 +220,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         llBottomManageLayout = findViewById(R.id.llBottomManageLayout);
         llBottomMoveLayout = findViewById(R.id.llBottomMoveLayout);
 
+        llFileRename = findViewById(R.id.llFileRename);
+        tvFileRename = findViewById(R.id.tvFileRename);
+        llFilePaste = findViewById(R.id.llFilePaste);
     }
 
 

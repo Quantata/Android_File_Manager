@@ -164,8 +164,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
             else { // basic_mode, selected_mode
                 fileSelected(holder, holder.getAdapterPosition());
-
             }
+
+            // 이름 변경 활성화 관련
+            mCallback.onSetChangeStatus(Mode.RENAME_MODE, !(selectedPositions.size() > 1));
+
             return true;
         });
 
@@ -204,6 +207,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 fileSelected(holder, holder.getAdapterPosition());
             }
 
+            // 이름 변경 활성화 관련
+            mCallback.onSetChangeStatus(Mode.RENAME_MODE, !(selectedPositions.size() > 1));
         });
 
     }

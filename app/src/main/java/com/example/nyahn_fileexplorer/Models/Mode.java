@@ -5,5 +5,8 @@ public enum  Mode {
     BASIC_MODE, SELECTED_MODE,
 
     // ManageFile에서 사용
-    COPY_MODE, MOVE_MODE
+    COPY_MODE, MOVE_MODE,
+
+    // Rename
+    RENAME_MODE
 }
