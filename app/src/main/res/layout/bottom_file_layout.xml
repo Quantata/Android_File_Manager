@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_copy"/>
 
     </LinearLayout>
@@ -33,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_move"/>
 
     </LinearLayout>
@@ -45,9 +47,11 @@
         android:layout_weight="1">
 
         <TextView
+            android:id="@+id/tvFileRename"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_rename"/>
 
     </LinearLayout>
@@ -63,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_delete"/>
 
     </LinearLayout>
@@ -78,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_info"/>
 
     </LinearLayout>

@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/cancel"/>
 
     </LinearLayout>
@@ -33,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="?attr/bottomTextColor"
             android:text="@string/file_paste"/>
 
     </LinearLayout>

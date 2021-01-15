@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TextAppearance.AppCompat.Tiny" parent="TextAppearance.AppCompat.Small">
+    <style name="TextAppearance.AppCompat.Tiny" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BottomTextColor" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?bottomTextColor</item>
+        <item name="android:textColorHint">?bottomTextColorHint</item>
     </style>
 
 </resources>
