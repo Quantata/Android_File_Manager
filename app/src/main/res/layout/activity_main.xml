@@ -34,13 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/main_storage"
+                android:textAppearance="@style/TextAppearance.AppCompat.14sp"
                 android:textColor="?android:attr/textColor" />
 
             <TextView
                 android:id="@+id/tvInnerVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Tiny"
+                android:textAppearance="@style/TextAppearance.AppCompat.10sp"
                 android:textColor="?android:attr/textColorHint"
                 tools:text="@string/cant_use" />
         </LinearLayout>
@@ -64,6 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.14sp"
                 android:textColor="?android:attr/textColor"
                 android:text="@string/sdcard_storage">
             </TextView>
@@ -71,7 +73,7 @@
                 android:id="@+id/tvSdcardVolume"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Tiny"
+                android:textAppearance="@style/TextAppearance.AppCompat.10sp"
                 android:textColor="?android:attr/textColorHint"
                 android:text="@string/cant_use"/>
         </LinearLayout>

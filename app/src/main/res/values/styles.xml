@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TextAppearance.AppCompat.Tiny" parent="@android:style/TextAppearance.Small">
+    <style name="TextAppearance.AppCompat.6sp" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">6sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.8sp" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">8sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.10sp" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.12sp" parent="@android:style/TextAppearance.Small">
         <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.14sp" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.16sp" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.18sp" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="TextAppearance.AppCompat.20sp" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="BottomTextColor" parent="@android:style/TextAppearance.Medium">
