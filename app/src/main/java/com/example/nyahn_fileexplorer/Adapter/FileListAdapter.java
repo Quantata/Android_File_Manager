@@ -3,6 +3,7 @@ package com.example.nyahn_fileexplorer.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     // Activity의 file 변수 Update 위함
     private OnItemClick mCallback;
     private ArrayList<FileData> fileDataList;
+    TypedValue typedValue;
+
 
     public FileListAdapter(Context context, ArrayList<FileData> files, OnItemClick listener) {
         this.context = context;
@@ -43,7 +46,12 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     // move모드일때
     public void fileSelectedMoveMode(ViewHolder holder, int position){
         fileDataList.get(position).setSelected(true);
-        holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+
+//        holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+        typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
+        int bottomLayoutColor = typedValue.data;
+        holder.llFolder.setBackgroundColor(bottomLayoutColor);
 
         selectedPositions.add(position);
         mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -96,7 +104,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         } else {
             // 선택되지 않은 상태라면 선택
             fileDataList.get(position).setSelected(true);
-            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+//            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+
+            // BottomLayoutColor로 변경
+            typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
+            int bottomLayoutColor = typedValue.data;
+            holder.llFolder.setBackgroundColor(bottomLayoutColor);
 
             selectedPositions.add(position);
             mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -128,10 +142,15 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         holder.tvFolderName.setText(fileDataList.get(position).getFile().getName());
 
         // Color 설정
-        if(fileDataList.get(position).isSelected())
-            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
-        else
+        if(fileDataList.get(position).isSelected()) {
+//            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+            typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
+            int bottomLayoutColor = typedValue.data;
+            holder.llFolder.setBackgroundColor(bottomLayoutColor);
+        } else {
             holder.llFolder.setBackgroundColor(Color.WHITE);
+        }
 
         // 길게 클릭했을 때
         holder.llFolder.setOnLongClickListener(v -> {
