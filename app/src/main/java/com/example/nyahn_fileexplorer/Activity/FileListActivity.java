@@ -357,7 +357,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             }
             // 정렬
             directories.sort(new SortFileData());
-//            directories.sort(new SortFileData());
             files.sort(new SortFileData());
 
             // directory먼저 보여주기
