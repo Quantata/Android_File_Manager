@@ -348,7 +348,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             flEmptyLayout.setVisibility(View.INVISIBLE);
 
             for (File value : list) {
-                // .으로 시작하는 파일은 불러오지 않도록 함
+                // .으로 시작하는 파일(히든파일)은 불러오지 않도록 함
                 if(value.getName().startsWith(".")) continue;
 
                 FileData fileData = new FileData();
