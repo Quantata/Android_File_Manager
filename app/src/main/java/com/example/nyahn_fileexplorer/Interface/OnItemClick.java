@@ -14,8 +14,11 @@ public interface OnItemClick {
     void onShowBottomLayout();
     Mode onGetMode();
     void onSetMode(Mode mode);
+
+    // DirectoryList
     void onAddDirectoryList(File addFile);
     void onBackDirectoryList(int clickedPosition);
 
-    // DirectoryListAdapter.java
+    // 다중 선택시 이름 변경 불가 / 이동시 현재 폴더에서 불가
+    void onSetChangeStatus(Mode mode, boolean active);
 }
