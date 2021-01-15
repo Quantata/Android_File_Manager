@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
+    android:foreground="?attr/selectableItemBackground"
     android:padding="10dp"
     android:layout_marginBottom="1dp">
 
@@ -23,6 +24,6 @@
         android:singleLine="true"
         android:ellipsize="middle"
         android:textAppearance="@style/TextAppearance.AppCompat.18sp"
-        android:textColor="#000000"
+        android:textColor="?android:attr/textColor"
         android:gravity="center_vertical" />
 </LinearLayout>

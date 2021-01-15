@@ -17,5 +17,7 @@
         <item name="bottomLayoutColor">?attr/colorPrimaryVariant</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/gray</item>
+        <item name="android:colorForeground">@color/purple_transparent</item>
+        <item name="selectableItemBackground">@drawable/ripple</item>
     </style>
 </resources>
