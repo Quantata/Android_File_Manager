@@ -376,6 +376,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         }
 
         fileListAdapter.notifyDataSetChanged();
+        // file 갱신될때마다 animation 효과 추가
+        rcFile.scheduleLayoutAnimation();
     }
 
     private void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
@@ -384,9 +386,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 //        AlertDialog alertDialog = builder.create();
 
         if(dialogMode == DialogMode.DIALOG_DELETE) {
-            builder.setTitle(R.string.file_delete)
-                    .setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()))
-                    .setPositiveButton("확인", (dialog, which) -> {
+            builder.setTitle(R.string.file_delete);
+            builder.setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()));
+            builder.setPositiveButton("확인", (dialog, which) -> {
                         // 현재 화면에서 선택된 fileList 갖고옴
                         selectedFileDataList = selectedDataList;
                         // 현재 화면의 선택된 파일 List 선택 해제
@@ -400,8 +402,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                         // 파일 List 갱신
                         showFileList(file);
 
-                    })
-                    .setNegativeButton("취소",
+                    });
+            builder.setNegativeButton("취소",
                             (dialog, which) ->
                             // 현재 화면의 선택된 파일 List 선택 해제
                             fileListAdapter.setClearSelectedFileList());
