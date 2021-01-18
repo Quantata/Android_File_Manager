@@ -112,8 +112,49 @@ public class FileManage {
         }
     }
 
-    public void move(File sourceFile, File outputFile){
+    // 이동 구현
+    public void move(File sourceFile, File targetFile){
         Log.d(TAG, "이동중.");
+        File newDirectory = new File(targetFile, sourceFile.getName());
+
+        // 파일이 존재할 경우
+        if(newDirectory.exists()){
+            int i = 0;
+            while(newDirectory.exists()) {
+                i++;
+                newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+            }
+        }
+
+        if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
+            // 복사할거 recursive
+            // 선택된 파일의 파일 리스트
+            File[] sourceFiles = sourceFile.listFiles();
+            try {
+                if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
+                    // java NIO
+                    // File.move(이동할 파일의 Path, 이동할 곳의 Path)
+                    // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
+                    Files.move(sourceFile.toPath(),
+                            newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                    Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
+                }
+                else {  // 복사할 파일이 파일 or 빈폴더가 아니면
+                    Files.createDirectories(newDirectory.toPath());
+
+                    // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
+                    for (File file : sourceFiles) {
+                        move(file, newDirectory);
+                    }
+
+                    delete(sourceFile);
+                }
+            } catch (IOException e){
+
+                Log.d(TAG, "복사 Exception = " + e);
+            }
+        }
     }
 
 
@@ -160,9 +201,6 @@ public class FileManage {
 
                 move(file, outputFile);
             }
-            // 복사 하고
-
-            // 삭제하는 부분
         }
     }
 
