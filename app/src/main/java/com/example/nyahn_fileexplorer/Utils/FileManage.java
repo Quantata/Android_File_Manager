@@ -1,10 +1,13 @@
 package com.example.nyahn_fileexplorer.Utils;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.nyahn_fileexplorer.Activity.FileListActivity;
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
 
@@ -24,6 +27,11 @@ import java.util.ArrayList;
 public class FileManage {
     private static final String TAG = FileManage.class.getSimpleName();
 
+    Context context;
+    public FileManage(){}
+    public FileManage(Context context){
+        this.context = context;
+    }
 
     public void delete(File sourceFile){
         // 파일이 존재 한다면
@@ -104,6 +112,10 @@ public class FileManage {
         }
     }
 
+    public void move(File sourceFile, File outputFile){
+        Log.d(TAG, "이동중.");
+    }
+
 
     // 붙여넣기시 mode확인하고 진행
     // fileDataList : 현재 선택된 파일 리스트
@@ -117,6 +129,37 @@ public class FileManage {
             }
         }
         if (mode == Mode.MOVE_MODE){
+            // 대상 경로 파일
+            String outputPath = outputFile.getPath();
+            String sourcePath = "";
+
+            for(FileData fileData : fileDataList) {
+                File file = fileData.getFile();
+                // 소스 경로 파일
+                sourcePath = file.getPath();
+
+                // 복사된 파일이 디렉토리인 경우 자신의 디렉토리로 복사하는건지 확인
+                if(file.isDirectory()){
+                    outputPath = outputPath.replace("(", "#");
+                    outputPath = outputPath.replace(")", "#");
+                    sourcePath = sourcePath.replace("(", "#");
+                    sourcePath = sourcePath.replace(")", "#");
+                    Log.d(TAG, "같은 파일인가? " + outputPath.matches(sourcePath + "(.*)"));
+
+                    if (outputPath.matches(sourcePath + "(.*)")) {
+                        Toast.makeText(context, "폴더를 복사할 수 없습니다. 대상폴더가 복사하려는 폴더의 하위폴더 입니다.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+                }
+
+                if(outputPath.equals(file.getParent())){
+                    Toast.makeText(context, "대상폴더와 소스폴더가 같습니다.", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
+                move(file, outputFile);
+            }
             // 복사 하고
 
             // 삭제하는 부분

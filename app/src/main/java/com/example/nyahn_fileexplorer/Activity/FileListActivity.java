@@ -172,20 +172,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             llFileRename.setClickable(active);
             Log.d(TAG, "Rename Mode Clickable = " + active);
         }
-
-        // TODO: 이동시 현재 폴더일 경우 비활성화
-        if(mode == Mode.MOVE_MODE) {
-            typedValue = new TypedValue();
-
-            if(active)
-                getTheme().resolveAttribute(R.attr.bottomTextColor, typedValue, true);
-            else
-                getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
-
-            tvFilePaste.setTextColor(typedValue.data);
-            llFilePaste.setClickable(active);
-            Log.d(TAG, "Paste Mode Clickable = " + active);
-        }
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -212,7 +198,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     public void init(){
-        fileManage = new FileManage();
+        fileManage = new FileManage(this);
+//        fileManage = new FileManage();
 
         // Directory RecyclerView 초기화
         rcDirectory = findViewById(R.id.rcDirectory);
@@ -259,6 +246,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // MOVE_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.MOVE_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
+                // 선택된 파일(들)이 있는 경로의 파일 목록 저장
+                selectedFileDataList = fileListAdapter.getSelectedFileList();
+
+                // 현재 화면의 recyclerView fileList 선택부분 초기화
+                fileListAdapter.setClearSelectedFileList();
                 break;
 
             case R.id.llFileRename:

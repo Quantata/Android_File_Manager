@@ -43,7 +43,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         this.mCallback = listener;
     }
 
-    // move모드일때
+    // move, copy모드일때
     public void fileSelectedMoveMode(ViewHolder holder, int position){
         fileDataList.get(position).setSelected(true);
 
@@ -196,7 +196,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                     mCallback.onAddDirectoryList(clickedFile);
                 }
                 /*
-                    TODO: 일반 파일일때 구현
+                    TODO: 일반 파일일때 여는거 구현
 
                 else {
 
