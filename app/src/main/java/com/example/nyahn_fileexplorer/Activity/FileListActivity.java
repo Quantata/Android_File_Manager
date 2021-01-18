@@ -66,7 +66,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private LinearLayout llFileRename;
     private TextView tvFileRename;
     private LinearLayout llFilePaste;
-
+    private TextView tvFilePaste;
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -174,6 +174,18 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         }
 
         // TODO: 이동시 현재 폴더일 경우 비활성화
+        if(mode == Mode.MOVE_MODE) {
+            typedValue = new TypedValue();
+
+            if(active)
+                getTheme().resolveAttribute(R.attr.bottomTextColor, typedValue, true);
+            else
+                getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
+
+            tvFilePaste.setTextColor(typedValue.data);
+            llFilePaste.setClickable(active);
+            Log.d(TAG, "Paste Mode Clickable = " + active);
+        }
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -224,6 +236,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         llFileRename = findViewById(R.id.llFileRename);
         tvFileRename = findViewById(R.id.tvFileRename);
         llFilePaste = findViewById(R.id.llFilePaste);
+        tvFilePaste = findViewById(R.id.tvFilePaste);
     }
 
 
@@ -243,9 +256,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
 
             case R.id.llFileMove:
+                // MOVE_MODE로 변경, 붙여넣기 클릭시 사용
                 presentMode = Mode.MOVE_MODE;
-                Toast.makeText(this, "이동하겠습니다.", Toast.LENGTH_SHORT).show();
-                onShowBottomLayout();
+                onShowBottomLayout();   // 취소/붙여넣기
                 break;
 
             case R.id.llFileRename:
@@ -374,8 +387,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         }
 
         fileListAdapter.notifyDataSetChanged();
-        // file 갱신될때마다 animation 효과 추가
-        rcFile.scheduleLayoutAnimation();
     }
 
     private void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){

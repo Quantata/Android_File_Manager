@@ -130,6 +130,7 @@ public class FileManage {
         }
     }
 
+    // 이름 변경
     public void renameFile(ArrayList<FileData> selectedList, String rename){
         for(FileData fileData : selectedList){
             rename(fileData.getFile(), rename);

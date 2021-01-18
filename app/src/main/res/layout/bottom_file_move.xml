@@ -16,6 +16,7 @@
         android:layout_weight="1">
 
         <TextView
+            android:id="@+id/tvCancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -31,6 +32,7 @@
         android:layout_weight="1">
 
         <TextView
+            android:id="@+id/tvFilePaste"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
