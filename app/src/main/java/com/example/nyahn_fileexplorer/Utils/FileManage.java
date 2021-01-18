@@ -174,27 +174,44 @@ public class FileManage {
             String outputPath = outputFile.getPath();
             String sourcePath = "";
 
+            boolean isSub = true;
             for(FileData fileData : fileDataList) {
                 File file = fileData.getFile();
                 // 소스 경로 파일
                 sourcePath = file.getPath();
 
                 // 복사된 파일이 디렉토리인 경우 자신의 디렉토리로 복사하는건지 확인
-                if(file.isDirectory()){
-                    outputPath = outputPath.replace("(", "#");
-                    outputPath = outputPath.replace(")", "#");
-                    sourcePath = sourcePath.replace("(", "#");
-                    sourcePath = sourcePath.replace(")", "#");
-                    Log.d(TAG, "같은 파일인가? " + outputPath.matches(sourcePath + "(.*)"));
+                if (file.isDirectory()) {
+//                    outputPath = outputPath.replace("(", "#");
+//                    outputPath = outputPath.replace(")", "#");
+//                    sourcePath = sourcePath.replace("(", "#");
+//                    sourcePath = sourcePath.replace(")", "#");
+//                    Log.d(TAG, "같은 파일인가? " + outputPath.matches(sourcePath + "(.*)"));
+//
+//                    if (outputPath.matches(sourcePath + "(.*)")) {
+//
+//                        Toast.makeText(context, "폴더를 복사할 수 없습니다. 대상폴더가 복사하려는 폴더의 하위폴더 입니다.", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    }
+                    if (outputPath.startsWith(sourcePath)) {
+                        String[] outputAry = outputPath.split("/");
+                        String[] inputAry = sourcePath.split("/");
+                        for (int i = 0; i < inputAry.length; i++) {
+                            if (!inputAry[i].equals(outputAry[i])) {
+                                isSub = false;
+                                break;
+                            }
 
-                    if (outputPath.matches(sourcePath + "(.*)")) {
-                        Toast.makeText(context, "폴더를 복사할 수 없습니다. 대상폴더가 복사하려는 폴더의 하위폴더 입니다.", Toast.LENGTH_SHORT).show();
-                        break;
+                        }
+                        if(isSub){
+                            Toast.makeText(context, "폴더를 복사할 수 없습니다. 대상폴더가 복사하려는 폴더의 하위폴더 입니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     }
-
                 }
 
-                if(outputPath.equals(file.getParent())){
+                // 현재 소스파일이 있는 곳일 경우
+                if (outputPath.equals(file.getParent())) {
                     Toast.makeText(context, "대상폴더와 소스폴더가 같습니다.", Toast.LENGTH_SHORT).show();
                     break;
                 }
