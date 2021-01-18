@@ -182,17 +182,8 @@ public class FileManage {
 
                 // 복사된 파일이 디렉토리인 경우 자신의 디렉토리로 복사하는건지 확인
                 if (file.isDirectory()) {
-//                    outputPath = outputPath.replace("(", "#");
-//                    outputPath = outputPath.replace(")", "#");
-//                    sourcePath = sourcePath.replace("(", "#");
-//                    sourcePath = sourcePath.replace(")", "#");
-//                    Log.d(TAG, "같은 파일인가? " + outputPath.matches(sourcePath + "(.*)"));
-//
-//                    if (outputPath.matches(sourcePath + "(.*)")) {
-//
-//                        Toast.makeText(context, "폴더를 복사할 수 없습니다. 대상폴더가 복사하려는 폴더의 하위폴더 입니다.", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    }
+                    // outputPath가 sourcePath로 시작하면 진짜 시작하는건지 하나하나 확인
+                    // 아니면 .../ScreenShot과 .../ScreenShot (1) 을 동일 폴더로 착각할 수 있음
                     if (outputPath.startsWith(sourcePath)) {
                         String[] outputAry = outputPath.split("/");
                         String[] inputAry = sourcePath.split("/");
