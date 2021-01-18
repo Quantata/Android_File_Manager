@@ -249,7 +249,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
 
             case R.id.llFileRename:
-                Toast.makeText(this, "이름 수정.", Toast.LENGTH_SHORT).show();
                 presentMode = Mode.BASIC_MODE;
                 //이름 변경 Dialog한 뒤 notifySetData
                 showDialog(DialogMode.DIALOG_RENAME, fileListAdapter.getSelectedFileList());
@@ -293,7 +292,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // 붙여넣기 끝난 후 Basic_Mode로 변경
                 presentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
-                Toast.makeText(this, "붙여넣기.", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.ivRootDir:
