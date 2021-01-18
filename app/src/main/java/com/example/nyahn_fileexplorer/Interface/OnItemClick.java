@@ -8,8 +8,8 @@ public interface OnItemClick {
 //    void onBackClick(File clickedFile);
 
     // FileListAdapter.java
-    File onGetParentFile();
-    void onSetParentFile(File file);
+    File onGetCurrentFile();
+    void onSetCurrentFile(File file);
     void onSetFileList(File file);
     void onShowBottomLayout();
     Mode onGetMode();

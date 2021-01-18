@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +37,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 {
     private static final String TAG = FileListActivity.class.getSimpleName();
 
-    private Mode presentMode = Mode.BASIC_MODE;
+    private Mode currentMode = Mode.BASIC_MODE;
     // 현재 파일
     private File file;
     // 현재 파일이 갖고 있는 파일 목록
@@ -83,12 +82,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     @Override
-    public File onGetParentFile() {
+    public File onGetCurrentFile() {
         return file;
     }
 
     @Override
-    public void onSetParentFile(File file) {
+    public void onSetCurrentFile(File file) {
         this.file = file;
     }
 
@@ -100,15 +99,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 복사, 이동 등 file function layout
     @Override
     public void onShowBottomLayout() {
-        if(presentMode == Mode.SELECTED_MODE){
+        if(currentMode == Mode.SELECTED_MODE){
             cdBottomSheet.setVisibility(View.VISIBLE);
             llBottomManageLayout.setVisibility(View.VISIBLE);
         }
-        else if(presentMode == Mode.MOVE_MODE){
+        else if(currentMode == Mode.MOVE_MODE){
             llBottomManageLayout.setVisibility(View.GONE);
             llBottomMoveLayout.setVisibility(View.VISIBLE);
         }
-        else if(presentMode == Mode.COPY_MODE){
+        else if(currentMode == Mode.COPY_MODE){
             llBottomManageLayout.setVisibility(View.GONE);
             llBottomMoveLayout.setVisibility(View.VISIBLE);
         }
@@ -121,12 +120,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     @Override
     public Mode onGetMode() {
-        return presentMode;
+        return currentMode;
     }
 
     @Override
     public void onSetMode(Mode mode) {
-        presentMode = mode;
+        currentMode = mode;
     }
 
     @Override
@@ -234,7 +233,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             // 파일 기능
             case R.id.llFileCopy:   // 구현 완료
                 // COPY_MODE로 변경, 붙여넣기 클릭시 사용
-                presentMode = Mode.COPY_MODE;
+                currentMode = Mode.COPY_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
                 // 선택된 파일(들)이 있는 경로의 파일 목록
                 selectedFileDataList = fileListAdapter.getSelectedFileList();
@@ -244,7 +243,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             case R.id.llFileMove:
                 // MOVE_MODE로 변경, 붙여넣기 클릭시 사용
-                presentMode = Mode.MOVE_MODE;
+                currentMode = Mode.MOVE_MODE;
                 onShowBottomLayout();   // 취소/붙여넣기
                 // 선택된 파일(들)이 있는 경로의 파일 목록 저장
                 selectedFileDataList = fileListAdapter.getSelectedFileList();
@@ -254,14 +253,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
 
             case R.id.llFileRename:
-                presentMode = Mode.BASIC_MODE;
+                currentMode = Mode.BASIC_MODE;
                 //이름 변경 Dialog한 뒤 notifySetData
                 showDialog(DialogMode.DIALOG_RENAME, fileListAdapter.getSelectedFileList());
                 // Layout 내림
                 onShowBottomLayout();
                 break;
             case R.id.llFileDelete:
-                presentMode = Mode.BASIC_MODE;
+                currentMode = Mode.BASIC_MODE;
 
                 showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
 
@@ -274,7 +273,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
-                presentMode = Mode.BASIC_MODE;
+                currentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 // 선택 해제
                 selectedFileDataList.clear();
@@ -286,7 +285,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
-                fileManage.pasteFile(presentMode, selectedFileDataList, file);
+                fileManage.pasteFile(currentMode, selectedFileDataList, file);
 
                 // 복사된 파일 List 보여주기
                 showFileList(file);
@@ -295,7 +294,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 selectedFileDataList.clear();
 
                 // 붙여넣기 끝난 후 Basic_Mode로 변경
-                presentMode = Mode.BASIC_MODE;
+                currentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 break;
 
@@ -311,8 +310,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
     @Override
     public void onBackPressed() {
-        if(presentMode == Mode.SELECTED_MODE){
-            presentMode = Mode.BASIC_MODE;
+        if(currentMode == Mode.SELECTED_MODE){
+            currentMode = Mode.BASIC_MODE;
             onShowBottomLayout();
             // selectedFileDataList에는 따로저장된게 없음으로 adapter의 selectedList만 clear해주면 됨.
             fileListAdapter.setClearSelectedFileList();
@@ -344,11 +343,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     // 파일 목록 update
-    public void showFileList(File parentFile){
+    public void showFileList(File currentFile){
         ArrayList<FileData> directories = new ArrayList<>();
         ArrayList<FileData> files = new ArrayList<>();
 
-        file = parentFile;
+        file = currentFile;
         File[] list = file.listFiles();
 
         // 붙여넣기시 기존 파일 + 붙여넣기 안되는 문제 해결

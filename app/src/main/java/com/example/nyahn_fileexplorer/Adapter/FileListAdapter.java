@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nyahn_fileexplorer.Models.FileData;
@@ -179,7 +178,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 mCallback.onGetMode() == Mode.MOVE_MODE ||
                 mCallback.onGetMode() == Mode.COPY_MODE){
 
-                File file = mCallback.onGetParentFile();
+                File file = mCallback.onGetCurrentFile();
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
                 File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
 
@@ -187,7 +186,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                 // 디렉토리일때
                 if (clickedFile.isDirectory()) {
-                    mCallback.onSetParentFile(clickedFile);
+                    mCallback.onSetCurrentFile(clickedFile);
                     fileDataList.clear();
                     mCallback.onSetFileList(clickedFile);
 
