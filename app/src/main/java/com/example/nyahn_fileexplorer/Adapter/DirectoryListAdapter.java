@@ -2,6 +2,7 @@ package com.example.nyahn_fileexplorer.Adapter;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,10 @@ public class DirectoryListAdapter extends RecyclerView.Adapter<DirectoryListAdap
     @Override
     public void onBindViewHolder(@NonNull DirectoryListAdapter.ViewHolder holder, int position) {
         holder.tvDirName.setText(directoryList.get(position).getName());
+        if(holder.getAdapterPosition() == getItemCount()-1)
+            holder.tvDirName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        else
+            holder.tvDirName.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
 
         holder.tvDirName.setOnClickListener(v -> {
             // directory list : 해당 position까지 remove

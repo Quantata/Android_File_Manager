@@ -135,6 +135,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         directoryListAdapter.notifyDataSetChanged();
 
         setToolbarTitle(addFile.getName());
+        // 최하단으로 scroll
+        rcDirectory.scrollToPosition(directoryListAdapter.getItemCount() - 1);
     }
 
     @Override
@@ -148,6 +150,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             directoryList.remove(i);
             directoryListAdapter.notifyItemRemoved(i);
         }
+        // 현재 위치 bold 처리 위해 추가
+        directoryListAdapter.notifyItemChanged(directoryListAdapter.getItemCount()-1);
 
         //Toolbar title 지정
         if(directoryList.size() == 0)
