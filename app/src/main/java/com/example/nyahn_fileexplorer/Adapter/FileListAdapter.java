@@ -166,7 +166,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
 
             // 이름 변경 활성화 관련
-            mCallback.onSetChangeStatus(Mode.RENAME_MODE, !(selectedPositions.size() > 1));
+            mCallback.onSetChangeStatus(!(selectedPositions.size() > 1));
 
             return true;
         });
@@ -207,7 +207,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
 
             // 이름 변경 활성화 관련
-            mCallback.onSetChangeStatus(Mode.RENAME_MODE, !(selectedPositions.size() > 1));
+            mCallback.onSetChangeStatus(!(selectedPositions.size() > 1));
         });
 
     }

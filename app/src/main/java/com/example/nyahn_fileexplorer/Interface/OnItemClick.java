@@ -20,5 +20,6 @@ public interface OnItemClick {
     void onBackDirectoryList(int clickedPosition);
 
     // 다중 선택시 이름 변경 불가 / 이동시 현재 폴더에서 불가
-    void onSetChangeStatus(Mode mode, boolean active);
+//    void onSetChangeStatus(Mode mode, boolean active);
+    void onSetChangeStatus(boolean active);
 }

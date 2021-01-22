@@ -6,7 +6,4 @@ public enum  Mode {
 
     // ManageFile에서 사용
     COPY_MODE, MOVE_MODE,
-
-    // Rename
-    RENAME_MODE
 }

@@ -61,7 +61,7 @@
             android:textColor="?android:attr/textColorHint"/>
 
         <TextView
-            android:id="@+id/tvFileModify"
+            android:id="@+id/tvFileLastModify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/file_last_modify"
@@ -71,7 +71,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llFileSub"
+        android:id="@+id/llFileSubInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -79,15 +79,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_sub_dir_size"
+            android:text="@string/file_sub_info"
             android:textAppearance="@style/TextSize.12sp"
             android:textColor="?android:attr/textColorHint"/>
 
         <TextView
-            android:id="@+id/tvFileSub"
+            android:id="@+id/tvFileSubInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_sub_dir_size"
+            android:text="@string/file_sub_info"
             android:textAppearance="@style/TextSize.18sp"
             android:textColor="?android:attr/textColor"/>
 

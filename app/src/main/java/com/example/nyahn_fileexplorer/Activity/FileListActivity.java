@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -64,8 +66,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private LinearLayout llBottomMoveLayout;
     private LinearLayout llFileRename;
     private TextView tvFileRename;
-    private LinearLayout llFilePaste;
-    private TextView tvFilePaste;
+    private LinearLayout llFileInfo;
+    private TextView tvFileInfo;
 
 //    private BottomSheetBehavior bottomSheetBehavior;
 
@@ -161,9 +163,21 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
 
     @Override
-    public void onSetChangeStatus(Mode mode, boolean active) {
+    public void onSetChangeStatus(boolean active) {
         TypedValue typedValue;
-        if(mode == Mode.RENAME_MODE){
+//        if(mode == Mode.RENAME_MODE){
+//            typedValue = new TypedValue();
+//
+//            if(active)
+//                getTheme().resolveAttribute(R.attr.bottomTextColor, typedValue, true);
+//            else
+//                getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
+//
+//            tvFileRename.setTextColor(typedValue.data);
+//            llFileRename.setClickable(active);
+//            Log.d(TAG, "Rename Mode Clickable = " + active);
+//        }
+
             typedValue = new TypedValue();
 
             if(active)
@@ -171,10 +185,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             else
                 getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
 
+            // Rename관련
             tvFileRename.setTextColor(typedValue.data);
             llFileRename.setClickable(active);
-            Log.d(TAG, "Rename Mode Clickable = " + active);
-        }
+            // File Info 관련
+            tvFileInfo.setTextColor(typedValue.data);
+            llFileInfo.setClickable(active);
+
+            Log.d(TAG, "INFO Mode Clickable = " + active);
     }
 
     public void onCreate(Bundle savedInstanceState)
@@ -225,8 +243,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         llFileRename = findViewById(R.id.llFileRename);
         tvFileRename = findViewById(R.id.tvFileRename);
-        llFilePaste = findViewById(R.id.llFilePaste);
-        tvFilePaste = findViewById(R.id.tvFilePaste);
+        llFileInfo = findViewById(R.id.llFileInfo);
+        tvFileInfo = findViewById(R.id.tvFileInfo);
     }
 
 
@@ -265,16 +283,21 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
             case R.id.llFileDelete:
                 currentMode = Mode.BASIC_MODE;
-
-                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
-
                 // Layout 내림
                 onShowBottomLayout();
+
+                showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
+
                 break;
 
             case R.id.llFileInfo:
+                currentMode = Mode.COPY_MODE;
+
+                // Layout 내림
+                onShowBottomLayout();
                 Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
                 break;
+
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
                 currentMode = Mode.BASIC_MODE;
@@ -390,6 +413,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 //        AlertDialog alertDialog = builder.create();
 
         if(dialogMode == DialogMode.DIALOG_DELETE) {
+            // 배경 터치 불가
+            builder.setCancelable(false);
+
             builder.setTitle(R.string.file_delete);
             builder.setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()));
             builder.setPositiveButton("확인", (dialog, which) -> {
@@ -474,6 +500,32 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                     // 키보드 숨기기
                     imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
                 });
+
+            builder.show();
+        }
+
+        if(dialogMode == DialogMode.DIALOG_INFO){
+            // 배경 터치 불가
+            builder.setCancelable(false);
+
+            builder.setTitle(R.string.file_info);
+            // 한 개만 가능
+            File selectedFile = selectedDataList.get(0).getFile();
+
+            // TODO: file정보 layout에 적용
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_info_dialog, null);
+            builder.setView(view);
+            TextView tvFileName = (TextView) view.findViewById(R.id.tvFileName);
+            TextView tvFileSize = (TextView) view.findViewById(R.id.tvFileSize);
+            TextView tvFileLastModify = (TextView) view.findViewById(R.id.tvFileLastModify);
+            TextView tvFileSubInfo = (TextView) view.findViewById(R.id.tvFileSubInfo);
+            TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
+
+            // 현재 화면의 선택된 파일 List 선택 해제
+            fileListAdapter.setClearSelectedFileList();
+
+            builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
 
             builder.show();
         }
