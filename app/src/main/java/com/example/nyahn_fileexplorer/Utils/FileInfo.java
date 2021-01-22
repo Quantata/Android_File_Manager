@@ -12,6 +12,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FileInfo {
@@ -19,58 +20,81 @@ public class FileInfo {
     File file;
     Context context;
 
+    AtomicLong fileSize = new AtomicLong(0);
+    AtomicInteger numDir = new AtomicInteger(0);
+    AtomicInteger numNonDir = new AtomicInteger(0);
 
     public FileInfo(Context context, File file){
         this.context = context;
         this.file = file;
     }
 
+    // 파일 이름 가져오기
     public String getFileName(){
         return file.getName();
     }
 
+    // 파일 사이즈 가져오기
     public String getFileSize(){
-        AtomicLong size = new AtomicLong(0);
         if(file.isDirectory()){
             File[] list = file.listFiles();
             for(File tempFile : list){
-                size.addAndGet(calculateStorage(tempFile));
+                calculateStorage(tempFile);
             }
         }
         else
-            size.addAndGet(calculateStorage(file));
+            calculateStorage(file);
 
         // 파일 사이즈 읽기 쉽도록 변경
-        return formatFileSize(size.get());
+        return formatFileSize(fileSize.get());
 
     }
 
+    // 파일 사이즈 쉽게 보이도록 함
     private String formatFileSize(long bytes) {
         return android.text.format.Formatter.formatFileSize(context, bytes);
     }
 
-    public long calculateStorage(File pathFile){
-        AtomicLong size = new AtomicLong(0);
+    public void calculateStorage(File pathFile){
+//        AtomicLong size = new AtomicLong(0);
         try {
             Files.walkFileTree(pathFile.toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    size.addAndGet(attrs.size());
+                    numNonDir.addAndGet(1);
+                    fileSize.addAndGet(attrs.size());
                     return FileVisitResult.CONTINUE;
                 }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    numDir.addAndGet(1);
+                    return FileVisitResult.CONTINUE;
+                }
+
             });
-            Log.d(TAG, pathFile.getName() + " = " + size);
-            return size.get();
+            Log.d(TAG, pathFile.getName() + " fileSize = " + fileSize);
+            Log.d(TAG, pathFile.getName() + " numDir= " + numDir);
+            Log.d(TAG, pathFile.getName() + " numNonDir= " + numNonDir);
         } catch (IOException e) {
             e.printStackTrace();
-            return 0;
         }
     }
 
+    // 파일의 마지막 수정날짜 가져오기
     // BasicFileAttributes를 이용해서도 가능
     public String getFileLastModify(){
         //날짜 포맷
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 a hh:mm", Locale.KOREAN);
         return simpleDateFormat.format(file.lastModified());
+    }
+
+    // 파일 내용(폴더수, 파일수) 가져오기
+    public int getFileNum(){
+        return numNonDir.get();
+    }
+
+    public int getFolderNum(){
+        return numDir.get();
     }
 }

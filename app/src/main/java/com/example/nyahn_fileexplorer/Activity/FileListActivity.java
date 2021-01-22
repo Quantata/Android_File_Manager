@@ -530,6 +530,10 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 tvFileName.setText(fileInfo.getFileName());
                 tvFileSize.setText(fileInfo.getFileSize());
                 tvFileLastModify.setText(fileInfo.getFileLastModify());
+                tvFileSubInfo.setText(
+                        String.format(getResources().getString(R.string.file_contents),
+                                fileInfo.getFolderNum(), fileInfo.getFileNum()
+                        ));
             }
             // 현재 화면의 선택된 파일 List 선택 해제
             fileListAdapter.setClearSelectedFileList();
