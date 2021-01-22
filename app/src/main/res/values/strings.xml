@@ -14,9 +14,16 @@
     <string name="file_copy">복사</string>
     <string name="file_move">이동</string>
     <string name="file_share">공유</string>
-    <string name="file_info">속성</string>
     <string name="file_more">더보기</string>
     <string name="file_paste">붙여넣기</string>
+
+    <string name="file_info">상세 정보</string>
+    <string name="file_name">이름</string>
+    <string name="file_size">크기</string>
+    <string name="file_last_modify">마지막 수정</string>
+    <string name="file_sub_dir_size">포함 항목</string>
+    <string name="file_path">경로</string>
+
     <string name="cancel">취소</string>
 
     <string name="file_createFile">새 폴더</string>
