@@ -20,6 +20,7 @@ public class FileInfo {
 
 
     public FileInfo(Context context, File file){
+        this.context = context;
         this.file = file;
     }
 
@@ -37,15 +38,14 @@ public class FileInfo {
         else
             size.addAndGet(calculateStorage(file));
 
-        return readableFileSize(size.get());
+        // 파일 사이즈 읽기 쉽도록 변경
+        return formatFileSize(size.get());
 
     }
 
-    public static String readableFileSize(long size) {
-        if(size <= 0) return "0B";
-        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
-        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
-        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+
+    private String formatFileSize(long bytes) {
+        return android.text.format.Formatter.formatFileSize(context, bytes);
     }
 
     public long calculateStorage(File pathFile){
