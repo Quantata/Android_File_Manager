@@ -286,15 +286,17 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // Layout 내림
                 onShowBottomLayout();
 
-                showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
+                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
 
                 break;
 
             case R.id.llFileInfo:
-                currentMode = Mode.COPY_MODE;
+                currentMode = Mode.BASIC_MODE;
 
                 // Layout 내림
                 onShowBottomLayout();
+
+                showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
                 Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
                 break;
 
