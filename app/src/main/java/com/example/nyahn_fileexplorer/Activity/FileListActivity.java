@@ -526,8 +526,11 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
 
             FileInfo fileInfo = new FileInfo(this, selectedFile);
-            tvFileName.setText(fileInfo.getFileName());
-            tvFileSize.setText(fileInfo.getFileSize());
+            if(file.exists()) {
+                tvFileName.setText(fileInfo.getFileName());
+                tvFileSize.setText(fileInfo.getFileSize());
+                tvFileLastModify.setText(fileInfo.getFileLastModify());
+            }
             // 현재 화면의 선택된 파일 List 선택 해제
             fileListAdapter.setClearSelectedFileList();
 

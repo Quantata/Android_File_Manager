@@ -10,7 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FileInfo {
@@ -27,6 +28,7 @@ public class FileInfo {
     public String getFileName(){
         return file.getName();
     }
+
     public String getFileSize(){
         AtomicLong size = new AtomicLong(0);
         if(file.isDirectory()){
@@ -42,7 +44,6 @@ public class FileInfo {
         return formatFileSize(size.get());
 
     }
-
 
     private String formatFileSize(long bytes) {
         return android.text.format.Formatter.formatFileSize(context, bytes);
@@ -64,5 +65,12 @@ public class FileInfo {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    // BasicFileAttributes를 이용해서도 가능
+    public String getFileLastModify(){
+        //날짜 포맷
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 a hh:mm", Locale.KOREAN);
+        return simpleDateFormat.format(file.lastModified());
     }
 }
