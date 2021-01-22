@@ -28,6 +28,7 @@ import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.OnFileManage;
 import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.Utils.FileInfo;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Utils.SortFileData;
@@ -524,6 +525,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             TextView tvFileSubInfo = (TextView) view.findViewById(R.id.tvFileSubInfo);
             TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
 
+            FileInfo fileInfo = new FileInfo(this, selectedFile);
+            tvFileName.setText(fileInfo.getFileName());
+            tvFileSize.setText(fileInfo.getFileSize());
             // 현재 화면의 선택된 파일 List 선택 해제
             fileListAdapter.setClearSelectedFileList();
 

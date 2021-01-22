@@ -7,112 +7,123 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/dialog_margin"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_name"
-            android:textAppearance="@style/TextSize.12sp"
-            android:textColor="?android:attr/textColorHint"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvFileName"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_name"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"/>
+
+            <TextView
+                android:id="@+id/tvFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_name"
+                android:textAppearance="@style/TextSize.18sp"
+                android:textColor="?android:attr/textColor"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_name"
-            android:textAppearance="@style/TextSize.18sp"
-            android:textColor="?android:attr/textColor"/>
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_size"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvFileSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_size"
+                android:textAppearance="@style/TextSize.18sp"
+                android:textColor="?android:attr/textColor"/>
 
-        <TextView
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_size"
-            android:textAppearance="@style/TextSize.12sp"
-            android:textColor="?android:attr/textColorHint"/>
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvFileSize"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_last_modify"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"/>
+
+            <TextView
+                android:id="@+id/tvFileLastModify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_last_modify"
+                android:textAppearance="@style/TextSize.18sp"
+                android:textColor="?android:attr/textColor"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFileSubInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_size"
-            android:textAppearance="@style/TextSize.18sp"
-            android:textColor="?android:attr/textColor"/>
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_sub_info"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvFileSubInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_sub_info"
+                android:textAppearance="@style/TextSize.18sp"
+                android:textColor="?android:attr/textColor"/>
 
-        <TextView
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/file_last_modify"
-            android:textAppearance="@style/TextSize.12sp"
-            android:textColor="?android:attr/textColorHint"/>
+            android:layout_marginTop="@dimen/dialog_margin"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvFileLastModify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/file_last_modify"
-            android:textAppearance="@style/TextSize.18sp"
-            android:textColor="?android:attr/textColor"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_path"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvFilePath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/file_path"
+                android:textAppearance="@style/TextSize.18sp"
+                android:textColor="?android:attr/textColor"/>
 
-    <LinearLayout
-        android:id="@+id/llFileSubInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/file_sub_info"
-            android:textAppearance="@style/TextSize.12sp"
-            android:textColor="?android:attr/textColorHint"/>
-
-        <TextView
-            android:id="@+id/tvFileSubInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/file_sub_info"
-            android:textAppearance="@style/TextSize.18sp"
-            android:textColor="?android:attr/textColor"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/file_path"
-            android:textAppearance="@style/TextSize.12sp"
-            android:textColor="?android:attr/textColorHint"/>
-
-        <TextView
-            android:id="@+id/tvFilePath"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/file_path"
-            android:textAppearance="@style/TextSize.18sp"
-            android:textColor="?android:attr/textColor"/>
-
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
 
