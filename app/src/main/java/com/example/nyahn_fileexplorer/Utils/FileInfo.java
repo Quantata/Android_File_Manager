@@ -1,6 +1,7 @@
 package com.example.nyahn_fileexplorer.Utils;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -28,6 +29,44 @@ public class FileInfo {
         this.context = context;
         this.file = file;
     }
+
+    public String getTotalMemory(){
+        return formatFileSize(calculateTotalMemory());
+    }
+    // 파일 전체 용량
+    public long calculateTotalMemory() {
+//        StatFs stat = new StatFs(file.getPath());
+//        long blockSize = 0;
+//        long totalBlocks = 0;
+//
+//        blockSize = stat.getBlockSizeLong();
+//        totalBlocks = stat.getBlockCountLong();
+        long totalSpace = file.getTotalSpace();
+        File rootFile = new File(Environment.getRootDirectory().getPath());
+        totalSpace = totalSpace + rootFile.getTotalSpace();
+
+        return  totalSpace;
+    }
+
+    // 사용 가능한 용량
+    public String getUsingMemory() {
+//        StatFs stat = new StatFs(file.getPath());
+//        long blockSize = 0;
+//        long availableBlocks = 0;
+//        long usingSize = 0;
+//        long totalSize = stat.getBlockSizeLong() * stat.getBlockCountLong();
+//
+//        blockSize = stat.getBlockSizeLong();
+//        availableBlocks = stat.getAvailableBlocksLong();
+//
+//        usingSize = totalSize - (blockSize * availableBlocks);
+        long freeSize = file.getFreeSpace();
+        File rootFile = new File(Environment.getRootDirectory().getPath());
+        freeSize = freeSize + rootFile.getFreeSpace();
+        return formatFileSize(calculateTotalMemory() - freeSize);
+    }
+
+
 
     // 파일 이름 가져오기
     public String getFileName(){
@@ -61,14 +100,17 @@ public class FileInfo {
             Files.walkFileTree(pathFile.toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    numNonDir.addAndGet(1);
-                    fileSize.addAndGet(attrs.size());
+                    if(!file.getFileName().startsWith(".")) {
+                        numNonDir.addAndGet(1);
+                        fileSize.addAndGet(attrs.size());
+                    }
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    numDir.addAndGet(1);
+                    if(!dir.getFileName().startsWith("."))
+                        numDir.addAndGet(1);
                     return FileVisitResult.CONTINUE;
                 }
 

@@ -10,12 +10,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nyahn_fileexplorer.Activity.FileListActivity;
-import com.example.nyahn_fileexplorer.Utils.FileManage;
+import com.example.nyahn_fileexplorer.Utils.FileInfo;
 
 import java.io.File;
 
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     File innerFile;
     File sdcardFile;
 
+    FileInfo fileInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,30 +70,46 @@ public class MainActivity extends AppCompatActivity {
         // 내부 저장소 저장용량 계산
         innerFile =  new File(Environment.getExternalStorageDirectory().getPath());
 
-        int usuableSpace = (int) Math.round(innerFile.getFreeSpace() / Math.pow(1024, 3));
-        int totalSpace = (int) Math.round(innerFile.getTotalSpace() / Math.pow(1024, 3));
-        int usedSpace = totalSpace - usuableSpace;
+        // 파일 정보
+        fileInfo = new FileInfo(this, innerFile);
+
+//        int usuableSpace = (int) Math.round(innerFile.getFreeSpace() / Math.pow(1024, 3));
+//        int totalSpace = (int) Math.round(innerFile.getTotalSpace() / Math.pow(1024, 3));
+//        int usedSpace = totalSpace - usuableSpace;
+//
+//        // TODO : 주석 해제
+//        tvInnerVolume.setText(String.format("%dGB / %dGB", usedSpace, totalSpace));
+
 
         // TODO : 주석 해제
-        tvInnerVolume.setText(String.format("%dGB / %dGB", usedSpace, totalSpace));
+        tvInnerVolume.setText(String.format("%s / %s",
+                fileInfo.getUsingMemory(), fileInfo.getTotalMemory()));
 
         // sdcard 폴더 갖고 오기
         File sdcard = null;
-        sdcardFile = new File(Environment.getStorageDirectory().getPath());
-        File[] list = sdcardFile.listFiles();
-
-        // sdcard 이름에 (-)이 포함되어 있음.
-        for(File el : list){
-            if(el.getName().contains("-")){
-                sdcard = el;
+        File[] list;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            sdcardFile = new File(Environment.getStorageDirectory().getPath());
+            list = sdcardFile.listFiles();
+            // sdcard 이름에 (-)이 포함되어 있음.
+            for(File el : list){
+                if(el.getName().contains("-")){
+                    sdcard = el;
+                    break;
+                }
             }
         }
 
         if(sdcard != null) {
-            usuableSpace = (int) Math.round(sdcardFile.getFreeSpace() / Math.pow(1024, 3));
-            totalSpace = (int) Math.round(sdcardFile.getTotalSpace() / Math.pow(1024, 3));
-            usedSpace = totalSpace - usuableSpace;
-            tvSdcardVolume.setText(String.format("%dGB / %dGB", usedSpace, totalSpace));
+//            usuableSpace = (int) Math.round(sdcardFile.getFreeSpace() / Math.pow(1024, 3));
+//            totalSpace = (int) Math.round(sdcardFile.getTotalSpace() / Math.pow(1024, 3));
+//            usedSpace = totalSpace - usuableSpace;
+//            tvSdcardVolume.setText(String.format("%dGB / %dGB", usedSpace, totalSpace));
+
+            fileInfo = new FileInfo(this, sdcard);
+            tvSdcardVolume.setText(String.format("%s / %s",
+                    fileInfo.getUsingMemory(),
+                    fileInfo.getTotalMemory()));
         } else {
             // sdcard가 없을 경우 선택 비활성화
             llSdcardStorage.setEnabled(false);
