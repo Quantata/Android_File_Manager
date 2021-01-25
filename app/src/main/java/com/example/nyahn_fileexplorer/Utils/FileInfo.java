@@ -45,7 +45,7 @@ public class FileInfo {
         File rootFile = new File(Environment.getRootDirectory().getPath());
         totalSpace = totalSpace + rootFile.getTotalSpace();
 
-        return  totalSpace;
+        return totalSpace;
     }
 
     // 사용 가능한 용량
@@ -138,5 +138,9 @@ public class FileInfo {
 
     public int getFolderNum(){
         return numDir.get();
+    }
+
+    public String getFilePath(){
+        return file.getAbsolutePath();
     }
 }
