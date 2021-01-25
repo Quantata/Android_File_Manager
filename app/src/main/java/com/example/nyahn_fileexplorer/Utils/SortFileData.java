@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.nyahn_fileexplorer.Models.FileData;
 
-import java.io.File;
+import java.math.BigInteger;
 import java.util.Comparator;
 
 public class SortFileData implements Comparator<FileData> {
@@ -37,11 +37,14 @@ public class SortFileData implements Comparator<FileData> {
     private int extractInt(String s) {
         Log.d(TAG, "String s = " + s);
 
-        // 숫자가 아닌 것은 다 "" 만들어버림
-        String num = s.replaceAll("\\D", "");
-        Log.d(TAG, "String num = " + num);
-
-        // return 0 if no digits found
-        return num.isEmpty() ? 0 : Integer.parseInt(num);
+        try {
+            // 숫자가 아닌 것은 다 "" 만들어버림
+            String num = s.replaceAll("\\D", "");
+            Log.d(TAG, "String num = " + num);
+            // return 0 if no digits found
+            return num.isEmpty() ? 0 : Integer.parseInt(num);
+        } catch (NumberFormatException numberFormatException){
+            return 0;
+        }
     }
 }

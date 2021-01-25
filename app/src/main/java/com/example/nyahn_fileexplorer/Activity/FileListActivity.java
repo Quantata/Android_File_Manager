@@ -298,7 +298,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 onShowBottomLayout();
 
                 showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
-                Toast.makeText(this, "속성.", Toast.LENGTH_SHORT).show();
                 break;
 
             // 복사, 이동시 나타나는 버튼
@@ -308,7 +307,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 // 선택 해제
                 selectedFileDataList.clear();
                 fileListAdapter.setClearSelectedFileList();
-                Toast.makeText(this, "취소", Toast.LENGTH_SHORT).show();
                 // Basic 모드로 바꾸고
                 // showBottom 호출하면 됨.
                 break;
