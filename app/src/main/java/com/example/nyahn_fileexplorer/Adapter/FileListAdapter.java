@@ -221,6 +221,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         ImageView ivFolderImage;
         TextView tvFolderName;
         RelativeLayout RlFolder;
+        TextView tvLastModified;
+        TextView tvCountORSize;
 
         // bottom layout
         public ViewHolder(@NonNull View itemView) {
@@ -229,6 +231,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             ivFolderImage = itemView.findViewById(R.id.ivFolderImage);
             tvFolderName = itemView.findViewById(R.id.tvFolderName);
 
+            tvLastModified = itemView.findViewById(R.id.tvLastModified);
+            tvCountORSize = itemView.findViewById(R.id.tvCountORSize);
         }
     }
 }
