@@ -41,9 +41,20 @@ public class FileInfo {
 //
 //        blockSize = stat.getBlockSizeLong();
 //        totalBlocks = stat.getBlockCountLong();
+        
         long totalSpace = file.getTotalSpace();
         File rootFile = new File(Environment.getRootDirectory().getPath());
-        totalSpace = totalSpace + rootFile.getTotalSpace();
+        long sdcardStorage = Environment.getStorageDirectory().getTotalSpace();
+        totalSpace = totalSpace + rootFile.getTotalSpace() + sdcardStorage;
+        Log.d(TAG, "****************GET CALTOTAL MEMORY****************");
+        Log.d(TAG, "file.getPath = " + file.getPath());
+        Log.d(TAG, "file.getTotalSpace = " + formatFileSize(file.getTotalSpace()));
+        Log.d(TAG, "rootFile.getPath = " + rootFile.getPath());
+        Log.d(TAG, "rootFile.getTotalSpace = " + formatFileSize(rootFile.getTotalSpace()));
+        Log.d(TAG, "sdcardDir.getPath = " + Environment.getStorageDirectory().getPath());
+        Log.d(TAG, "sdcardStorage.getTotalSpace = " + formatFileSize(sdcardStorage));
+        Log.d(TAG, "totalspace = " + formatFileSize(totalSpace));
+        Log.d(TAG, "************************************************");
 
         return totalSpace;
     }
@@ -63,6 +74,15 @@ public class FileInfo {
         long freeSize = file.getFreeSpace();
         File rootFile = new File(Environment.getRootDirectory().getPath());
         freeSize = freeSize + rootFile.getFreeSpace();
+
+        Log.d(TAG, "****************GET USING MEMORY****************");
+        Log.d(TAG, "file.getPath = " + file.getPath());
+        Log.d(TAG, "file.getFreeSpace = " + formatFileSize(file.getFreeSpace()));
+        Log.d(TAG, "rootFile.getPath = " + rootFile.getPath());
+        Log.d(TAG, "rootFile.getFreeSpace = " + formatFileSize(rootFile.getFreeSpace()));
+        Log.d(TAG, "getFreeSpace = " + formatFileSize(freeSize));
+        Log.d(TAG, "************************************************");
+
         return formatFileSize(calculateTotalMemory() - freeSize);
     }
 
