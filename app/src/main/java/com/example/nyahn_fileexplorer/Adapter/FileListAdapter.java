@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,11 +46,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public void fileSelectedMoveMode(ViewHolder holder, int position){
         fileDataList.get(position).setSelected(true);
 
-//        holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+//        holder.RlFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
         typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
         int bottomLayoutColor = typedValue.data;
-        holder.llFolder.setBackgroundColor(bottomLayoutColor);
+        holder.RlFolder.setBackgroundColor(bottomLayoutColor);
 
         selectedPositions.add(position);
         mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -93,7 +93,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         if (selected) {
             // 선택된 상태라면 선택 해제
             fileDataList.get(position).setSelected(false);
-            holder.llFolder.setBackgroundColor(Color.WHITE);
+            holder.RlFolder.setBackgroundColor(Color.WHITE);
 
             // 선택된 부분을 배열에서 지우고 size가 0인 경우 basic_mode로 변경
             selectedPositions.remove(position);
@@ -103,13 +103,13 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         } else {
             // 선택되지 않은 상태라면 선택
             fileDataList.get(position).setSelected(true);
-//            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+//            holder.RlFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
 
             // BottomLayoutColor로 변경
             typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
             int bottomLayoutColor = typedValue.data;
-            holder.llFolder.setBackgroundColor(bottomLayoutColor);
+            holder.RlFolder.setBackgroundColor(bottomLayoutColor);
 
             selectedPositions.add(position);
             mCallback.onSetMode(Mode.SELECTED_MODE);
@@ -142,17 +142,17 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
         // Color 설정
         if(fileDataList.get(position).isSelected()) {
-//            holder.llFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+//            holder.RlFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
             typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
             int bottomLayoutColor = typedValue.data;
-            holder.llFolder.setBackgroundColor(bottomLayoutColor);
+            holder.RlFolder.setBackgroundColor(bottomLayoutColor);
         } else {
-            holder.llFolder.setBackgroundColor(Color.WHITE);
+            holder.RlFolder.setBackgroundColor(Color.WHITE);
         }
 
         // 길게 클릭했을 때
-        holder.llFolder.setOnLongClickListener(v -> {
+        holder.RlFolder.setOnLongClickListener(v -> {
             if(mCallback.onGetMode() == Mode.MOVE_MODE ||
                 mCallback.onGetMode() == Mode.COPY_MODE){ // move, copy mode였을때
                 // 선택된 파일 리스트 해제하는 함수
@@ -172,7 +172,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         });
 
         // 짧게 클릭했을 때
-        holder.llFolder.setOnClickListener(v ->
+        holder.RlFolder.setOnClickListener(v ->
         {
             if(mCallback.onGetMode() == Mode.BASIC_MODE ||
                 mCallback.onGetMode() == Mode.MOVE_MODE ||
@@ -220,12 +220,12 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFolderImage;
         TextView tvFolderName;
-        LinearLayout llFolder;
+        RelativeLayout RlFolder;
 
         // bottom layout
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            llFolder = itemView.findViewById(R.id.llFolder);
+            RlFolder = itemView.findViewById(R.id.RlFolder);
             ivFolderImage = itemView.findViewById(R.id.ivFolderImage);
             tvFolderName = itemView.findViewById(R.id.tvFolderName);
 
