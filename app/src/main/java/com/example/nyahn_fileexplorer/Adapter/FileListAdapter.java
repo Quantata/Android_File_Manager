@@ -18,6 +18,7 @@ import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.Utils.FileInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -131,14 +132,19 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        int holderPosition = holder.getAdapterPosition();
         // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
-        if (!fileDataList.get(position).getFile().isFile()){
+        if (!fileDataList.get(holderPosition).getFile().isFile()){
             holder.ivFolderImage.setImageResource(R.drawable.folder);
         }
         else {
             holder.ivFolderImage.setImageResource(R.drawable.text);
         }
-        holder.tvFolderName.setText(fileDataList.get(position).getFile().getName());
+        holder.tvFolderName.setText(fileDataList.get(holderPosition).getFile().getName());
+        holder.tvCountORSize.setText(fileDataList.get(holderPosition).getFileCountORSize());
+        holder.tvLastModified.setText(
+                new FileInfo(context, fileDataList.get(holderPosition).getFile()).getFileLastModify()
+        );
 
         // Color 설정
         if(fileDataList.get(position).isSelected()) {
@@ -159,10 +165,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 setClearSelectedFileList();
 
                 // 선택된 부분 click
-                fileSelectedMoveMode(holder, holder.getAdapterPosition());
+                fileSelectedMoveMode(holder, holderPosition);
             }
             else { // basic_mode, selected_mode
-                fileSelected(holder, holder.getAdapterPosition());
+                fileSelected(holder, holderPosition);
             }
 
             // 이름 변경 활성화 관련
@@ -203,7 +209,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 */
             }
             else if(mCallback.onGetMode() == Mode.SELECTED_MODE){
-                fileSelected(holder, holder.getAdapterPosition());
+                fileSelected(holder, holderPosition);
             }
 
             // 이름 변경 활성화 관련

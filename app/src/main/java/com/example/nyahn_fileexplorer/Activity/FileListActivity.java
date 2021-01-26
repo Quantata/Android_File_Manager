@@ -374,6 +374,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     public void showFileList(File currentFile){
         ArrayList<FileData> directories = new ArrayList<>();
         ArrayList<FileData> files = new ArrayList<>();
+        FileInfo fileInfo;
 
         file = currentFile;
         File[] list = file.listFiles();
@@ -391,10 +392,19 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
                 FileData fileData = new FileData();
                 fileData.setFile(value);
-                if(fileData.getFile().isDirectory())
+
+                fileInfo = new FileInfo(this, value);
+
+                if(fileData.getFile().isDirectory()) {
                     directories.add(fileData);
-                else
+                    fileData.setFileCountORSize(
+                            String.format(getResources().getString(R.string.file_count)
+                                        , fileInfo.getFolderNum()));
+                }
+                else {
+                    fileData.setFileCountORSize(fileInfo.getFileSize());
                     files.add(fileData);
+                }
             }
             // 정렬
             directories.sort(new SortFileData());
