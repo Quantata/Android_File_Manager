@@ -38,14 +38,34 @@ public class FileInfo {
 //        StatFs stat = new StatFs(file.getPath());
 //        long blockSize = 0;
 //        long totalBlocks = 0;
-//
+//        long totalSpace = 0;
 //        blockSize = stat.getBlockSizeLong();
 //        totalBlocks = stat.getBlockCountLong();
-        
+//
+//        totalSpace = blockSize * totalBlocks;
+//
+//        File rootFile = new File(Environment.getRootDirectory().getPath());
+//        stat = new StatFs(rootFile.getPath());
+//        long rootFileSize = stat.getBlockSizeLong() * stat.getBlockCountLong();
+//
+//        String sdcardPath = Environment.getStorageDirectory().getPath();
+//        stat = new StatFs(sdcardPath);
+//        long sdcardStorage = stat.getBlockSizeLong() * stat.getBlockCountLong();
+//        totalSpace = totalSpace + rootFileSize + sdcardStorage;
+
+
         long totalSpace = file.getTotalSpace();
+//        long totalSpace = Environment.getDataDirectory().getTotalSpace();
         File rootFile = new File(Environment.getRootDirectory().getPath());
-        long sdcardStorage = Environment.getStorageDirectory().getTotalSpace();
-        totalSpace = totalSpace + rootFile.getTotalSpace() + sdcardStorage;
+
+        long sdcardStorage = 0;
+        if(!file.getPath().equals(Environment.getStorageDirectory().getAbsolutePath())) {
+            sdcardStorage = Environment.getStorageDirectory().getTotalSpace();
+            totalSpace = totalSpace + rootFile.getTotalSpace() + sdcardStorage;
+        }
+        else
+            totalSpace = totalSpace + rootFile.getTotalSpace();
+
         Log.d(TAG, "****************GET CALTOTAL MEMORY****************");
         Log.d(TAG, "file.getPath = " + file.getPath());
         Log.d(TAG, "file.getTotalSpace = " + formatFileSize(file.getTotalSpace()));

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         tvSdcardVolume = (TextView) findViewById(R.id.tvSdcardVolume);
 
         // 내부 저장소 저장용량 계산
-        innerFile =  new File(Environment.getExternalStorageDirectory().getPath());
+        innerFile =  new File(Environment.getExternalStorageDirectory().getAbsolutePath());
 
         // 파일 정보
         fileInfo = new FileInfo(this, innerFile);
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         File sdcard = null;
         File[] list;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            sdcardFile = new File(Environment.getStorageDirectory().getPath());
+            sdcardFile = new File(Environment.getStorageDirectory().getAbsolutePath());
             list = sdcardFile.listFiles();
             // sdcard 이름에 (-)이 포함되어 있음.
             for(File el : list){
