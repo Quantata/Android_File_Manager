@@ -133,17 +133,22 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int holderPosition = holder.getAdapterPosition();
+        FileData currentFileData = fileDataList.get(holder.getAdapterPosition());
         // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
-        if (!fileDataList.get(holderPosition).getFile().isFile()){
+        if (!currentFileData.getFile().isFile()){
             holder.ivFolderImage.setImageResource(R.drawable.folder);
+            holder.tvCountORSize.setText(
+                    String.format(context.getResources().getString(R.string.file_count)
+                            , currentFileData.getFolderNum()
+            ));
         }
         else {
             holder.ivFolderImage.setImageResource(R.drawable.text);
+            holder.tvCountORSize.setText(new FileInfo(context, currentFileData.getFile()).getFileSize());
         }
-        holder.tvFolderName.setText(fileDataList.get(holderPosition).getFile().getName());
-        holder.tvCountORSize.setText(fileDataList.get(holderPosition).getFileCountORSize());
+        holder.tvFolderName.setText(currentFileData.getFile().getName());
         holder.tvLastModified.setText(
-                new FileInfo(context, fileDataList.get(holderPosition).getFile()).getFileLastModify()
+                new FileInfo(context, currentFileData.getFile()).getFileLastModify()
         );
 
         // Color 설정

@@ -6,15 +6,25 @@ public class FileData {
 
     File file;
     boolean selected;   // 파일이 선택 되었는지 확인
-    String fileCountORSize;
 
-    public String getFileCountORSize() {
-        return fileCountORSize;
+    public int getFolderNum() {
+        return folderNum;
     }
 
-    public void setFileCountORSize(String fileCountORSize) {
-        this.fileCountORSize = fileCountORSize;
+    public void setFolderNum(int folderNum) {
+        this.folderNum = folderNum;
     }
+
+    public int getFileNum() {
+        return fileNum;
+    }
+
+    public void setFileNum(int fileNum) {
+        this.fileNum = fileNum;
+    }
+
+    int folderNum;
+    int fileNum;
 
     public boolean isSelected() {
         return selected;

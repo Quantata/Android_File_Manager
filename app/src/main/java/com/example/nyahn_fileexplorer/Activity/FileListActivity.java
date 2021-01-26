@@ -397,12 +397,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
                 if(fileData.getFile().isDirectory()) {
                     directories.add(fileData);
-                    fileData.setFileCountORSize(
-                            String.format(getResources().getString(R.string.file_count)
-                                        , fileInfo.getFolderNum()));
+                    fileData.setFolderNum(fileInfo.getFolderNum());
                 }
                 else {
-                    fileData.setFileCountORSize(fileInfo.getFileSize());
                     files.add(fileData);
                 }
             }
