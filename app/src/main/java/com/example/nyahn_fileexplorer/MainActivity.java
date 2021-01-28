@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 앱 내부파일 가져오기
-        appFile = new File(getApplication().getFilesDir().getPath());
+        appFile = new File(getApplicationContext().getFilesDir().getPath());
         Log.d(TAG, "appFile = " + appFile.getPath());
         tvAppStorageVolume.setVisibility(View.GONE);
 
