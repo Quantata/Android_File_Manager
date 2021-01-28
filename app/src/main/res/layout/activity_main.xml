@@ -10,14 +10,17 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
-
-    <RelativeLayout
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:rowCount="3"
+        android:alignmentMode="alignMargins"
+        >
         <LinearLayout
             android:id="@+id/llMainStorage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
@@ -47,11 +50,11 @@
 
         <LinearLayout
             android:id="@+id/llSdcardStorage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:layout_toEndOf="@+id/llMainStorage"
             android:padding="20dp">
 
             <ImageView
@@ -75,6 +78,36 @@
                 android:textColor="?android:attr/textColorHint"
                 android:text="@string/cant_use"/>
         </LinearLayout>
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/llAppStorage"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/blank_file"
+                android:contentDescription="@string/app_storage">
+            </ImageView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextSize.16sp"
+                android:text="@string/app_storage">
+            </TextView>
+            <TextView
+                android:id="@+id/tvAppStorageVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextSize.12sp"
+                android:textColor="?android:attr/textColorHint"
+                android:text="@string/cant_use"/>
+        </LinearLayout>
+    </GridLayout>
 
 </LinearLayout>
