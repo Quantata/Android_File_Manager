@@ -539,13 +539,18 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 tvFileName.setText(fileInfo.getFileName());
                 tvFileSize.setText(fileInfo.getFileSize());
                 tvFileLastModify.setText(fileInfo.getFileLastModify());
-                tvFileSubInfo.setText(
-                        //TODO: 변경
-//                        String.format(getResources().getString(R.string.file_contents),
-//                                fileInfo.getTotalFolderNum(), fileInfo.getTotalFileNum()
-                        String.format(getResources().getString(R.string.file_contents),
-                                0, 0
-                        ));
+
+                if(file.isDirectory()) {
+                    tvFileSubInfo.setVisibility(View.VISIBLE);
+                    tvFileSubInfo.setText(
+                            //TODO: 변경
+                            String.format(getResources().getString(R.string.file_contents),
+                                    fileInfo.getTotalFolderNum(), fileInfo.getTotalFileNum()
+                            ));
+                }
+                else
+                    tvFileSubInfo.setVisibility(View.GONE);
+
                 tvFilePath.setText(fileInfo.getFilePath());
             }
             // 현재 화면의 선택된 파일 List 선택 해제

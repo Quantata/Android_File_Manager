@@ -28,6 +28,7 @@ public class FileInfo {
     AtomicInteger nonDirNum = new AtomicInteger(0);
     AtomicInteger totalDirNum = new AtomicInteger(0);
     AtomicInteger totalNonDirNum = new AtomicInteger(0);
+
     public FileInfo(){}
     public FileInfo(Context context, File file){
         this.context = context;
@@ -145,16 +146,18 @@ public class FileInfo {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     if(!file.getFileName().startsWith(".")) {
-//                        numNonDir.addAndGet(1);
-                        fileSize.addAndGet(attrs.size());
+                        totalNonDirNum.getAndAdd(1);
+                        fileSize.getAndAdd(attrs.size());
                     }
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-//                    if(!dir.getFileName().startsWith("."))
-//                        numDir.addAndGet(1);
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    if(String.valueOf(dir.getFileName()).startsWith("."))
+                       return FileVisitResult.SKIP_SUBTREE; // 숨김 파일인 경우 하위 디렉토리 검사 안함
+
+                    totalDirNum.getAndAdd(1);
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -176,19 +179,15 @@ public class FileInfo {
         return simpleDateFormat.format(file.lastModified());
     }
 
-    public int getTotalFileNum(FileData fileData){
-        // fileData for문 돌면서 저장
-        File tempFile = fileData.getFile();
 
-        if(tempFile.isDirectory()){
-
-        }
-        return 0;
+    public int getTotalFileNum(){
+        // 속성에서 파일사이즈 검색시 같이 검색
+        return totalNonDirNum.get();
     }
 
-    public int getTotalFolderNum(FileData fileData){
-        // fileData for문 돌면서 저장
-        return 0;
+    public int getTotalFolderNum(){
+        // 속성에서 파일사이즈 검색시 같이 검색
+        return totalDirNum.get();
     }
 
     public void setFileNum(FileData fileData){
