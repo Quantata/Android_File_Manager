@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.nyahn_fileexplorer.Models.FileData;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -22,9 +24,11 @@ public class FileInfo {
     Context context;
 
     AtomicLong fileSize = new AtomicLong(0);
-    AtomicInteger numDir = new AtomicInteger(0);
-    AtomicInteger numNonDir = new AtomicInteger(0);
-
+    AtomicInteger dirNum = new AtomicInteger(0);
+    AtomicInteger nonDirNum = new AtomicInteger(0);
+    AtomicInteger totalDirNum = new AtomicInteger(0);
+    AtomicInteger totalNonDirNum = new AtomicInteger(0);
+    public FileInfo(){}
     public FileInfo(Context context, File file){
         this.context = context;
         this.file = file;
@@ -141,7 +145,7 @@ public class FileInfo {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     if(!file.getFileName().startsWith(".")) {
-                        numNonDir.addAndGet(1);
+//                        numNonDir.addAndGet(1);
                         fileSize.addAndGet(attrs.size());
                     }
                     return FileVisitResult.CONTINUE;
@@ -149,19 +153,20 @@ public class FileInfo {
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    if(!dir.getFileName().startsWith("."))
-                        numDir.addAndGet(1);
+//                    if(!dir.getFileName().startsWith("."))
+//                        numDir.addAndGet(1);
                     return FileVisitResult.CONTINUE;
                 }
 
             });
             Log.d(TAG, pathFile.getName() + " fileSize = " + fileSize);
-            Log.d(TAG, pathFile.getName() + " numDir= " + numDir);
-            Log.d(TAG, pathFile.getName() + " numNonDir= " + numNonDir);
+            Log.d(TAG, pathFile.getName() + " numDir= " + dirNum);
+            Log.d(TAG, pathFile.getName() + " numNonDir= " + nonDirNum);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     // 파일의 마지막 수정날짜 가져오기
     // BasicFileAttributes를 이용해서도 가능
@@ -171,13 +176,41 @@ public class FileInfo {
         return simpleDateFormat.format(file.lastModified());
     }
 
-    // 파일 내용(폴더수, 파일수) 가져오기
-    public int getFileNum(){
-        return numNonDir.get();
+    public int getTotalFileNum(FileData fileData){
+        // fileData for문 돌면서 저장
+        File tempFile = fileData.getFile();
+
+        if(tempFile.isDirectory()){
+
+        }
+        return 0;
     }
 
-    public int getFolderNum(){
-        return numDir.get();
+    public int getTotalFolderNum(FileData fileData){
+        // fileData for문 돌면서 저장
+        return 0;
+    }
+
+    public void setFileNum(FileData fileData){
+        // Ageis
+        File currentFile = fileData.getFile();
+
+
+        if(currentFile.isDirectory()) { // ex) /emulated/0/Ageis가 directory이면
+            // ex) /emulated/0/Movies의 하위 fileList가 0이 아니면
+            if (currentFile.listFiles() != null && currentFile.listFiles().length != 0) {
+                // ex) /emulated/0/Aegis/file 의 file 개수 계산
+                for (File tempFile : currentFile.listFiles()) {
+                    if(!tempFile.getName().startsWith(".")) {
+                        if (tempFile.isDirectory()) dirNum.getAndAdd(1);
+                        else nonDirNum.getAndAdd(1);
+                    }
+                }
+            }
+        }
+
+        fileData.setFolderNum(dirNum.get());
+        fileData.setFileNum(nonDirNum.get());
     }
 
     public String getFilePath(){

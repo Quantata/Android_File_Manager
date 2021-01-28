@@ -7,7 +7,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -386,6 +385,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         } else {
             flEmptyLayout.setVisibility(View.INVISIBLE);
 
+            // @value : 선택한 파일의 하위 파일
             for (File value : list) {
                 // .으로 시작하는 파일(히든파일)은 불러오지 않도록 함
                 if(value.getName().startsWith(".")) continue;
@@ -393,11 +393,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 FileData fileData = new FileData();
                 fileData.setFile(value);
 
-                fileInfo = new FileInfo(this, value);
+                fileInfo = new FileInfo();
+
+                // 현재 파일의 Folder, File Number 설정
+                fileInfo.setFileNum(fileData);
 
                 if(fileData.getFile().isDirectory()) {
                     directories.add(fileData);
-                    fileData.setFolderNum(fileInfo.getFolderNum());
                 }
                 else {
                     files.add(fileData);
@@ -518,7 +520,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             builder.setTitle(R.string.file_info);
             // 한 개만 가능
-            File selectedFile = selectedDataList.get(0).getFile();
+//            File selectedFile = selectedDataList.get(0).getFile();
+            FileData selectedFile = selectedDataList.get(0);
 
             // TODO: file정보 layout에 적용
             LayoutInflater inflater = getLayoutInflater();
@@ -530,14 +533,18 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             TextView tvFileSubInfo = (TextView) view.findViewById(R.id.tvFileSubInfo);
             TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
 
-            FileInfo fileInfo = new FileInfo(this, selectedFile);
+            FileInfo fileInfo = new FileInfo(this, selectedFile.getFile());
+
             if(file.exists()) {
                 tvFileName.setText(fileInfo.getFileName());
                 tvFileSize.setText(fileInfo.getFileSize());
                 tvFileLastModify.setText(fileInfo.getFileLastModify());
                 tvFileSubInfo.setText(
+                        //TODO: 변경
+//                        String.format(getResources().getString(R.string.file_contents),
+//                                fileInfo.getTotalFolderNum(), fileInfo.getTotalFileNum()
                         String.format(getResources().getString(R.string.file_contents),
-                                fileInfo.getFolderNum(), fileInfo.getFileNum()
+                                0, 0
                         ));
                 tvFilePath.setText(fileInfo.getFilePath());
             }

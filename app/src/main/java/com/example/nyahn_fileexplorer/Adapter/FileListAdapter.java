@@ -139,7 +139,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             holder.ivFolderImage.setImageResource(R.drawable.folder);
             holder.tvCountORSize.setText(
                     String.format(context.getResources().getString(R.string.file_count)
-                            , currentFileData.getFolderNum()
+                            , currentFileData.getFolderNum()+currentFileData.getFileNum()
             ));
         }
         else {
