@@ -135,7 +135,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         int holderPosition = holder.getAdapterPosition();
         FileData currentFileData = fileDataList.get(holder.getAdapterPosition());
         // 나중에 fileData Type에 따라 이미지 변환할 수 있도록
-        if (!currentFileData.getFile().isFile()){
+        if (currentFileData.getFile().isDirectory()){
             holder.ivFolderImage.setImageResource(R.drawable.folder);
             holder.tvCountORSize.setText(
                     String.format(context.getResources().getString(R.string.file_count)
@@ -143,7 +143,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             ));
         }
         else {
-            holder.ivFolderImage.setImageResource(R.drawable.text);
+            String fileName = currentFileData.getFile().getName();
+            switch (fileName.substring(fileName.lastIndexOf("."))){
+                case ".txt":
+                    holder.ivFolderImage.setImageResource(R.drawable.txt);
+                    break;
+                case ".jpg":
+                    holder.ivFolderImage.setImageResource(R.drawable.jpg);
+                    break;
+                default:
+                    holder.ivFolderImage.setImageResource(R.drawable.blank_file);
+                    break;
+            }
             holder.tvCountORSize.setText(new FileInfo(context, currentFileData.getFile()).getFileSize());
         }
         holder.tvFolderName.setText(currentFileData.getFile().getName());

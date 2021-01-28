@@ -24,8 +24,7 @@ public class FileInfo {
     Context context;
 
     AtomicLong fileSize = new AtomicLong(0);
-    AtomicInteger dirNum = new AtomicInteger(0);
-    AtomicInteger nonDirNum = new AtomicInteger(0);
+
     AtomicInteger totalDirNum = new AtomicInteger(0);
     AtomicInteger totalNonDirNum = new AtomicInteger(0);
 
@@ -163,8 +162,8 @@ public class FileInfo {
 
             });
             Log.d(TAG, pathFile.getName() + " fileSize = " + fileSize);
-            Log.d(TAG, pathFile.getName() + " numDir= " + dirNum);
-            Log.d(TAG, pathFile.getName() + " numNonDir= " + nonDirNum);
+            Log.d(TAG, pathFile.getName() + " totalDirNum= " + totalDirNum);
+            Log.d(TAG, pathFile.getName() + " totalNonDirNum= " + totalNonDirNum);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,22 +193,23 @@ public class FileInfo {
         // Ageis
         File currentFile = fileData.getFile();
 
-
+        int dirNum = 0;
+        int nonDirNum = 0;
         if(currentFile.isDirectory()) { // ex) /emulated/0/Ageis가 directory이면
             // ex) /emulated/0/Movies의 하위 fileList가 0이 아니면
             if (currentFile.listFiles() != null && currentFile.listFiles().length != 0) {
                 // ex) /emulated/0/Aegis/file 의 file 개수 계산
                 for (File tempFile : currentFile.listFiles()) {
                     if(!tempFile.getName().startsWith(".")) {
-                        if (tempFile.isDirectory()) dirNum.getAndAdd(1);
-                        else nonDirNum.getAndAdd(1);
+                        if (tempFile.isDirectory()) dirNum += 1;
+                        else nonDirNum += 1;
                     }
                 }
             }
         }
 
-        fileData.setFolderNum(dirNum.get());
-        fileData.setFileNum(nonDirNum.get());
+        fileData.setFolderNum(dirNum);
+        fileData.setFileNum(nonDirNum);
     }
 
     public String getFilePath(){
