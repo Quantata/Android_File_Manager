@@ -5,11 +5,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,14 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout llMainStorage;
     LinearLayout llSdcardStorage;
+    LinearLayout llAppStorage;
 
     TextView tvInnerVolume;
     TextView tvSdcardVolume;
+    TextView tvAppStorageVolume;
 
     File innerFile;
     File sdcardFile;
+    File appFile;
 
     FileInfo fileInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
     public void init() {
         llMainStorage = (LinearLayout)findViewById(R.id.llMainStorage);
         llSdcardStorage = (LinearLayout)findViewById(R.id.llSdcardStorage);
+        llAppStorage = (LinearLayout)findViewById(R.id.llAppStorage);
+
         tvInnerVolume = (TextView) findViewById(R.id.tvInnerVolume);
         tvSdcardVolume = (TextView) findViewById(R.id.tvSdcardVolume);
+        tvAppStorageVolume = (TextView) findViewById(R.id.tvAppStorageVolume);
 
         // 내부 저장소 저장용량 계산
         innerFile =  new File(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -87,10 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
         // sdcard 폴더 갖고 오기
         File sdcard = null;
-        File[] list;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             sdcardFile = new File(Environment.getStorageDirectory().getAbsolutePath());
-            list = sdcardFile.listFiles();
+            File[] list = sdcardFile.listFiles();
             // sdcard 이름에 (-)이 포함되어 있음.
             for(File el : list){
                 if(el.getName().contains("-")){
@@ -115,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
             llSdcardStorage.setEnabled(false);
         }
 
+
+        // 앱 내부파일 가져오기
+        appFile = new File(getApplication().getFilesDir().getPath());
+        Log.d(TAG, "appFile = " + appFile.getPath());
+        tvAppStorageVolume.setVisibility(View.GONE);
+
     }
     public void initClick(){
         Intent intent;
@@ -130,6 +145,13 @@ public class MainActivity extends AppCompatActivity {
 
         llSdcardStorage.setOnClickListener(v -> {
             bundle.putString("STORAGE", sdcardFile.getPath());
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        });
+
+        llAppStorage.setOnClickListener(v -> {
+            bundle.putString("STORAGE", appFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
