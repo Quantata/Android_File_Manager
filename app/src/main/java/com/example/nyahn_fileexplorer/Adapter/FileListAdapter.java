@@ -1,7 +1,9 @@
 package com.example.nyahn_fileexplorer.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -12,8 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nyahn_fileexplorer.BuildConfig;
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Interface.OnItemClick;
@@ -23,6 +27,7 @@ import com.example.nyahn_fileexplorer.Utils.FileInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
     Context context;
@@ -144,6 +149,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         }
         else {
             String fileName = currentFileData.getFile().getName();
+
             switch (fileName.substring(fileName.lastIndexOf("."))){
                 case ".txt":
                     holder.ivFolderImage.setImageResource(R.drawable.txt);
@@ -163,7 +169,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         );
 
         // Color 설정
-        if(fileDataList.get(position).isSelected()) {
+        if(currentFileData.isSelected()) {
 //            holder.RlFolder.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
             typedValue = new TypedValue();
             context.getTheme().resolveAttribute(R.attr.bottomLayoutColor, typedValue, true);
@@ -202,7 +208,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                 File file = mCallback.onGetCurrentFile();
                 // file 객체 폴더의 선택된 파일에 대한 파일 객체를 생성
-                File clickedFile = new File(file, fileDataList.get(position).getFile().getName());
+                File clickedFile = new File(file, currentFileData.getFile().getName());
 
                 Log.d(TAG, "LongClicked isFile : " + clickedFile.isFile());
 
@@ -216,13 +222,30 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
                     mCallback.onAddDirectoryList(clickedFile);
                 }
-                /*
-                    TODO: 일반 파일일때 여는거 구현
 
+                //    TODO: 일반 파일일때 여는거 구현
                 else {
 
+                    // https://developer.android.com/training/sharing/send?hl=ko 일단 대충 만들음.
+                    // pdf면 pdf관련 파일만 나오도록 해야함
+//                    Uri fileUri = Uri.fromFile(currentFileData.getFile());// content file uri로 변경
+                    Uri fileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",
+                            currentFileData.getFile());
+
+
+                    if(fileUri != null) {
+                        Intent sendIntent = new Intent();
+
+                        sendIntent.setAction(Intent.ACTION_SEND);
+//                        sendIntent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.conn_other_app));
+                        sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                        sendIntent.setType("text/plain");
+                        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        context.startActivity(sendIntent);
+                    }
                 }
-                */
+
             }
             else if(mCallback.onGetMode() == Mode.SELECTED_MODE){
                 fileSelected(holder, holderPosition);

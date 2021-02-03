@@ -30,4 +30,6 @@
     <string name="cancel">취소</string>
 
     <string name="file_createFile">새 폴더</string>
+
+    <string name="conn_other_app">다른 앱 연결하기</string>
 </resources>
