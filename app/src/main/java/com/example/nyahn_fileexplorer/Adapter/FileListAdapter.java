@@ -264,7 +264,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                         sendIntent.setAction(Intent.ACTION_SEND);
 //                        sendIntent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.conn_other_app));
                         sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                        sendIntent.setType("text/plain");
+                        sendIntent.setType(currentFileData.getFileExtension());
                         sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 
