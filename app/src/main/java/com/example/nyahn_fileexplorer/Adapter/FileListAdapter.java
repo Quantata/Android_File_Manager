@@ -2,6 +2,8 @@ package com.example.nyahn_fileexplorer.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
@@ -265,16 +267,25 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                         Intent sendIntent = new Intent();
 
                         sendIntent.setAction(Intent.ACTION_VIEW);
-//                        sendIntent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.conn_other_app));
-                        sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                        sendIntent.setDataAndType(fileUri, currentFileData.getFileExtension());
+//                        sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
 //                        sendIntent.setType(currentFileData.getFileExtension());
-                        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        sendIntent.setDataAndType(fileUri, currentFileData.getFileExtension());
+                        // 권한 부여
+                        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        sendIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
+                        // 열 앱이 있는지
+                        PackageManager packageManager = context.getPackageManager();
+                        List<ResolveInfo> activities = packageManager.queryIntentActivities(sendIntent,
+                                PackageManager.MATCH_DEFAULT_ONLY);
+                        boolean isIntentSafe = activities.size() > 0;
 
-//                        context.startActivity(sendIntent); // 리졸버 사용할때 사용
-                        context.startActivity(
-                                Intent.createChooser(sendIntent, context.getResources().getString(R.string.conn_other_app)));
+                        if (isIntentSafe) {
+                            // chooser 열기
+                            Intent chooser = Intent.createChooser(sendIntent, context.getResources().getString(R.string.conn_other_app));
+                            context.startActivity(chooser);
+                        }
+                        // else { } // TODO: 연결할 앱이 없을때 활동
                     }
                 }
 
