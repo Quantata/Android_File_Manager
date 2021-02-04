@@ -242,7 +242,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                         sendIntent.setType("text/plain");
                         sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                        context.startActivity(sendIntent);
+
+//                        context.startActivity(sendIntent); // 리졸버 사용할때 사용
+                        context.startActivity(
+                                Intent.createChooser(sendIntent, context.getResources().getString(R.string.conn_other_app)));
                     }
                 }
 
