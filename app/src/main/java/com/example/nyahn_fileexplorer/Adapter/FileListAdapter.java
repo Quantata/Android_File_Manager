@@ -149,16 +149,19 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             ));
         }
         else {
+//            String fileName = FilenameUtils.getBaseName(uploadfile.getOriginalFilename());
             String fileName = currentFileData.getFile().getName();
 
             MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
             // png
-            String extension = MimeTypeMap.getFileExtensionFromUrl(currentFileData.getFile().getPath());
+            // 공백이 있을때 잘 안됨
+//            String extension = MimeTypeMap.getFileExtensionFromUrl(currentFileData.getFile().getName());
+            String extension = fileName.substring( fileName.lastIndexOf(".") + 1 );
+
             // image/png
             currentFileData.setFileExtension(mimeTypeMap.getMimeTypeFromExtension(extension));
 
-//            String fileName = FilenameUtils.getBaseName(uploadfile.getOriginalFilename());
-            int resId = 0;
+            int resId;
             switch (extension){
                 case "pdf": resId = R.drawable.pdf; break;
                 case "psd": resId = R.drawable.psd;break;
@@ -261,10 +264,11 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                     if(fileUri != null) {
                         Intent sendIntent = new Intent();
 
-                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.setAction(Intent.ACTION_VIEW);
 //                        sendIntent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.conn_other_app));
                         sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                        sendIntent.setType(currentFileData.getFileExtension());
+                        sendIntent.setDataAndType(fileUri, currentFileData.getFileExtension());
+//                        sendIntent.setType(currentFileData.getFileExtension());
                         sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 
