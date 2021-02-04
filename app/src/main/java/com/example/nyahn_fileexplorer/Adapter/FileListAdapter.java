@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -150,17 +151,41 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         else {
             String fileName = currentFileData.getFile().getName();
 
-            switch (fileName.substring(fileName.lastIndexOf("."))){
-                case ".txt":
-                    holder.ivFolderImage.setImageResource(R.drawable.txt);
-                    break;
-                case ".jpg":
-                    holder.ivFolderImage.setImageResource(R.drawable.jpg);
-                    break;
-                default:
-                    holder.ivFolderImage.setImageResource(R.drawable.blank_file);
-                    break;
+            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+            // png
+            String extension = MimeTypeMap.getFileExtensionFromUrl(currentFileData.getFile().getPath());
+            // image/png
+            currentFileData.setFileExtension(mimeTypeMap.getMimeTypeFromExtension(extension));
+
+//            String fileName = FilenameUtils.getBaseName(uploadfile.getOriginalFilename());
+            int resId = 0;
+            switch (extension){
+                case "pdf": resId = R.drawable.pdf; break;
+                case "psd": resId = R.drawable.psd;break;
+                case "txt": resId = R.drawable.txt; break;
+                case "ai" : resId = R.drawable.ai; break;
+                case "zip":
+                case "alz":
+                case "7zip" : resId = R.drawable.zip; break;
+                case "jpg":
+                case "jpeg": resId = R.drawable.jpg; break;
+//                case "apk" : resId = R.drawable.apk; break;
+                case "png": resId = R.drawable.png; break;
+                case "gif": resId = R.drawable.gif; break;
+                case "avi": resId = R.drawable.avi; break;
+                case "doc":
+                case "docx": resId = R.drawable.doc; break;
+                case "mp3" : resId = R.drawable.mp3; break;
+//                case "mp4" : resId = R.drawable.mp4; break;
+                case "xls" :
+                case "xlsx" : resId = R.drawable.xls; break;
+                case "ppt":
+                case "pptx": resId = R.drawable.ppt; break;
+//                case "hwp": resId = R.drawable.hwp; break;
+
+                default: resId = R.drawable.blank_file; break;
             }
+            holder.ivFolderImage.setImageResource(resId);
             holder.tvCountORSize.setText(new FileInfo(context, currentFileData.getFile()).getFileSize());
         }
         holder.tvFolderName.setText(currentFileData.getFile().getName());
