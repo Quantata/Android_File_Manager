@@ -195,14 +195,58 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             Log.d(TAG, "INFO Mode Clickable = " + active);
     }
 
+    /* // TODO: FileList에서 받을까
+    private void getMimeType(){
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_VIEW.equals(action) && type != null) {
+            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            String path = getRealPathFromUri(this, imageUri);
+            FileListActivity fileListActivity = new FileListActivity();
+            ArrayList<FileData> selectedDataList = new ArrayList<>();
+            FileData fileData = new FileData();
+            fileData.setFile(new File(path));
+            selectedDataList.add(fileData);
+
+            fileListActivity.showDialog(DialogMode.DIALOG_INFO, selectedDataList);
+//            if ("text/plain".equals(type)) {
+//                handleSendText(intent); // Handle text being sent
+//            } else if (type.startsWith("image/")) {
+//                handleSendImage(intent); // Handle single image being sent
+//            }
+        }
+    }
+
+    public static String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    */
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_list);
 
+
         // storage 종류 판별
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
 
         rootDir = bundle.getString("STORAGE");
         Log.d(TAG, "RootDirectory = "+ rootDir);
@@ -417,7 +461,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         fileListAdapter.notifyDataSetChanged();
     }
 
-    private void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
+    protected void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
 //        AlertDialog alertDialog = builder.create();

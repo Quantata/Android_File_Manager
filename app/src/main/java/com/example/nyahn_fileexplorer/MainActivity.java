@@ -97,17 +97,16 @@ public class MainActivity extends AppCompatActivity {
 
         // sdcard 폴더 갖고 오기
         File sdcard = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            sdcardFile = new File(Environment.getStorageDirectory().getAbsolutePath());
-            File[] list = sdcardFile.listFiles();
-            // sdcard 이름에 (-)이 포함되어 있음.
-            for(File el : list){
-                if(el.getName().contains("-")){
-                    sdcard = el;
-                    break;
-                }
+        sdcardFile = new File(Environment.getStorageDirectory().getAbsolutePath());
+        File[] list = sdcardFile.listFiles();
+        // sdcard 이름에 (-)이 포함되어 있음.
+        for(File el : list){
+            if(el.getName().contains("-")){
+                sdcard = el;
+                break;
             }
         }
+
 
         if(sdcard != null) {
 //            usuableSpace = (int) Math.round(sdcardFile.getFreeSpace() / Math.pow(1024, 3));
