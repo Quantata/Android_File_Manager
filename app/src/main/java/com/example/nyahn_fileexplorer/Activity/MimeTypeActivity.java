@@ -15,6 +15,7 @@ import com.example.nyahn_fileexplorer.Adapter.FileListAdapter;
 import com.example.nyahn_fileexplorer.Models.DialogMode;
 import com.example.nyahn_fileexplorer.Models.FileData;
 import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.Utils.Singleton;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,11 +39,14 @@ public class MimeTypeActivity extends AppCompatActivity {
             String path = getRealPathFromUri(this, imageUri);
             FileListActivity fileListActivity = new FileListActivity();
             ArrayList<FileData> selectedDataList = new ArrayList<>();
+
             FileData fileData = new FileData();
             fileData.setFile(new File(path));
             selectedDataList.add(fileData);
 
-            fileListActivity.showDialog(DialogMode.DIALOG_INFO, selectedDataList);
+            Singleton.getInstance().setSelectedFileDataList(selectedDataList);
+
+            fileListActivity.showDialog(DialogMode.DIALOG_INFO);
 //            if ("text/plain".equals(type)) {
 //                handleSendText(intent); // Handle text being sent
 //            } else if (type.startsWith("image/")) {

@@ -308,10 +308,14 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             // 파일 기능
             case R.id.llFileCopy:   // 구현 완료
                 // COPY_MODE로 변경, 붙여넣기 클릭시 사용
-                currentMode = Mode.COPY_MODE;
+//1                currentMode = Mode.COPY_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.COPY_MODE);
                 onShowBottomLayout();   // 취소/붙여넣기
+
                 // 선택된 파일(들)이 있는 경로의 파일 목록
-                selectedFileDataList = fileListAdapter.getSelectedFileList();
+//2                selectedFileDataList = fileListAdapter.getSelectedFileList();
+                fileListAdapter.setSingletonSelectedFileList();
+
                 // 현재 화면의 recyclerView fileList 선택부분 초기화
                 fileListAdapter.setClearSelectedFileList();
                 break;
@@ -333,36 +337,50 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 break;
 
             case R.id.llFileRename:
-                currentMode = Mode.BASIC_MODE;
+//1                currentMode = Mode.BASIC_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
+
+                fileListAdapter.setSingletonSelectedFileList(); // 추가
                 //이름 변경 Dialog한 뒤 notifySetData
-                showDialog(DialogMode.DIALOG_RENAME, fileListAdapter.getSelectedFileList());
+//2                showDialog(DialogMode.DIALOG_RENAME, fileListAdapter.getSelectedFileList());
+                showDialog(DialogMode.DIALOG_RENAME);
+
                 // Layout 내림
                 onShowBottomLayout();
                 break;
             case R.id.llFileDelete:
-                currentMode = Mode.BASIC_MODE;
+//1                currentMode = Mode.BASIC_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
+
                 // Layout 내림
                 onShowBottomLayout();
 
-                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
+                fileListAdapter.setSingletonSelectedFileList(); // 추가
+//2                showDialog(DialogMode.DIALOG_DELETE, fileListAdapter.getSelectedFileList());
+                showDialog(DialogMode.DIALOG_DELETE);
 
                 break;
 
             case R.id.llFileInfo:
-                currentMode = Mode.BASIC_MODE;
+//1                currentMode = Mode.BASIC_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
 
                 // Layout 내림
                 onShowBottomLayout();
 
-                showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
+                fileListAdapter.setSingletonSelectedFileList(); // 추가
+//2                showDialog(DialogMode.DIALOG_INFO, fileListAdapter.getSelectedFileList());
+                showDialog(DialogMode.DIALOG_INFO);
                 break;
 
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
-                currentMode = Mode.BASIC_MODE;
+//1                currentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
+
                 // 선택 해제
-                selectedFileDataList.clear();
+//                selectedFileDataList.clear();
+                Singleton.getInstance().setSelectedFileDataListClear();
                 fileListAdapter.setClearSelectedFileList();
                 // Basic 모드로 바꾸고
                 // showBottom 호출하면 됨.
@@ -392,6 +410,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 file = new File(rootDir);
                 onSetFileList(file);
                 break;
+
             default:
                 Toast.makeText(this, "기본버튼입니다.", Toast.LENGTH_SHORT).show();
                 break;
@@ -399,6 +418,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     }
     @Override
     public void onBackPressed() {
+        currentMode = Singleton.getInstance().getCurrentMode();
+
         if(currentMode == Mode.SELECTED_MODE){
             currentMode = Mode.BASIC_MODE;
             onShowBottomLayout();
@@ -478,8 +499,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         fileListAdapter.notifyDataSetChanged();
     }
-
-    protected void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
+    protected void showDialog(DialogMode dialogMode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
 //        AlertDialog alertDialog = builder.create();
@@ -489,24 +509,23 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             builder.setCancelable(false);
 
             builder.setTitle(R.string.file_delete);
-            builder.setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()));
+            builder.setMessage(String.format(getResources().getString(R.string.confirm_delete),
+                    Singleton.getInstance().getSelectedFileDataList().size()));
             builder.setPositiveButton("확인", (dialog, which) -> {
-                        // 현재 화면에서 선택된 fileList 갖고옴
-                        selectedFileDataList = selectedDataList;
-                        // 현재 화면의 선택된 파일 List 선택 해제
-                        fileListAdapter.setClearSelectedFileList();
+                // 현재 화면의 선택된 파일 List 선택 해제
+                fileListAdapter.setClearSelectedFileList();
 
-                        //삭제 함수
-                        fileManage.deleteFile(selectedFileDataList);
+                //현재 화면에서 선택된 fileList 삭제 함수
+                fileManage.deleteFile(Singleton.getInstance().getSelectedFileDataList());
 
-                        // 선택된 파일 clear
-                        selectedFileDataList.clear();
-                        // 파일 List 갱신
-                        showFileList(file);
+                // 선택된 파일 clear
+                Singleton.getInstance().setSelectedFileDataListClear();
+                // 파일 List 갱신
+                showFileList(file);
 
-                    });
+            });
             builder.setNegativeButton("취소",
-                            (dialog, which) ->
+                    (dialog, which) ->
                             // 현재 화면의 선택된 파일 List 선택 해제
                             fileListAdapter.setClearSelectedFileList());
 
@@ -530,7 +549,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             edittext.setSingleLine();
 
             // edittext 기존 파일 이름
-            edittext.setText(selectedDataList.get(0).getFile().getName());
+            edittext.setText(Singleton.getInstance().getSelectedFileDataList().get(0).getFile().getName());
             edittext.requestFocus();
             edittext.selectAll();
 
@@ -548,13 +567,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 /*
                  * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
                  */
-                // 현재 화면에서 선택된 fileList 갖고옴
-                selectedFileDataList = selectedDataList;
+
+
                 // 현재 화면의 선택된 파일 List 선택 해제
                 fileListAdapter.setClearSelectedFileList();
 
-                //이름 변경 함수
-                fileManage.renameFile(selectedFileDataList, edittext.getText().toString());
+                //// 현재 화면에서 선택된 fileList 갖고와서 이름 변경 함수
+                fileManage.renameFile(Singleton.getInstance().getSelectedFileDataList(), edittext.getText().toString());
 
                 // 선택된 파일 clear
                 selectedFileDataList.clear();
@@ -565,13 +584,13 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
             });
             builder.setNegativeButton(
-            "취소",
-                (dialog, which) ->{
-                    // 현재 화면의 선택된 파일 List 선택 해제
-                    fileListAdapter.setClearSelectedFileList();
-                    // 키보드 숨기기
-                    imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
-                });
+                    "취소",
+                    (dialog, which) ->{
+                        // 현재 화면의 선택된 파일 List 선택 해제
+                        fileListAdapter.setClearSelectedFileList();
+                        // 키보드 숨기기
+                        imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+                    });
 
             builder.show();
         }
@@ -583,7 +602,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             builder.setTitle(R.string.file_info);
             // 한 개만 가능
 //            File selectedFile = selectedDataList.get(0).getFile();
-            FileData selectedFile = selectedDataList.get(0);
+            FileData selectedFile = Singleton.getInstance().getSelectedFileDataList().get(0);
 
             // TODO: file정보 layout에 적용
             LayoutInflater inflater = getLayoutInflater();
@@ -623,4 +642,148 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             builder.show();
         }
     }
+//    protected void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
+////        AlertDialog alertDialog = builder.create();
+//
+//        if(dialogMode == DialogMode.DIALOG_DELETE) {
+//            // 배경 터치 불가
+//            builder.setCancelable(false);
+//
+//            builder.setTitle(R.string.file_delete);
+//            builder.setMessage(String.format(getResources().getString(R.string.confirm_delete), selectedDataList.size()));
+//            builder.setPositiveButton("확인", (dialog, which) -> {
+//                        // 현재 화면에서 선택된 fileList 갖고옴
+//                        selectedFileDataList = selectedDataList;
+//                        // 현재 화면의 선택된 파일 List 선택 해제
+//                        fileListAdapter.setClearSelectedFileList();
+//
+//                        //삭제 함수
+//                        fileManage.deleteFile(selectedFileDataList);
+//
+//                        // 선택된 파일 clear
+//                        selectedFileDataList.clear();
+//                        // 파일 List 갱신
+//                        showFileList(file);
+//
+//                    });
+//            builder.setNegativeButton("취소",
+//                            (dialog, which) ->
+//                            // 현재 화면의 선택된 파일 List 선택 해제
+//                            fileListAdapter.setClearSelectedFileList());
+//
+//            builder.show();
+//        }
+//
+//        if(dialogMode == DialogMode.DIALOG_RENAME){
+//            // 배경 터치 불가
+//            builder.setCancelable(false);
+//
+//            EditText edittext = new EditText(this);
+//
+//            // Edittext margin 주기 위해 LinearLayout 구현
+//            LinearLayout container = new LinearLayout(getApplicationContext());
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            params.topMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+//            params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+//            params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+//
+//            edittext.setLayoutParams(params);
+//            edittext.setSingleLine();
+//
+//            // edittext 기존 파일 이름
+//            edittext.setText(selectedDataList.get(0).getFile().getName());
+//            edittext.requestFocus();
+//            edittext.selectAll();
+//
+//            // 키보드 관리자 생성 및 보이기
+//            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//            // 키보드가 올라와있으면 내리고, 내려와있으면 올림
+//            // 열리는 용도로 사용 -> ShowSoftInput이 안먹힘
+//            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//
+//            container.addView(edittext);
+//
+//            builder.setTitle(R.string.file_rename);
+//            builder.setView(container);
+//            builder.setPositiveButton("이름 변경", (dialog, which) -> {
+//                /*
+//                 * 이름 변경은 하나의 파일만 가능 but 사용하는 함수 쓰기 위해 selectedFileDataList 사용
+//                 */
+//                // 현재 화면에서 선택된 fileList 갖고옴
+//                selectedFileDataList = selectedDataList;
+//                // 현재 화면의 선택된 파일 List 선택 해제
+//                fileListAdapter.setClearSelectedFileList();
+//
+//                //이름 변경 함수
+//                fileManage.renameFile(selectedFileDataList, edittext.getText().toString());
+//
+//                // 선택된 파일 clear
+//                selectedFileDataList.clear();
+//                // 파일 List 갱신
+//                showFileList(file);
+//
+//                // 키보드 숨기기
+//                imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+//            });
+//            builder.setNegativeButton(
+//            "취소",
+//                (dialog, which) ->{
+//                    // 현재 화면의 선택된 파일 List 선택 해제
+//                    fileListAdapter.setClearSelectedFileList();
+//                    // 키보드 숨기기
+//                    imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+//                });
+//
+//            builder.show();
+//        }
+//
+//        if(dialogMode == DialogMode.DIALOG_INFO){
+//            // 배경 터치 불가
+//            builder.setCancelable(false);
+//
+//            builder.setTitle(R.string.file_info);
+//            // 한 개만 가능
+////            File selectedFile = selectedDataList.get(0).getFile();
+//            FileData selectedFile = selectedDataList.get(0);
+//
+//            // TODO: file정보 layout에 적용
+//            LayoutInflater inflater = getLayoutInflater();
+//            View view = inflater.inflate(R.layout.alert_info_dialog, null);
+//            builder.setView(view);
+//            TextView tvFileName = (TextView) view.findViewById(R.id.tvFileName);
+//            TextView tvFileSize = (TextView) view.findViewById(R.id.tvFileSize);
+//            TextView tvFileLastModify = (TextView) view.findViewById(R.id.tvFileLastModify);
+//            TextView tvFileSubInfo = (TextView) view.findViewById(R.id.tvFileSubInfo);
+//            TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
+//
+//            FileInfo fileInfo = new FileInfo(this, selectedFile.getFile());
+//
+//            if(file.exists()) {
+//                tvFileName.setText(fileInfo.getFileName());
+//                tvFileSize.setText(fileInfo.getFileSize());
+//                tvFileLastModify.setText(fileInfo.getFileLastModify());
+//
+//                if(file.isDirectory()) {
+//                    tvFileSubInfo.setVisibility(View.VISIBLE);
+//                    tvFileSubInfo.setText(
+//                            //TODO: 변경
+//                            String.format(getResources().getString(R.string.file_contents),
+//                                    fileInfo.getTotalFolderNum(), fileInfo.getTotalFileNum()
+//                            ));
+//                }
+//                else
+//                    tvFileSubInfo.setVisibility(View.GONE);
+//
+//                tvFilePath.setText(fileInfo.getFilePath());
+//            }
+//            // 현재 화면의 선택된 파일 List 선택 해제
+//            fileListAdapter.setClearSelectedFileList();
+//
+//            builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
+//
+//            builder.show();
+//        }
+//    }
 }

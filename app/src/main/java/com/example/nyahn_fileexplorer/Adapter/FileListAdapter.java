@@ -69,17 +69,17 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     }
 
     // 선택된 파일 List
-    public ArrayList<FileData> getSelectedFileList(){
-        ArrayList<FileData> selectedList = new ArrayList<>();
-        if(selectedPositions.size() != 0) {
-            for (int selected : selectedPositions) {
-                Log.d(TAG, "selected position =" + selected);
-                FileData fileData = fileDataList.get(selected);
-                selectedList.add(fileData);
-            }
-        }
-        return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
-    }
+//    public ArrayList<FileData> getSelectedFileList(){
+//        ArrayList<FileData> selectedList = new ArrayList<>();
+//        if(selectedPositions.size() != 0) {
+//            for (int selected : selectedPositions) {
+//                Log.d(TAG, "selected position =" + selected);
+//                FileData fileData = fileDataList.get(selected);
+//                selectedList.add(fileData);
+//            }
+//        }
+//        return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
+//    }
 
     public void setSingletonSelectedFileList(){
         ArrayList<FileData> selectedList = new ArrayList<>();
