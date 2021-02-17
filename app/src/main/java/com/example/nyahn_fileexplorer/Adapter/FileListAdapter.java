@@ -26,6 +26,7 @@ import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.FileInfo;
+import com.example.nyahn_fileexplorer.Utils.Singleton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,6 +79,18 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             }
         }
         return selectedList;    // 호출하는 쪽에서 NPE관련 처리 해줘야함
+    }
+
+    public void setSingletonSelectedFileList(){
+        ArrayList<FileData> selectedList = new ArrayList<>();
+        if(selectedPositions.size() != 0) {
+            for (int selected : selectedPositions) {
+                Log.d(TAG, "selected position =" + selected);
+                FileData fileData = fileDataList.get(selected);
+                selectedList.add(fileData);
+            }
+            Singleton.getInstance().setSelectedFileDataList(selectedList);
+        }
     }
 
     // 파일 선택 해제

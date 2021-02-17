@@ -30,6 +30,7 @@ import com.example.nyahn_fileexplorer.R;
 import com.example.nyahn_fileexplorer.Utils.FileInfo;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
+import com.example.nyahn_fileexplorer.Utils.Singleton;
 import com.example.nyahn_fileexplorer.Utils.SortFileData;
 
 import java.io.File;
@@ -39,7 +40,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 {
     private static final String TAG = FileListActivity.class.getSimpleName();
 
-    private Mode currentMode = Mode.BASIC_MODE;
+//    private Mode currentMode = Mode.BASIC_MODE;
+    private Mode currentMode = Singleton.getInstance().getCurrentMode();
     // 현재 파일
     private File file;
     // 현재 파일이 갖고 있는 파일 목록
@@ -101,6 +103,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 복사, 이동 등 file function layout
     @Override
     public void onShowBottomLayout() {
+        currentMode = Singleton.getInstance().getCurrentMode();
+
         if(currentMode == Mode.SELECTED_MODE){
             cdBottomSheet.setVisibility(View.VISIBLE);
             llBottomManageLayout.setVisibility(View.VISIBLE);
@@ -122,12 +126,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     @Override
     public Mode onGetMode() {
-        return currentMode;
+
+//1        return currentMode;
+        return Singleton.getInstance().getCurrentMode();
     }
 
     @Override
     public void onSetMode(Mode mode) {
-        currentMode = mode;
+        Singleton.getInstance().setCurrentMode(mode);
+//1        currentMode = mode;
     }
 
     @Override
@@ -237,6 +244,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
     */
 
+
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -247,12 +255,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-
         rootDir = bundle.getString("STORAGE");
         Log.d(TAG, "RootDirectory = "+ rootDir);
 
         setToolbar();
         init();
+
 
         // rootMainDir에 해당되는 파일의 File 객체 생성
         file = new File(rootDir);
@@ -260,6 +268,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         rcFile.setAdapter(fileListAdapter);
 
         showFileList(file);
+        onShowBottomLayout();
     }
 
     public void init(){
@@ -309,10 +318,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             case R.id.llFileMove:
                 // MOVE_MODE로 변경, 붙여넣기 클릭시 사용
-                currentMode = Mode.MOVE_MODE;
+//1                currentMode = Mode.MOVE_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.MOVE_MODE);
+                // 어느 path의 파일이 선택된건지 저장
+                Singleton.getInstance().setCurrentFile(file);
+
                 onShowBottomLayout();   // 취소/붙여넣기
                 // 선택된 파일(들)이 있는 경로의 파일 목록 저장
-                selectedFileDataList = fileListAdapter.getSelectedFileList();
+//2                selectedFileDataList = fileListAdapter.getSelectedFileList();
+                fileListAdapter.setSingletonSelectedFileList();
 
                 // 현재 화면의 recyclerView fileList 선택부분 초기화
                 fileListAdapter.setClearSelectedFileList();
@@ -356,16 +370,20 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
-                fileManage.pasteFile(currentMode, selectedFileDataList, file);
+//1                fileManage.pasteFile(currentMode, selectedFileDataList, file);
+                fileManage.pasteFile(Singleton.getInstance().getCurrentMode(),
+                        Singleton.getInstance().getSelectedFileDataList(), file);
 
                 // 복사된 파일 List 보여주기
                 showFileList(file);
 
                 // 선택된 fileList 초기화
-                selectedFileDataList.clear();
+//2                selectedFileDataList.clear();
+                Singleton.getInstance().setSelectedFileDataListClear();
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
 
                 // 붙여넣기 끝난 후 Basic_Mode로 변경
-                currentMode = Mode.BASIC_MODE;
+//3                currentMode = Mode.BASIC_MODE;
                 onShowBottomLayout();
                 break;
 
@@ -427,7 +445,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         if(list == null || list.length == 0){
             flEmptyLayout.setVisibility(View.VISIBLE);
         } else {
-            flEmptyLayout.setVisibility(View.INVISIBLE);
+            flEmptyLayout.setVisibility(View.GONE);
 
             // @value : 선택한 파일의 하위 파일
             for (File value : list) {
