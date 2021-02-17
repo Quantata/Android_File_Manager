@@ -576,7 +576,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 fileManage.renameFile(Singleton.getInstance().getSelectedFileDataList(), edittext.getText().toString());
 
                 // 선택된 파일 clear
-                selectedFileDataList.clear();
+                Singleton.getInstance().setSelectedFileDataListClear();
                 // 파일 List 갱신
                 showFileList(file);
 
