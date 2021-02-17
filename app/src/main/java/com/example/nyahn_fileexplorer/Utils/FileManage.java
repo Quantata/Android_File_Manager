@@ -60,19 +60,30 @@ public class FileManage {
 
     // 파일 복사하기 - 완료
     public void copy(File sourceFile, File targetFile) {
+        Log.d(TAG, "**********복사 시작*********");
+        Log.d(TAG, "sourceFile = " + sourceFile.getPath());
+        Log.d(TAG, "targetFile = " + targetFile.getPath());
+
         File newDirectory = new File(targetFile, sourceFile.getName());
+        Log.d(TAG, "newDirectory = " + newDirectory.getPath());
 
         // 파일이 존재할 경우
         if(newDirectory.exists()){
+            Log.d(TAG, "****newDirectory exists****");
+
             int i = 0;
 
             while(newDirectory.exists()) {
                 i++;
                 String fileName = sourceFile.getName();
 
-                if(newDirectory.isDirectory())
+                if(newDirectory.isDirectory()) {
+                    Log.d(TAG, "****newDirectory is Directory****");
                     newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+                }
                 else {
+                    Log.d(TAG, "****newDirectory is not Directory****");
+
                     String realName = fileName.substring(0, fileName.lastIndexOf("."));
                     String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 
@@ -83,24 +94,37 @@ public class FileManage {
         }
 
         if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
+            Log.d(TAG, "****newDirectory not exists****");
+            Log.d(TAG, "newDirectory = " + newDirectory.getPath());
+
             // 복사할거 recursive
             // 선택된 파일의 파일 리스트
             File[] sourceFiles = sourceFile.listFiles();
             try {
                 if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
+                    Log.d(TAG, "****sourceFiles(선택된 파일) empty folder OR file****");
+                    // 안해주면 apk 실행시 nio Exception
+
                     // java NIO
                     // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
                     // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
-                    Files.copy(sourceFile.toPath(),
-                            newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                        Files.copy(sourceFile.toPath(),
+                        newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                     Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
                 }
                 else {  // 복사할 파일이 파일 or 빈폴더가 아니면
+                    Log.d(TAG, "****newDirectory folder****");
+                    Log.d(TAG, "createDirectories newDirectory.toPath() = " + newDirectory.toPath());
+                    // 안해주면 apk 실행시 nio Exception
                     Files.createDirectories(newDirectory.toPath());
 
                     // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
                     for (File file : sourceFiles) {
+                        Log.d(TAG, "copy(file, newDirectory)");
+                        Log.d(TAG, "file(sourceFile) =" + file);
+                        Log.d(TAG, "newDirectory.getPath(targetFile) = " + newDirectory.getPath());
+
                         copy(file, newDirectory);
                     }
 
@@ -108,16 +132,23 @@ public class FileManage {
             } catch (IOException e){
 
                 Log.d(TAG, "복사 Exception = " + e);
+
             }
         }
     }
 
     public void rename(File sourceFile, String rename){
+        Log.d(TAG, "********이름 변경 시작********");
+        Log.d(TAG, "sourceFile = " + sourceFile.getPath());
+
         File file = new File(sourceFile.getPath());
         File newFile = new File(file.getParent(), rename);
 
+        Log.d(TAG, "newFile = " + newFile.getPath());
+
         // TODO: 이미 있는 이름이면 처리
         try {
+            Log.d(TAG, "Files.move()");
             Files.move(file.toPath(), newFile.toPath());
         } catch (IOException e){
             Log.d(TAG, "파일 이름 변경 = " + rename);
@@ -126,11 +157,14 @@ public class FileManage {
 
     // 이동 구현
     public void move(File sourceFile, File targetFile){
-        Log.d(TAG, "이동중.");
+        Log.d(TAG, "********이동 시작********");
         File newDirectory = new File(targetFile, sourceFile.getName());
+        Log.d(TAG, "newDirectory = " + newDirectory);
 
         // 파일이 존재할 경우
         if(newDirectory.exists()){
+            Log.d(TAG, "********newDirectory exists********");
+
             int i = 0;
             while(newDirectory.exists()) {
                 i++;
@@ -139,11 +173,14 @@ public class FileManage {
         }
 
         if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
+            Log.d(TAG, "********newDirectory not exists********");
+
             // 복사할거 recursive
             // 선택된 파일의 파일 리스트
             File[] sourceFiles = sourceFile.listFiles();
             try {
                 if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
+                    Log.d(TAG, "****sourceFiles(선택된파일) empty folder OR file****");
                     // java NIO
                     // File.move(이동할 파일의 Path, 이동할 곳의 Path)
                     // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
@@ -153,6 +190,8 @@ public class FileManage {
                     Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
                 }
                 else {  // 복사할 파일이 파일 or 빈폴더가 아니면
+                    Log.d(TAG, "****sourceFiles(선택된파일) is folder****");
+
                     Files.createDirectories(newDirectory.toPath());
 
                     // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
@@ -176,7 +215,11 @@ public class FileManage {
     public void pasteFile(Mode mode, ArrayList<FileData> fileDataList, File outputFile){
         if(mode == Mode.COPY_MODE){
             for(FileData fileData : fileDataList) {
+                Log.d(TAG, "*********COPY_MODE*********");
                 File file = fileData.getFile();
+                Log.d(TAG, "file = " + file.getPath());
+                Log.d(TAG, "outputFile = " + outputFile);
+
                 copy(file, outputFile);
 //                copyFile(fileDataList, outputPath);
             }
