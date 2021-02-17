@@ -65,9 +65,20 @@ public class FileManage {
         // 파일이 존재할 경우
         if(newDirectory.exists()){
             int i = 0;
+
             while(newDirectory.exists()) {
                 i++;
-                newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+                String fileName = sourceFile.getName();
+
+                if(newDirectory.isDirectory())
+                    newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+                else {
+                    String realName = fileName.substring(0, fileName.lastIndexOf("."));
+                    String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+                    newDirectory = new File(targetFile, realName + " (" + i + ")." + extension);
+//                newDirectory = new File(targetFile, sourceFile.getName() + " (" + i + ")");
+                }
             }
         }
 
@@ -105,6 +116,7 @@ public class FileManage {
         File file = new File(sourceFile.getPath());
         File newFile = new File(file.getParent(), rename);
 
+        // TODO: 이미 있는 이름이면 처리
         try {
             Files.move(file.toPath(), newFile.toPath());
         } catch (IOException e){
