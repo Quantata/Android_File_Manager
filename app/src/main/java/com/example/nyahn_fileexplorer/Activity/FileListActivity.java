@@ -421,7 +421,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         currentMode = Singleton.getInstance().getCurrentMode();
 
         if(currentMode == Mode.SELECTED_MODE){
-            currentMode = Mode.BASIC_MODE;
+//1            currentMode = Mode.BASIC_MODE;
+            Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
             onShowBottomLayout();
             // selectedFileDataList에는 따로저장된게 없음으로 adapter의 selectedList만 clear해주면 됨.
             fileListAdapter.setClearSelectedFileList();
