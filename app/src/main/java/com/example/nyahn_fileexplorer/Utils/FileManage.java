@@ -114,10 +114,11 @@ public class FileManage {
                 Log.d(TAG, "****sourceFiles(선택된 파일) empty folder OR file****");
                 // 안해주면 apk 실행시 nio Exception
 
-                // java NIO
-                // File.copy(복사할 파일의 Path, 복사할 곳의 Path)
+
                 // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
                   copyFile(sourceFile, newDirectory);
+                // java NIO
+                // Files.copy(복사할 파일의 Path, 복사할 곳의 Path)
 //                    Files.copy(sourceFile.toPath(),
 //                        newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -142,6 +143,7 @@ public class FileManage {
         }
     }
 
+    // copy를 수행하는 부분
     public void copyFile(File sourceFile, File targetFile) {
         try {
             FileInputStream fis = new FileInputStream(sourceFile); //읽을파일
@@ -220,35 +222,39 @@ public class FileManage {
         if(!newDirectory.exists()) { // newDirectory(복사할 곳 + 복사한 파일의 이름)이 현재 path에 존재 하지 않으면
             Log.d(TAG, "********newDirectory not exists********");
 
+            // 기존 파일이 폴더라면
+            if(sourceFile.isDirectory())
+                createDirectory(newDirectory.getPath());
+
             // 복사할거 recursive
             // 선택된 파일의 파일 리스트
             File[] sourceFiles = sourceFile.listFiles();
-            try {
-                if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
-                    Log.d(TAG, "****sourceFiles(선택된파일) empty folder OR file****");
-                    // java NIO
-                    // File.move(이동할 파일의 Path, 이동할 곳의 Path)
-                    // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
-                    Files.move(sourceFile.toPath(),
-                            newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            if(sourceFiles == null || sourceFiles.length == 0){ // 빈폴더나 파일일 경우
+                Log.d(TAG, "****sourceFiles(선택된파일) empty folder OR file****");
+                // java NIO
+                // File.move(이동할 파일의 Path, 이동할 곳의 Path)
+                // TODO: 현재 같은 이름의 폴더 있으면 pass, 코드상엔 덮어쓰기 -> 예외처리하기(이름변경 버튼 누르면 ->(1) 이렇게 만들어 버림)
+                if(sourceFile.renameTo(newDirectory))
+                    Log.d(TAG, "move file success");
+                else
+                    Log.d(TAG, "move file fail");
 
-                    Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
+//                    Files.move(sourceFile.toPath(),
+//                            newDirectory.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                Log.d(TAG, "newDirectoryFile = " + newDirectory.getPath());
+            }
+            else {  // 복사할 파일이 파일 or 빈폴더가 아니면
+                Log.d(TAG, "****sourceFiles(선택된파일) is folder****");
+
+//                    Files.createDirectories(newDirectory.toPath());
+
+                // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
+                for (File file : sourceFiles) {
+                    move(file, newDirectory);
                 }
-                else {  // 복사할 파일이 파일 or 빈폴더가 아니면
-                    Log.d(TAG, "****sourceFiles(선택된파일) is folder****");
 
-                    Files.createDirectories(newDirectory.toPath());
-
-                    // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
-                    for (File file : sourceFiles) {
-                        move(file, newDirectory);
-                    }
-
-                    delete(sourceFile);
-                }
-            } catch (IOException e){
-
-                Log.d(TAG, "복사 Exception = " + e);
+                delete(sourceFile);
             }
         }
     }
