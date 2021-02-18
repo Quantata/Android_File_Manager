@@ -12,13 +12,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nyahn_fileexplorer.Activity.FileListActivity;
+import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Utils.Define;
 import com.example.nyahn_fileexplorer.Utils.FileInfo;
+import com.example.nyahn_fileexplorer.Utils.Singleton;
 
 import java.io.File;
 
@@ -28,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout llMainStorage;
     LinearLayout llSdcardStorage;
     LinearLayout llAppStorage;
+
+    LinearLayout cdBottomSheet;
+    LinearLayout llBottomMoveLayout;
+    LinearLayout llFilePaste;
+    TextView tvFilePaste;
+    LinearLayout llCancel;
 
     TextView tvInnerVolume;
     TextView tvSdcardVolume;
@@ -50,6 +59,21 @@ public class MainActivity extends AppCompatActivity {
         initClick();
         setupPermission();
 
+        onShowBottomLayout();
+    }
+
+    public void onShowBottomLayout() {
+        Mode currentMode = Singleton.getInstance().getCurrentMode();
+
+        if(currentMode == Mode.MOVE_MODE ||
+                currentMode == Mode.COPY_MODE){
+            cdBottomSheet.setVisibility(View.VISIBLE);
+            llBottomMoveLayout.setVisibility(View.VISIBLE);
+        }
+        else { // Basic_mode
+            cdBottomSheet.setVisibility(View.GONE);
+            llBottomMoveLayout.setVisibility(View.GONE);
+        }
     }
 
     // request permission for sdcard
@@ -68,8 +92,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 파일 버튼 클릭시
+    public void onClickButton(View view) {
+        // TODO: if/else로 변경 static에서 기본형으로 바뀌면서 효율성 면에서 R.id.~ 사용시 if/else문으로 사용 하는걸 권장
+        switch (view.getId()) {
+            case R.id.llCancel:
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
+                onShowBottomLayout();
+                Singleton.getInstance().setSelectedFileDataListClear();
 
+                break;
+        }
+    }
     public void init() {
+        cdBottomSheet = (LinearLayout) findViewById(R.id.cdBottomSheet);
+        llBottomMoveLayout = (LinearLayout) findViewById(R.id.llBottomMoveLayout);
+        llCancel = (LinearLayout) findViewById(R.id.llCancel);
+        llFilePaste = (LinearLayout) findViewById(R.id.llFilePaste);
+        tvFilePaste = findViewById(R.id.tvFilePaste);
+
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.bottomTextColorHint, typedValue, true);
+        // 붙여넣기
+        tvFilePaste.setTextColor(typedValue.data);
+        tvFilePaste.setClickable(false);
+        llFilePaste.setClickable(false);
+
+
         llMainStorage = (LinearLayout)findViewById(R.id.llMainStorage);
         llSdcardStorage = (LinearLayout)findViewById(R.id.llSdcardStorage);
         llAppStorage = (LinearLayout)findViewById(R.id.llAppStorage);

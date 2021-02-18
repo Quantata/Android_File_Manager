@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -11,6 +11,8 @@
         android:id="@+id/toolbar"/>
 
     <GridLayout
+        android:layout_below="@id/toolbar"
+        android:layout_above="@+id/cdBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -113,4 +115,20 @@
         </LinearLayout>
     </GridLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/cdBottomSheet"
+        android:visibility="visible"
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/bottom_file_move"
+            android:id="@+id/llBottomMoveLayout"
+            android:visibility="visible"
+            tools:visibility="visible"/>
+    </LinearLayout>
+
+</RelativeLayout>
