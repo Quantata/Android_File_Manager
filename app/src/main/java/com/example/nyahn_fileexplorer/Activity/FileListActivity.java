@@ -343,6 +343,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             // 복사, 이동시 나타나는 버튼
             case R.id.llCancel:
 //1                currentMode = Mode.BASIC_MODE;
+                Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
                 onShowBottomLayout();
 
                 // 선택 해제
@@ -356,8 +357,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             case R.id.llFilePaste:
                 // Mode가 COPY인지 MOVE인지 확인 후 붙여 넣기
 //1                fileManage.pasteFile(currentMode, selectedFileDataList, file);
-                fileManage.pasteFile(Singleton.getInstance().getCurrentMode(),
-                        Singleton.getInstance().getSelectedFileDataList(), file);
+                fileManage.pasteFile(file);
 
                 // 복사된 파일 List 보여주기
                 showFileList(file);
@@ -387,9 +387,6 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     public void onBackPressed() {
         currentMode = Singleton.getInstance().getCurrentMode();
 
-        if(isMimeType){
-
-        }
         if(currentMode == Mode.SELECTED_MODE){
 //1            currentMode = Mode.BASIC_MODE;
             Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
