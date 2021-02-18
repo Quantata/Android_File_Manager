@@ -27,6 +27,7 @@ import com.example.nyahn_fileexplorer.Models.Mode;
 import com.example.nyahn_fileexplorer.Interface.OnItemClick;
 import com.example.nyahn_fileexplorer.OnFileManage;
 import com.example.nyahn_fileexplorer.R;
+import com.example.nyahn_fileexplorer.Utils.Define;
 import com.example.nyahn_fileexplorer.Utils.FileInfo;
 import com.example.nyahn_fileexplorer.Utils.FileManage;
 import com.example.nyahn_fileexplorer.Models.FileData;
@@ -35,10 +36,13 @@ import com.example.nyahn_fileexplorer.Utils.SortFileData;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FileListActivity extends AppCompatActivity implements OnItemClick, OnFileManage
 {
     private static final String TAG = FileListActivity.class.getSimpleName();
+
+    boolean isMimeType;
 
 //    private Mode currentMode = Mode.BASIC_MODE;
     private Mode currentMode = Singleton.getInstance().getCurrentMode();
@@ -202,73 +206,36 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             Log.d(TAG, "INFO Mode Clickable = " + active);
     }
 
-    /* // TODO: FileList에서 받을까
-    private void getMimeType(){
-        // Get intent, action and MIME type
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if (Intent.ACTION_VIEW.equals(action) && type != null) {
-            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-            String path = getRealPathFromUri(this, imageUri);
-            FileListActivity fileListActivity = new FileListActivity();
-            ArrayList<FileData> selectedDataList = new ArrayList<>();
-            FileData fileData = new FileData();
-            fileData.setFile(new File(path));
-            selectedDataList.add(fileData);
-
-            fileListActivity.showDialog(DialogMode.DIALOG_INFO, selectedDataList);
-//            if ("text/plain".equals(type)) {
-//                handleSendText(intent); // Handle text being sent
-//            } else if (type.startsWith("image/")) {
-//                handleSendImage(intent); // Handle single image being sent
-//            }
-        }
-    }
-
-    public static String getRealPathFromUri(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    */
-
-
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_list);
-
+        Log.d(TAG, "*******onCreate()********");
 
         // storage 종류 판별
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        rootDir = bundle.getString("STORAGE");
-        Log.d(TAG, "RootDirectory = "+ rootDir);
+        isMimeType = bundle.getBoolean(Define.MimeType, false);
+        rootDir = bundle.getString(Define.STORAGE, "");
+        Log.d(TAG, "RootDirectory = " + rootDir);
+        Log.d(TAG, "isMimeType = " + isMimeType);
 
         setToolbar();
         init();
 
+        if(isMimeType)
+            showDialog(DialogMode.DIALOG_MIMETYPE);
+        else {
+            // rootMainDir에 해당되는 파일의 File 객체 생성
+            file = new File(rootDir);
+            fileListAdapter = new FileListAdapter(this, fileList, this);
+            rcFile.setAdapter(fileListAdapter);
+            showFileList(file);
+        }
 
-        // rootMainDir에 해당되는 파일의 File 객체 생성
-        file = new File(rootDir);
-        fileListAdapter = new FileListAdapter(this, fileList, this);
-        rcFile.setAdapter(fileListAdapter);
-
-        showFileList(file);
         onShowBottomLayout();
+
     }
 
     public void init(){
@@ -420,6 +387,9 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     public void onBackPressed() {
         currentMode = Singleton.getInstance().getCurrentMode();
 
+        if(isMimeType){
+
+        }
         if(currentMode == Mode.SELECTED_MODE){
 //1            currentMode = Mode.BASIC_MODE;
             Singleton.getInstance().setCurrentMode(Mode.BASIC_MODE);
@@ -500,6 +470,60 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
         fileListAdapter.notifyDataSetChanged();
     }
+
+    // 잘되지만 back눌렀을때 activity보이게 하는거나 하는것 때문에 일단 막아놓겠음.
+    // 파일 목록 update
+    public void showMimeTypeFileList(File selectedFile){
+        ArrayList<FileData> directories = new ArrayList<>();
+        ArrayList<FileData> files = new ArrayList<>();
+        FileInfo fileInfo;
+
+        file = new File(Objects.requireNonNull(selectedFile.getParent()));
+
+        File[] list = file.listFiles();
+
+        Singleton.getInstance().setSelectedFileDataListClear();
+
+        if(list == null || list.length == 0){
+            flEmptyLayout.setVisibility(View.VISIBLE);
+        } else {
+            flEmptyLayout.setVisibility(View.GONE);
+
+            // @value : 선택한 파일의 하위 파일
+            for (File value : list) {
+                // .으로 시작하는 파일(히든파일)은 불러오지 않도록 함
+                if(value.getName().startsWith(".")) continue;
+
+                FileData fileData = new FileData();
+                fileData.setFile(value);
+
+                fileInfo = new FileInfo();
+
+                // 현재 파일의 Folder, File Number 설정
+                fileInfo.setFileNum(fileData);
+
+                if(fileData.getFile().isDirectory()) {
+                    directories.add(fileData);
+                }
+                else {
+                    files.add(fileData);
+                }
+            }
+            // 정렬
+            directories.sort(new SortFileData());
+            files.sort(new SortFileData());
+
+            // directory먼저 보여주기
+            fileList.addAll(directories);
+            fileList.addAll(files);
+        }
+
+        fileListAdapter = new FileListAdapter(this, fileList, this);
+        rcFile.setAdapter(fileListAdapter);
+
+        // TODO: 언젠가 directory를 넣든가,,,근데 그러면 backpressed 도,,ㅠ
+    }
+
     protected void showDialog(DialogMode dialogMode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성
@@ -639,6 +663,59 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             fileListAdapter.setClearSelectedFileList();
 
             builder.setPositiveButton("확인", (dialog, which) -> dialog.dismiss());
+
+            builder.show();
+        }
+
+        if(dialogMode == DialogMode.DIALOG_MIMETYPE){
+            // 배경 터치 불가
+            builder.setCancelable(false);
+
+            builder.setTitle(R.string.file_info);
+            // 한 개만 가능
+//            File selectedFile = selectedDataList.get(0).getFile();
+            FileData selectedFile = Singleton.getInstance().getSelectedFileDataList().get(0);
+            showMimeTypeFileList(selectedFile.getFile());
+
+            // TODO: file정보 layout에 적용
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_info_dialog, null);
+            builder.setView(view);
+            TextView tvFileName = (TextView) view.findViewById(R.id.tvFileName);
+            TextView tvFileSize = (TextView) view.findViewById(R.id.tvFileSize);
+            TextView tvFileLastModify = (TextView) view.findViewById(R.id.tvFileLastModify);
+            TextView tvFileSubInfo = (TextView) view.findViewById(R.id.tvFileSubInfo);
+            TextView tvFilePath = (TextView) view.findViewById(R.id.tvFilePath);
+
+            FileInfo fileInfo = new FileInfo(this, selectedFile.getFile());
+
+            if(file.exists()) {
+                tvFileName.setText(fileInfo.getFileName());
+                tvFileSize.setText(fileInfo.getFileSize());
+                tvFileLastModify.setText(fileInfo.getFileLastModify());
+
+                if(file.isDirectory()) {
+                    tvFileSubInfo.setVisibility(View.VISIBLE);
+                    tvFileSubInfo.setText(
+                            //TODO: 변경
+                            String.format(getResources().getString(R.string.file_contents),
+                                    fileInfo.getTotalFolderNum(), fileInfo.getTotalFileNum()
+                            ));
+                }
+                else
+                    tvFileSubInfo.setVisibility(View.GONE);
+
+                tvFilePath.setText(fileInfo.getFilePath());
+            }
+            // 현재 화면의 선택된 파일 List 선택 해제
+            fileListAdapter.setClearSelectedFileList();
+
+            builder.setPositiveButton("확인", (dialog, which) -> {
+                dialog.dismiss();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            });
 
             builder.show();
         }

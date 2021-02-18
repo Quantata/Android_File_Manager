@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nyahn_fileexplorer.Activity.FileListActivity;
+import com.example.nyahn_fileexplorer.Utils.Define;
 import com.example.nyahn_fileexplorer.Utils.FileInfo;
 
 import java.io.File;
@@ -136,21 +137,21 @@ public class MainActivity extends AppCompatActivity {
         intent = new Intent(MainActivity.this, FileListActivity.class);
 
         llMainStorage.setOnClickListener(view ->{
-            bundle.putString("STORAGE", innerFile.getPath());
+            bundle.putString(Define.STORAGE, innerFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
         });
 
         llSdcardStorage.setOnClickListener(v -> {
-            bundle.putString("STORAGE", sdcardFile.getPath());
+            bundle.putString(Define.STORAGE, sdcardFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
         });
 
         llAppStorage.setOnClickListener(v -> {
-            bundle.putString("STORAGE", appFile.getPath());
+            bundle.putString(Define.STORAGE, appFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
             finish();

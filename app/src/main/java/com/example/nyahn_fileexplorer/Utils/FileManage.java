@@ -117,15 +117,17 @@ public class FileManage {
                     Log.d(TAG, "****newDirectory folder****");
                     Log.d(TAG, "createDirectories newDirectory.toPath() = " + newDirectory.toPath());
                     // 안해주면 apk 실행시 nio Exception
-                    Files.createDirectories(newDirectory.toPath());
+//                    Files.createDirectories(newDirectory.toPath());
+                    if(createDirectory(newDirectory.getPath())) {
 
-                    // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
-                    for (File file : sourceFiles) {
-                        Log.d(TAG, "copy(file, newDirectory)");
-                        Log.d(TAG, "file(sourceFile) =" + file);
-                        Log.d(TAG, "newDirectory.getPath(targetFile) = " + newDirectory.getPath());
+                        // 선택된 파일 안에 파일 리스트들을 newDirectory안에 복사
+                        for (File file : sourceFiles) {
+                            Log.d(TAG, "copy(file, newDirectory)");
+                            Log.d(TAG, "file(sourceFile) =" + file);
+                            Log.d(TAG, "newDirectory.getPath(targetFile) = " + newDirectory.getPath());
 
-                        copy(file, newDirectory);
+                            copy(file, newDirectory);
+                        }
                     }
 
                 }
@@ -134,6 +136,19 @@ public class FileManage {
                 Log.d(TAG, "복사 Exception = " + e);
 
             }
+        }
+    }
+
+    public boolean createDirectory(String path) {
+        try {
+            File dir = new File(path);
+            if (dir.exists()) {
+                return true;
+            }
+
+            return dir.mkdirs();
+        } catch (Exception e) {
+            return false;
         }
     }
 
