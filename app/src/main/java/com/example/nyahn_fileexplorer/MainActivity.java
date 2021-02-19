@@ -187,6 +187,10 @@ public class MainActivity extends AppCompatActivity {
 
         llMainStorage.setOnClickListener(view ->{
             bundle.putString(Define.STORAGE, innerFile.getPath());
+            bundle.putString(Define.STORAGE_NAME,
+                    getApplicationContext().getResources().getString(R.string.main_storage));
+            bundle.putInt(Define.ROOTDIR_IMAGE,
+                    R.drawable.inbox);
             intent.putExtras(bundle);
             startActivity(intent);
             overridePendingTransition(0, 0);
@@ -195,6 +199,10 @@ public class MainActivity extends AppCompatActivity {
 
         llSdcardStorage.setOnClickListener(v -> {
             bundle.putString(Define.STORAGE, sdcardFile.getPath());
+            bundle.putString(Define.STORAGE_NAME,
+                    getApplicationContext().getResources().getString(R.string.sdcard_storage));
+            bundle.putInt(Define.ROOTDIR_IMAGE,
+                    R.drawable.sdcard);
             intent.putExtras(bundle);
             startActivity(intent);
             overridePendingTransition(0, 0);
@@ -203,6 +211,10 @@ public class MainActivity extends AppCompatActivity {
 
         llAppStorage.setOnClickListener(v -> {
             bundle.putString(Define.STORAGE, appFile.getPath());
+            bundle.putString(Define.STORAGE_NAME,
+                    getApplicationContext().getResources().getString(R.string.app_storage));
+            bundle.putInt(Define.ROOTDIR_IMAGE,
+                    R.drawable.blank_file);
             intent.putExtras(bundle);
             startActivity(intent);
             overridePendingTransition(0, 0);

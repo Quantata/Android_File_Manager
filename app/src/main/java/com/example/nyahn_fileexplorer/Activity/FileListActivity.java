@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     private static final String TAG = FileListActivity.class.getSimpleName();
 
     boolean isMimeType;
+    int imageRootDir;
+    ImageView ivRootDir;
 
 //    private Mode currentMode = Mode.BASIC_MODE;
     private Mode currentMode = Singleton.getInstance().getCurrentMode();
@@ -63,6 +66,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     DirectoryListAdapter directoryListAdapter;
 
     private String rootDir = "";
+    private String rootDirName = "";
     private RecyclerView rcFile;
     private FileListAdapter fileListAdapter;
     private FrameLayout flEmptyLayout;
@@ -81,7 +85,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         // toolbar as actionbar
         // setting toolbar
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.main_storage);
+        toolbar.setTitle(rootDirName);
         setSupportActionBar(toolbar);
     }
 
@@ -216,10 +220,16 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        isMimeType = bundle.getBoolean(Define.MimeType, false);
-        rootDir = bundle.getString(Define.STORAGE, "");
-        Log.d(TAG, "RootDirectory = " + rootDir);
-        Log.d(TAG, "isMimeType = " + isMimeType);
+        if(bundle != null) {
+            isMimeType = bundle.getBoolean(Define.MimeType, false);
+            rootDir = bundle.getString(Define.STORAGE, "");
+            rootDirName = bundle.getString(Define.STORAGE_NAME, "");
+            imageRootDir = bundle.getInt(Define.ROOTDIR_IMAGE, 0);
+            Log.d(TAG, "RootDirectory = " + rootDir);
+            Log.d(TAG, "RootDirectory Name = " + rootDirName);
+            Log.d(TAG, "isMimeType = " + isMimeType);
+            Log.d(TAG, "imageRootDir = " + imageRootDir);
+        }
 
         setToolbar();
         init();
@@ -265,6 +275,12 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         tvFileRename = findViewById(R.id.tvFileRename);
         llFileInfo = findViewById(R.id.llFileInfo);
         tvFileInfo = findViewById(R.id.tvFileInfo);
+
+        ivRootDir = findViewById(R.id.ivRootDir);
+        if(imageRootDir != 0)
+            ivRootDir.setBackgroundResource(imageRootDir);
+        else
+            ivRootDir.setBackgroundResource(R.drawable.inbox);
     }
 
 
