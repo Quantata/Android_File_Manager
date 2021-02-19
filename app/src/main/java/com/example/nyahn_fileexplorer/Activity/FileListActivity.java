@@ -399,6 +399,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
             if(rootDir.equals(file.getPath())){
                 startActivity(new Intent(FileListActivity.this, MainActivity.class));
                 finish();
+                overridePendingTransition(0, 0);
             }
             else {
                 String parent = file.getParent();
@@ -406,10 +407,10 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                     file = new File(file.getParent());
 
                 // toolbar title 변경
-                if(rootDir.equals(file.getPath()))
-                    toolbar.setTitle(R.string.main_storage);
-                else
-                    toolbar.setTitle(file.getName());
+//                if(rootDir.equals(file.getPath()))
+//                    toolbar.setTitle(R.string.main_storage);
+//                else
+                toolbar.setTitle(file.getName());
 
                 // 기존 list 삭제
                 fileList.clear();
@@ -712,6 +713,7 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();
+                overridePendingTransition(0, 0);
             });
 
             builder.show();

@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString(Define.STORAGE, innerFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
+            overridePendingTransition(0, 0);
             finish();
         });
 
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString(Define.STORAGE, sdcardFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
+            overridePendingTransition(0, 0);
             finish();
         });
 
@@ -203,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString(Define.STORAGE, appFile.getPath());
             intent.putExtras(bundle);
             startActivity(intent);
+            overridePendingTransition(0, 0);
             finish();
         });
     }
