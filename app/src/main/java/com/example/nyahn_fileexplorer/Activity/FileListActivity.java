@@ -14,9 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,6 +62,8 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
     // 선택된 파일 Position
 
     Toolbar toolbar;
+    ImageView ivAdd;
+    TextView tvToolbarTitle;
     private RecyclerView rcDirectory; // 디렉토리 구조
     // directory 구조 list
     private ArrayList<File> directoryList;
@@ -85,7 +89,15 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
         // toolbar as actionbar
         // setting toolbar
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(rootDirName);
+        ivAdd = toolbar.findViewById(R.id.ivAdd);
+        tvToolbarTitle = toolbar.findViewById(R.id.tvToolbarTitle);
+
+        ivAdd.setVisibility(View.VISIBLE);
+        ivAdd.setOnClickListener(v -> {
+            showDialog(DialogMode.DIALOG_ADD);
+        });
+        tvToolbarTitle.setText(rootDirName);
+//        toolbar.setTitle(rootDirName);
         setSupportActionBar(toolbar);
     }
 
@@ -734,7 +746,91 @@ public class FileListActivity extends AppCompatActivity implements OnItemClick, 
 
             builder.show();
         }
+
+        if(dialogMode == DialogMode.DIALOG_ADD){
+            // 배경 터치 불가
+            builder.setCancelable(false);
+
+            EditText edittext = new EditText(this);
+
+            // Edittext margin 주기 위해 LinearLayout 구현
+            LinearLayout container = new LinearLayout(getApplicationContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.topMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dialog_bottom_margin);
+            container.setOrientation(LinearLayout.VERTICAL);
+
+            edittext.setLayoutParams(params);
+            edittext.setSingleLine();
+
+            // edittext 기존 파일 이름
+            edittext.setText("");
+            edittext.requestFocus();
+//            edittext.selectAll();
+
+            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            textParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dialog_bottom_margin);
+            textParams.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            textParams.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+            textParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dialog_bottom_margin);
+
+            TextView tvNotice = new TextView(this);
+            tvNotice.setLayoutParams(textParams);
+            tvNotice.setTextSize(12);
+            tvNotice.setTextColor(ContextCompat.getColor(this, R.color.red));
+            tvNotice.setText(getString(R.string.already_exist));
+            tvNotice.setVisibility(View.INVISIBLE);
+
+
+            // 키보드 관리자 생성 및 보이기
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            // 키보드가 올라와있으면 내리고, 내려와있으면 올림
+            // 열리는 용도로 사용 -> ShowSoftInput이 안먹힘
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+            container.addView(edittext);
+            container.addView(tvNotice);
+
+            builder.setTitle(R.string.create_folder);
+            builder.setView(container);
+            builder.setPositiveButton(getString(R.string.confirm), (dialog, which) -> {});
+            builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> {});
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setOnClickListener(v -> {
+                        String path = file.getPath() + "/" + edittext.getText().toString();
+                        Log.d(TAG, "path = " + path);
+                        // 존재하면 true, 존재하지 않으면 dir.mkdir();
+                        boolean wantToCloseDialog = !fileManage.createDirectory(path);
+
+                        if(wantToCloseDialog){   // 기존 폴더가 존재하지 않으면
+                            tvNotice.setVisibility(View.VISIBLE);
+//                            Toast.makeText(this, "대상이 이미 존재합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            // 키보드 숨기기
+                            imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+                            dialog.dismiss();
+                            showFileList(file);
+                            tvNotice.setVisibility(View.INVISIBLE);
+                        }
+
+                    });
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setOnClickListener(v -> {
+                        // 키보드 숨기기
+                        imm.hideSoftInputFromWindow(edittext.getWindowToken(), 0);
+                        dialog.dismiss();
+                    });
+        }
     }
+
+
 //    protected void showDialog(DialogMode dialogMode, ArrayList<FileData> selectedDataList){
 //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //        // builder 이용해서는 dismiss() 수행 불가능, builder를 담을 AlertDialog 객체 생성

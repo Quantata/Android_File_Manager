@@ -226,7 +226,9 @@ public class MainActivity extends AppCompatActivity {
         // toolbar as actionbar
         // setting toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_main_page);
+        TextView tvToolbarTitle = toolbar.findViewById(R.id.tvToolbarTitle);
+        tvToolbarTitle.setText(R.string.title_main_page);
+//        toolbar.setTitle(R.string.title_main_page);
         setSupportActionBar(toolbar);
     }
 }

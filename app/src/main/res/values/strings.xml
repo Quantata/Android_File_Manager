@@ -27,9 +27,15 @@
     <string name="file_count">%d개</string>
     <string name="file_path">경로</string>
 
-    <string name="cancel">취소</string>
 
     <string name="file_createFile">새 폴더</string>
 
     <string name="conn_other_app">다른 앱 연결하기</string>
+
+    <!-- 폴더 생성 -->
+    <string name="create_folder">폴더 이름</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="already_exist">대상이 이미 존재합니다.</string>
+
 </resources>

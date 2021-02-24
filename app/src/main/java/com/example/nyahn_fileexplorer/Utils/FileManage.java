@@ -173,7 +173,7 @@ public class FileManage {
         try {
             File dir = new File(path);
             if (dir.exists()) {
-                return true;
+                return false;
             }
 
             return dir.mkdirs();
